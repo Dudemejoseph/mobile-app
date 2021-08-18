@@ -12,12 +12,10 @@ import Wrapper from "../../components/Wrapper";
 import { LOGIN_SCREEN } from "../../constants/routeNames";
 import { COLORS } from "../../constants/theme";
 
-const Register = ({ navigation }) => {
+const Register = ({ setIndex }) => {
   return (
     <View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Text style={styles.headTxt}>Register</Text>
-
         {/* ========= Full Name ========= */}
         <TextInput
           placeholder='Full name'
@@ -70,10 +68,7 @@ const Register = ({ navigation }) => {
           {/* ===== Login ====== */}
           <View style={styles.login}>
             <Text style={styles.loginTxt}>Already have an account?</Text>
-            <TouchableOpacity
-              activeOpacity={0.6}
-              onPress={() => navigation.navigate(LOGIN_SCREEN)}
-            >
+            <TouchableOpacity activeOpacity={0.6} onPress={() => setIndex(1)}>
               <Text style={styles.loginTxt2}>Login</Text>
             </TouchableOpacity>
           </View>

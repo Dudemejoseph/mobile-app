@@ -17,40 +17,53 @@ const renderTabBar = (props) => (
     {...props}
     indicatorStyle={{
       backgroundColor: COLORS.primary,
+      width: 50,
     }}
+    tabStyle={{ alignItems: "flex-start", padding: 0 }}
     style={{
       backgroundColor: COLORS.background,
       elevation: 0,
-      height: 50,
+      height: 42,
       padding: 0,
       margin: 0,
       width: "100%",
+      borderBottomWidth: 1,
+      borderBottomColor: COLORS.border,
+      marginBottom: 30,
     }}
     activeColor={COLORS.primary}
     inactiveColor={COLORS.text_grey}
     scrollEnabled
     renderLabel={({ route, color }) => (
-      <Text style={{ color, margin: 0 }}>{route.title}</Text>
+      <Text style={{ color, margin: 0, textAlign: "left" }}>{route.title}</Text>
     )}
   />
 );
 
 const Auths = ({ navigation }) => {
   const layout = useWindowDimensions();
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(1);
   const [routes] = useState([
     { key: "first", title: "Register" },
     { key: "second", title: "Login" },
   ]);
   return (
     <Wrapper>
-      <Text>Auth</Text>
+      <Text style={styles.headTxt}>Welcome to Farm Monitor</Text>
       <TabView
         renderTabBar={renderTabBar}
         navigationState={{ index, routes }}
         renderScene={SceneMap({
-          first: () => <Register navigation={navigation} />,
-          second: () => <Login navigation={navigation} />,
+          first: () => (
+            <Register
+              navigation={navigation}
+              setIndex={setIndex}
+              index={index}
+            />
+          ),
+          second: () => (
+            <Login navigation={navigation} setIndex={setIndex} index={index} />
+          ),
         })}
         onIndexChange={setIndex}
         initialLayout={{ width: layout.width }}
@@ -61,4 +74,12 @@ const Auths = ({ navigation }) => {
 
 export default Auths;
 
-const styles = ScaledSheet.create({});
+const styles = ScaledSheet.create({
+  headTxt: {
+    fontSize: "18@ms",
+    fontWeight: "700",
+    textAlign: "center",
+    marginTop: "40@vs",
+    marginBottom: "20@vs",
+  },
+});
