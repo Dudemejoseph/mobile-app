@@ -38,10 +38,18 @@ const Fields = () => {
           coordinates={coordinates}
           fillColor={"rgba(100, 100, 200, 0.3)"}
         />
-        {/* <Marker
-          coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
-          title='your location'
-        ></Marker> */}
+        {coordinates.map((marker) => {
+          return (
+            <Marker
+              key={marker.name}
+              coordinate={{
+                latitude: marker.latitude,
+                longitude: marker.longitude,
+              }}
+              title={marker.name}
+            ></Marker>
+          );
+        })}
       </MapView>
       {/* <View
         style={{

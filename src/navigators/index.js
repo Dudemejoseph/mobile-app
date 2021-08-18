@@ -16,8 +16,8 @@ const AppNavContainer = () => {
   return (
     <SafeAreaProvider>
       <NavigationContainer theme={theme}>
-        {/* <AuthRoute /> */}
-        <HomeStack />
+        <AuthRoute />
+        {/* <HomeStack /> */}
       </NavigationContainer>
     </SafeAreaProvider>
   );

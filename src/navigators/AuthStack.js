@@ -1,15 +1,13 @@
-import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
-import Onboarding from '../screens/onboarding/Onboarding';
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import Onboarding from "../screens/onboarding/Onboarding";
 import {
-  LOGIN_SCREEN,
+  AUTH_SCREEN,
   ONBOARDING_SCREEN,
-  REGISTER_SCREEN,
   RESET_PASSWORD_SCREEN,
-} from '../constants/routeNames';
-import Register from '../screens/onboarding/Register';
-import Login from '../screens/onboarding/Login';
-import ResetPassword from '../screens/onboarding/ResetPassword';
+} from "../constants/routeNames";
+import ResetPassword from "../screens/onboarding/ResetPassword";
+import Auths from "../screens/onboarding/Auths";
 
 const Auth = createStackNavigator();
 
@@ -18,10 +16,10 @@ const AuthRoute = () => {
     <Auth.Navigator
       screenOptions={{
         headerShown: false,
-      }}>
+      }}
+    >
       <Auth.Screen name={ONBOARDING_SCREEN} component={Onboarding} />
-      <Auth.Screen name={REGISTER_SCREEN} component={Register} />
-      <Auth.Screen name={LOGIN_SCREEN} component={Login} />
+      <Auth.Screen name={AUTH_SCREEN} component={Auths} />
       <Auth.Screen name={RESET_PASSWORD_SCREEN} component={ResetPassword} />
     </Auth.Navigator>
   );
