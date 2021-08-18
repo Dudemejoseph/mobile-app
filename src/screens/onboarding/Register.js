@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Text,
   View,
@@ -8,48 +8,107 @@ import {
   ScrollView,
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import Wrapper from "../../components/Wrapper";
-import { LOGIN_SCREEN } from "../../constants/routeNames";
+import { useDispatch, useSelector } from "react-redux";
+import { useForm, Controller } from "react-hook-form";
 import { COLORS } from "../../constants/theme";
+import { registerUser } from "../../redux/features/userSlice";
 
 const Register = ({ setIndex }) => {
+  const dispatch = useDispatch();
+  // Hook Form
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm();
+
+  /**
+   * Handle Form Submit
+   * @param {Object} data
+   */
+  const onSubmit = async (data) => {
+    dispatch(registerUser(data));
+  };
+
   return (
     <View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* ========= Full Name ========= */}
-        <TextInput
-          placeholder='Full name'
-          placeholderTextColor={COLORS.text_grey}
-          autoCapitalize='words'
-          style={styles.input}
+        {/* ========= First Name ========= */}
+        <Controller
+          control={control}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              placeholder='First name'
+              placeholderTextColor={COLORS.text_grey}
+              autoCapitalize='words'
+              value={value}
+              onChangeText={(value) => onChange(value)}
+              style={styles.input}
+            />
+          )}
+          name='firstname'
+          rules={{ required: true }}
         />
+        {errors.firstname && (
+          <Text style={styles.err}>This field is required</Text>
+        )}
+
+        {/* ========= Last Name ========= */}
+        <Controller
+          control={control}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              placeholder='Last name'
+              placeholderTextColor={COLORS.text_grey}
+              autoCapitalize='words'
+              value={value}
+              onChangeText={(value) => onChange(value)}
+              style={styles.input}
+            />
+          )}
+          name='lastname'
+          rules={{ required: true }}
+        />
+        {errors.lastname && (
+          <Text style={styles.err}>This field is required</Text>
+        )}
 
         {/* ========== Email ========= */}
-        <TextInput
-          placeholder='Email'
-          placeholderTextColor={COLORS.text_grey}
-          autoCapitalize='none'
-          keyboardType='email-address'
-          style={styles.input}
+        <Controller
+          control={control}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              placeholder='Email'
+              placeholderTextColor={COLORS.text_grey}
+              autoCapitalize='none'
+              keyboardType='email-address'
+              value={value}
+              onChangeText={(value) => onChange(value)}
+              style={styles.input}
+            />
+          )}
+          name='email'
+          rules={{ required: true }}
         />
-
-        {/* ========= Phone Number ========== */}
-        <TextInput
-          placeholder='Phone number'
-          placeholderTextColor={COLORS.text_grey}
-          autoCapitalize='none'
-          keyboardType='number-pad'
-          style={styles.input}
-        />
+        {errors.email && <Text style={styles.err}>This field is required</Text>}
 
         {/* ========= Password ======== */}
         <View style={styles.inputView}>
-          <TextInput
-            placeholder='Create password'
-            placeholderTextColor={COLORS.text_grey}
-            autoCapitalize='none'
-            secureTextEntry
-            style={styles.input2}
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                placeholder='Create password'
+                placeholderTextColor={COLORS.text_grey}
+                autoCapitalize='none'
+                secureTextEntry
+                value={value}
+                onChangeText={(value) => onChange(value)}
+                style={styles.input2}
+              />
+            )}
+            name='password'
+            rules={{ required: true }}
           />
           <TouchableOpacity>
             <Image
@@ -58,10 +117,17 @@ const Register = ({ setIndex }) => {
             />
           </TouchableOpacity>
         </View>
+        {errors.password && (
+          <Text style={styles.err}>This field is required</Text>
+        )}
 
         {/* ========== Button View ============= */}
         <View style={styles.buttonView}>
-          <TouchableOpacity activeOpacity={0.6} style={styles.registerBtn}>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={styles.registerBtn}
+            onPress={handleSubmit(onSubmit)}
+          >
             <Text style={styles.registerTxt}>Register</Text>
           </TouchableOpacity>
 
@@ -90,7 +156,7 @@ const styles = ScaledSheet.create({
     paddingHorizontal: "10@ms",
     color: COLORS.text_grey,
     borderColor: "#F3F3F3",
-    marginBottom: "15@vs",
+    marginTop: "15@vs",
     fontFamily: "CircularStd-Medium",
   },
 
@@ -101,7 +167,7 @@ const styles = ScaledSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     borderColor: "#F3F3F3",
-    marginBottom: "15@vs",
+    marginTop: "15@vs",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -155,5 +221,11 @@ const styles = ScaledSheet.create({
     fontSize: "16@ms",
     fontWeight: "700",
     marginBottom: "30@vs",
+  },
+  err: {
+    fontSize: "12@ms",
+    fontWeight: "300",
+    color: COLORS.text_grey,
+    marginTop: "5@vs",
   },
 });

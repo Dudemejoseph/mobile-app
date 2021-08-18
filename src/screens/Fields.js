@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import Wrapper from "../components/Wrapper";
@@ -9,6 +9,7 @@ import MapView, {
   Polyline,
 } from "react-native-maps";
 import { COLORS } from "../constants/theme";
+import BackgroundGeolocation from "@mauron85/react-native-background-geolocation";
 
 const Fields = () => {
   const coordinates = [

@@ -35,14 +35,16 @@ const renderTabBar = (props) => (
     inactiveColor={COLORS.text_grey}
     scrollEnabled
     renderLabel={({ route, color }) => (
-      <Text style={{ color, margin: 0, textAlign: "left" }}>{route.title}</Text>
+      <Text style={{ color, margin: 0, textAlign: "center" }}>
+        {route.title}
+      </Text>
     )}
   />
 );
 
 const Auths = ({ navigation }) => {
   const layout = useWindowDimensions();
-  const [index, setIndex] = useState(1);
+  const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: "first", title: "Register" },
     { key: "second", title: "Login" },
