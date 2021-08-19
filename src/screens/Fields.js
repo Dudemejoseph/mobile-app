@@ -9,7 +9,6 @@ import MapView, {
   Polyline,
 } from "react-native-maps";
 import { COLORS } from "../constants/theme";
-import BackgroundGeolocation from "@mauron85/react-native-background-geolocation";
 
 const Fields = () => {
   const coordinates = [

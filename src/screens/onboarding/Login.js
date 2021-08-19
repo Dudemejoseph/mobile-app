@@ -55,7 +55,6 @@ const Login = ({ navigation, setIndex }) => {
               placeholder='Email'
               placeholderTextColor={COLORS.text_grey}
               autoCapitalize='none'
-              autoCorrect='none'
               value={value}
               onChangeText={(value) => onChange(value)}
               keyboardType='email-address'
@@ -73,7 +72,7 @@ const Login = ({ navigation, setIndex }) => {
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
-                placeholder='Create password'
+                placeholder='Password'
                 placeholderTextColor={COLORS.text_grey}
                 autoCapitalize='none'
                 secureTextEntry
