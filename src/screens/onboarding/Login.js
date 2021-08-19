@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Text,
   View,
@@ -6,36 +6,84 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import Wrapper from "../../components/Wrapper";
-import {
-  REGISTER_SCREEN,
-  RESET_PASSWORD_SCREEN,
-} from "../../constants/routeNames";
+import Toast from "react-native-toast-message";
+import { useForm, Controller } from "react-hook-form";
+import { RESET_PASSWORD_SCREEN } from "../../constants/routeNames";
 import { COLORS } from "../../constants/theme";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser, userSelector } from "../../redux/features/userSlice";
 
 const Login = ({ navigation, setIndex }) => {
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector(userSelector);
+  // Hook Form
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm();
+
+  /**
+   * Handle Form Submit
+   * @param {Object} data
+   */
+  const onSubmit = async (data) => {
+    dispatch(loginUser(data));
+  };
+
+  useEffect(() => {
+    error &&
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error,
+        topOffset: 40,
+      });
+  }, [error]);
+
   return (
     <View>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* ========== Email ========= */}
-        <TextInput
-          placeholder='Email'
-          placeholderTextColor={COLORS.text_grey}
-          autoCapitalize='none'
-          keyboardType='email-address'
-          style={styles.input}
+        <Controller
+          control={control}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              placeholder='Email'
+              placeholderTextColor={COLORS.text_grey}
+              autoCapitalize='none'
+              autoCorrect='none'
+              value={value}
+              onChangeText={(value) => onChange(value)}
+              keyboardType='email-address'
+              style={styles.input}
+            />
+          )}
+          name='email'
+          rules={{ required: true }}
         />
+        {errors.email && <Text style={styles.err}>This field is required</Text>}
 
         {/* ========= Password ======== */}
         <View style={styles.inputView}>
-          <TextInput
-            placeholder='Create password'
-            placeholderTextColor={COLORS.text_grey}
-            autoCapitalize='none'
-            secureTextEntry
-            style={styles.input2}
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                placeholder='Create password'
+                placeholderTextColor={COLORS.text_grey}
+                autoCapitalize='none'
+                secureTextEntry
+                value={value}
+                onChangeText={(value) => onChange(value)}
+                style={styles.input2}
+              />
+            )}
+            name='password'
+            rules={{ required: true }}
           />
           <TouchableOpacity>
             <Image
@@ -44,6 +92,9 @@ const Login = ({ navigation, setIndex }) => {
             />
           </TouchableOpacity>
         </View>
+        {errors.password && (
+          <Text style={styles.err}>This field is required</Text>
+        )}
 
         {/* ========== Forgot Password ========= */}
         <View style={styles.forgot}>
@@ -58,8 +109,16 @@ const Login = ({ navigation, setIndex }) => {
 
         {/* ========== Button View ============= */}
         <View style={styles.buttonView}>
-          <TouchableOpacity activeOpacity={0.6} style={styles.registerBtn}>
-            <Text style={styles.registerTxt}>Login</Text>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={styles.registerBtn}
+            onPress={handleSubmit(onSubmit)}
+          >
+            {loading ? (
+              <ActivityIndicator size='large' color={COLORS.background} />
+            ) : (
+              <Text style={styles.registerTxt}>Login</Text>
+            )}
           </TouchableOpacity>
 
           {/* ===== Login ====== */}
@@ -87,7 +146,7 @@ const styles = ScaledSheet.create({
     paddingHorizontal: "10@ms",
     color: COLORS.text_grey,
     borderColor: "#F3F3F3",
-    marginBottom: "15@vs",
+    marginTop: "15@vs",
     fontFamily: "CircularStd-Medium",
   },
   inputView: {
@@ -97,7 +156,7 @@ const styles = ScaledSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     borderColor: "#F3F3F3",
-    marginBottom: "15@vs",
+    marginTop: "15@vs",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -157,5 +216,11 @@ const styles = ScaledSheet.create({
     fontSize: "16@ms",
     fontWeight: "700",
     marginBottom: "30@vs",
+  },
+  err: {
+    fontSize: "12@ms",
+    fontWeight: "300",
+    color: COLORS.text_grey,
+    marginTop: "5@vs",
   },
 });

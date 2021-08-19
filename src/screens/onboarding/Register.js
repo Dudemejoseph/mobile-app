@@ -6,15 +6,18 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
 import { COLORS } from "../../constants/theme";
-import { registerUser } from "../../redux/features/userSlice";
+import { registerUser, userSelector } from "../../redux/features/userSlice";
+import Toast from "react-native-toast-message";
 
 const Register = ({ setIndex }) => {
   const dispatch = useDispatch();
+  const { loading, error } = useSelector(userSelector);
   // Hook Form
   const {
     control,
@@ -29,6 +32,16 @@ const Register = ({ setIndex }) => {
   const onSubmit = async (data) => {
     dispatch(registerUser(data));
   };
+
+  useEffect(() => {
+    error &&
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error,
+        topOffset: 40,
+      });
+  }, [error]);
 
   return (
     <View>
@@ -121,6 +134,35 @@ const Register = ({ setIndex }) => {
           <Text style={styles.err}>This field is required</Text>
         )}
 
+        {/* ========= Confirm Password ======== */}
+        <View style={styles.inputView}>
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                placeholder='Confirm password'
+                placeholderTextColor={COLORS.text_grey}
+                autoCapitalize='none'
+                secureTextEntry
+                value={value}
+                onChangeText={(value) => onChange(value)}
+                style={styles.input2}
+              />
+            )}
+            name='password_confirmation'
+            rules={{ required: true }}
+          />
+          <TouchableOpacity>
+            <Image
+              source={require("../../assets/icons/visible-eye-icon.png")}
+              style={styles.eyeIcon}
+            />
+          </TouchableOpacity>
+        </View>
+        {errors.password_confirmation && (
+          <Text style={styles.err}>This field is required</Text>
+        )}
+
         {/* ========== Button View ============= */}
         <View style={styles.buttonView}>
           <TouchableOpacity
@@ -128,7 +170,11 @@ const Register = ({ setIndex }) => {
             style={styles.registerBtn}
             onPress={handleSubmit(onSubmit)}
           >
-            <Text style={styles.registerTxt}>Register</Text>
+            {loading ? (
+              <ActivityIndicator size='large' color={COLORS.background} />
+            ) : (
+              <Text style={styles.registerTxt}>Register</Text>
+            )}
           </TouchableOpacity>
 
           {/* ===== Login ====== */}

@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../helpers/api";
 
@@ -29,7 +30,7 @@ const userSlice = createSlice({
       state.loading = false;
       state.isAuthenticated = true;
       state.user = payload;
-      state.message = "Successfully, welcome to AfriHealth";
+      state.message = "Account created successfully";
     },
     fetchFail: (state, { payload }) => {
       state.loading = false;
@@ -60,15 +61,11 @@ export const loginUser = (data) => {
   return async (dispatch) => {
     dispatch(fetch());
     try {
-      const res = await axiosInstance.post("/login", data);
-      if (res.data.result !== null) {
-        dispatch(loginSuccess(res?.data?.result));
-      } else {
-        dispatch(fetchFail(res?.data?.message));
-      }
+      const res = await axiosInstance.post("/auth/login", data);
+      dispatch(loginSuccess(res.data));
       console.log(res.data);
     } catch (error) {
-      dispatch(fetchFail("Something went wrong, please try again"));
+      dispatch(fetchFail(error.response.data.message));
       console.log(error);
     }
   };
@@ -86,16 +83,29 @@ export const registerUser = (data) => {
     try {
       const res = await axiosInstance.post("/auth/register", data);
 
-      console.log(res.data);
+      dispatch(activateUser(res.data.user.email_token));
+    } catch (error) {
+      dispatch(fetchFail(error.response.data.message));
+    }
+  };
+};
+
+/**
+ * Activate User
+ * @param {*} data
+ * @returns
+ */
+export const activateUser = (token) => {
+  return async (dispatch) => {
+    dispatch(fetch());
+    try {
+      const res = await axiosInstance.get(`/auth/activate/${token}`);
+      dispatch(registerSuccess(res.data.user));
+      const userToken = res.data.token;
+      await AsyncStorage.setItem("@userToken", userToken);
     } catch (error) {
       dispatch(fetchFail("Something went wrong, please try again"));
       console.log(error.response.data.message);
     }
   };
 };
-
-// export const logoutUser = () => {
-//   return async dispatch => {
-//     dispatch(loggedOut());
-//   };
-// };

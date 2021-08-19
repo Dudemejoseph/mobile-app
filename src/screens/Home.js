@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   ScrollView,
   Text,
@@ -8,6 +8,7 @@ import {
   ImageBackground,
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
+import Toast from "react-native-toast-message";
 import Wrapper from "../components/Wrapper";
 import { COLORS } from "../constants/theme";
 import Pie from "react-native-pie";
@@ -15,6 +16,8 @@ import box1 from "../assets/images/box1.png";
 import box2 from "../assets/images/box2.png";
 import box3 from "../assets/images/box3.png";
 import box4 from "../assets/images/box4.png";
+import { useSelector } from "react-redux";
+import { userSelector } from "../redux/features/userSlice";
 
 const data = [
   {
@@ -64,6 +67,18 @@ const actions = [
 ];
 
 const Home = () => {
+  const { user, message } = useSelector(userSelector);
+
+  useEffect(() => {
+    message &&
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: message,
+        topOffset: 40,
+      });
+  }, [message]);
+
   return (
     <Wrapper style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -78,7 +93,7 @@ const Home = () => {
         </View>
 
         {/* ========= Head Text ======== */}
-        <Text style={styles.headTxt}>Welcome, Essien</Text>
+        <Text style={styles.headTxt}>Welcome, {user.firstname}</Text>
 
         {/* ======== Slide View ======== */}
         <View style={styles.slideView}>
