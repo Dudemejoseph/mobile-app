@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -18,6 +18,7 @@ import Toast from "react-native-toast-message";
 const Register = ({ setIndex }) => {
   const dispatch = useDispatch();
   const { loading, error } = useSelector(userSelector);
+  const [showPassword, setShow] = useState(false);
   // Hook Form
   const {
     control,
@@ -114,7 +115,7 @@ const Register = ({ setIndex }) => {
                 placeholder='Create password'
                 placeholderTextColor={COLORS.text_grey}
                 autoCapitalize='none'
-                secureTextEntry
+                secureTextEntry={!showPassword}
                 value={value}
                 onChangeText={(value) => onChange(value)}
                 style={styles.input2}
@@ -123,12 +124,21 @@ const Register = ({ setIndex }) => {
             name='password'
             rules={{ required: true }}
           />
-          <TouchableOpacity>
-            <Image
-              source={require("../../assets/icons/visible-eye-icon.png")}
-              style={styles.eyeIcon}
-            />
-          </TouchableOpacity>
+          {showPassword ? (
+            <TouchableOpacity onPress={() => setShow(!showPassword)}>
+              <Image
+                source={require("../../assets/icons/Hidden.png")}
+                style={styles.eyeIcon}
+              />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={() => setShow(!showPassword)}>
+              <Image
+                source={require("../../assets/icons/visible-eye-icon.png")}
+                style={styles.eyeIcon}
+              />
+            </TouchableOpacity>
+          )}
         </View>
         {errors.password && (
           <Text style={styles.err}>This field is required</Text>
@@ -143,7 +153,7 @@ const Register = ({ setIndex }) => {
                 placeholder='Confirm password'
                 placeholderTextColor={COLORS.text_grey}
                 autoCapitalize='none'
-                secureTextEntry
+                secureTextEntry={!showPassword}
                 value={value}
                 onChangeText={(value) => onChange(value)}
                 style={styles.input2}
@@ -152,12 +162,21 @@ const Register = ({ setIndex }) => {
             name='password_confirmation'
             rules={{ required: true }}
           />
-          <TouchableOpacity>
-            <Image
-              source={require("../../assets/icons/visible-eye-icon.png")}
-              style={styles.eyeIcon}
-            />
-          </TouchableOpacity>
+          {showPassword ? (
+            <TouchableOpacity onPress={() => setShow(!showPassword)}>
+              <Image
+                source={require("../../assets/icons/Hidden.png")}
+                style={styles.eyeIcon}
+              />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={() => setShow(!showPassword)}>
+              <Image
+                source={require("../../assets/icons/visible-eye-icon.png")}
+                style={styles.eyeIcon}
+              />
+            </TouchableOpacity>
+          )}
         </View>
         {errors.password_confirmation && (
           <Text style={styles.err}>This field is required</Text>
