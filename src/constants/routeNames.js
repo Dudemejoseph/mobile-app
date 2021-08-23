@@ -3,3 +3,7 @@ export const LOGIN_SCREEN = "Login";
 export const REGISTER_SCREEN = "Register";
 export const RESET_PASSWORD_SCREEN = "ResetPassword";
 export const AUTH_SCREEN = "Auth";
+export const CREATE_FARMS_SCREEN = "Creaate-farms";
+export const ACTIVITIES_SCREEN = "Activities";
+export const TRACK_EXPENSES_SCREEN = "Track-Expenses";
+export const INVENTORY_SCREEN = "Inventory";

@@ -18,6 +18,12 @@ import box3 from "../assets/images/box3.png";
 import box4 from "../assets/images/box4.png";
 import { useSelector } from "react-redux";
 import { userSelector } from "../redux/features/userSlice";
+import {
+  ACTIVITIES_SCREEN,
+  CREATE_FARMS_SCREEN,
+  INVENTORY_SCREEN,
+  TRACK_EXPENSES_SCREEN,
+} from "../constants/routeNames";
 
 const data = [
   {
@@ -51,22 +57,27 @@ const actions = [
   {
     name: "Create Farms",
     image: box1,
+    route: CREATE_FARMS_SCREEN,
   },
   {
     name: "Activities",
     image: box2,
+    route: ACTIVITIES_SCREEN,
   },
   {
     name: "Track Expense",
     image: box3,
+    route: TRACK_EXPENSES_SCREEN,
   },
   {
     name: "Inventory",
     image: box4,
+    route: INVENTORY_SCREEN,
   },
 ];
 
-const Home = () => {
+const Home = ({ navigation }) => {
+  const { navigate } = navigation;
   const { user, message } = useSelector(userSelector);
 
   useEffect(() => {
@@ -134,7 +145,11 @@ const Home = () => {
         <View style={styles.boxView}>
           {actions.map((item) => {
             return (
-              <TouchableOpacity key={item.name} activeOpacity={0.6}>
+              <TouchableOpacity
+                key={item.name}
+                activeOpacity={0.6}
+                onPress={() => navigate(item.route)}
+              >
                 <ImageBackground
                   source={item.image}
                   resizeMode='contain'
