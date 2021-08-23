@@ -36,11 +36,11 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-<string>Your location is required to enable GEO Fencing</string>
-<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-<string>Your location is required to enable GEO Fencing</string>
-<key>NSLocationAlwaysUsageDescription</key>
-<string>Your location is required to enable GEO Fencing</string>
+	<string>Your location is required to enable GEO Fencing</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Your location is required to enable GEO Fencing</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Your location is required to enable GEO Fencing</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -58,6 +58,9 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>CircularStd-Medium.ttf</string>
+		<string>Poppins-Bold.ttf</string>
+		<string>Poppins-Medium.ttf</string>
+		<string>Poppins-Regular.ttf</string>
 	</array>
 </dict>
 </plist>

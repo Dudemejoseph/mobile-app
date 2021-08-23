@@ -191,7 +191,7 @@ const styles = ScaledSheet.create({
   headTxt: {
     fontSize: "18@ms",
     fontWeight: "500",
-    fontFamily: "CircularStd-Medium",
+    fontFamily: "Poppins-Regular",
     marginTop: "20@vs",
   },
   chartView: {
@@ -216,7 +216,7 @@ const styles = ScaledSheet.create({
   col1Txt: {
     fontWeight: "500",
     fontSize: "14@ms",
-    fontFamily: "CircularStd-Medium",
+    fontFamily: "Poppins-Regular",
     marginBottom: "10@vs",
   },
   color: {
@@ -237,6 +237,7 @@ const styles = ScaledSheet.create({
   chartTxt: {
     fontSize: "11@ms",
     color: COLORS.text_grey,
+    fontFamily: "Poppins-Regular",
   },
   box: {
     width: "140@ms",
@@ -264,7 +265,7 @@ const styles = ScaledSheet.create({
     fontSize: "16@ms",
     fontWeight: "500",
     color: COLORS.background,
-    fontFamily: "CircularStd-Medium",
+    fontFamily: "Poppins-Regular",
   },
   ctaView: {
     width: "100%",
@@ -308,10 +309,12 @@ const styles = ScaledSheet.create({
     fontWeight: "500",
     fontSize: "12@ms",
     color: "#21D363",
+    fontFamily: "Poppins-Regular",
   },
   btnTxt2: {
     fontWeight: "500",
     fontSize: "12@ms",
     color: "#FA0000",
+    fontFamily: "Poppins-Regular",
   },
 });

@@ -31,7 +31,7 @@ const Fields = () => {
     // Android only
     androidProvider: "auto",
     interval: 5000, // Milliseconds
-    fastestInterval: 10000, // Milliseconds
+    fastestInterval: 5000, // Milliseconds
     maxWaitTime: 5000, // Milliseconds
     // iOS Only
     activityType: "other",
@@ -61,7 +61,6 @@ const Fields = () => {
         const coords = location[0];
         setLat(coords.latitude);
         setLng(coords.longitude);
-        // setCoords([...coordinates, coords]);
         setCoords((prev) => [
           ...prev,
           { latitude: coords.latitude, longitude: coords.longitude },

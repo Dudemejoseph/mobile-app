@@ -156,7 +156,7 @@ const styles = ScaledSheet.create({
     color: COLORS.text_grey,
     borderColor: "#F3F3F3",
     marginTop: "15@vs",
-    fontFamily: "CircularStd-Medium",
+    fontFamily: "Poppins-Regular",
   },
   inputView: {
     width: "100%",
@@ -178,7 +178,7 @@ const styles = ScaledSheet.create({
   },
   input2: {
     width: "90%",
-    fontFamily: "CircularStd-Medium",
+    fontFamily: "Poppins-Regular",
     color: COLORS.text_grey,
   },
   buttonView: {
@@ -193,7 +193,7 @@ const styles = ScaledSheet.create({
     borderRadius: 4,
   },
   registerTxt: {
-    fontFamily: "CircularStd-Medium",
+    fontFamily: "Poppins-Regular",
     color: COLORS.background,
   },
   login: {
@@ -210,18 +210,18 @@ const styles = ScaledSheet.create({
     justifyContent: "flex-end",
   },
   loginTxt: {
-    fontFamily: "CircularStd-Medium",
+    fontFamily: "Poppins-Regular",
     fontSize: "14@ms",
     marginRight: "5@ms",
   },
   loginTxt2: {
-    fontFamily: "CircularStd-Medium",
+    fontFamily: "Poppins-Regular",
     fontSize: "14@ms",
     marginRight: "5@ms",
     color: COLORS.primary,
   },
   headTxt: {
-    fontFamily: "CircularStd-Medium",
+    fontFamily: "Poppins-Regular",
     fontSize: "16@ms",
     fontWeight: "700",
     marginBottom: "30@vs",
