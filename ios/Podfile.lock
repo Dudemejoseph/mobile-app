@@ -440,7 +440,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
-  - react-native-location (from `../node_modules/react-native-location/react-native-location.podspec`)
+  - react-native-location (from `../node_modules/react-native-location`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
@@ -520,7 +520,7 @@ EXTERNAL SOURCES:
   react-native-google-maps:
     :path: "../node_modules/react-native-maps"
   react-native-location:
-    :path: "../node_modules/react-native-location/react-native-location.podspec"
+    :path: "../node_modules/react-native-location"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
   react-native-netinfo:
@@ -631,6 +631,6 @@ SPEC CHECKSUMS:
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 9407db027a7c634b42ce276a667a0883c1c09cc0
+PODFILE CHECKSUM: 2672a453b0a0b48bda93bbd9e17eecdb7bd3a8b5
 
 COCOAPODS: 1.10.1

@@ -52,7 +52,7 @@ const BottomTab = () => {
           tabBarLabelStyle: { fontSize: 12, paddingBottom: 5 },
           tabBarIcon: ({ color }) => (
             <Image
-              source={require("../assets/icons/search-icon.png")}
+              source={require("../assets/icons/ecology-icon.png")}
               style={{
                 tintColor: color,
                 width: 20,
@@ -71,7 +71,7 @@ const BottomTab = () => {
           tabBarLabelStyle: { fontSize: 12, paddingBottom: 5 },
           tabBarIcon: ({ color }) => (
             <Image
-              source={require("../assets/icons/circle-plus-icon.png")}
+              source={require("../assets/icons/members-icon.png")}
               style={{
                 tintColor: color,
                 width: 20,
@@ -90,7 +90,7 @@ const BottomTab = () => {
           tabBarLabelStyle: { fontSize: 12, paddingBottom: 5 },
           tabBarIcon: ({ color }) => (
             <Image
-              source={require("../assets/icons/heart-icon.png")}
+              source={require("../assets/icons/calender-icon.png")}
               style={{
                 tintColor: color,
                 width: 20,
@@ -109,7 +109,7 @@ const BottomTab = () => {
           tabBarLabelStyle: { fontSize: 12, paddingBottom: 5 },
           tabBarIcon: ({ color }) => (
             <Image
-              source={require("../assets/icons/user-icon.png")}
+              source={require("../assets/icons/finance-icon.png")}
               style={{
                 tintColor: color,
                 width: 20,

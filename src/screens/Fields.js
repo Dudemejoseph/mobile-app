@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import Wrapper from "../components/Wrapper";
 import MapView, {
@@ -10,14 +10,18 @@ import MapView, {
 } from "react-native-maps";
 import RNLocation from "react-native-location";
 import { COLORS } from "../constants/theme";
+import { getDistanceCovered } from "../utils/getDistance";
+import * as Animatable from "react-native-animatable";
 
 const Fields = () => {
   const [lat, setLat] = useState(37.78825);
   const [lng, setLng] = useState(-122.4324);
   const [coordinates, setCoords] = useState([]);
   const [trackEnabled, setEnabled] = useState(false);
+  const [distance, setDistance] = useState(0);
+  const [history, setHistory] = useState([]);
+  const [showActionBox, setShowActionBox] = useState(false);
 
-  console.log(trackEnabled);
   RNLocation.configure({
     distanceFilter: 10, // Meters
     desiredAccuracy: {
@@ -57,10 +61,42 @@ const Fields = () => {
         const coords = location[0];
         setLat(coords.latitude);
         setLng(coords.longitude);
-        setCoords([...coordinates, coords]);
-        console.log(coords);
+        // setCoords([...coordinates, coords]);
+        setCoords((prev) => [
+          ...prev,
+          { latitude: coords.latitude, longitude: coords.longitude },
+        ]);
+        setDistance((prevDistance) => {
+          if (coordinates.length < 2) {
+            return 0;
+          }
+          const latestItem = coordinates[coordinates.length - 1];
+          const prevItem = coordinates[coordinates.length - 2];
+          let total = [];
+          const reducer = (accumulator, currentValue) =>
+            accumulator + currentValue;
+
+          total.push(
+            getDistanceCovered(
+              coords.latitude,
+              coords.longitude,
+              latestItem.latitude,
+              latestItem.longitude
+            )
+          );
+          console.log("@total", total.reduce(reducer));
+          return (
+            prevDistance +
+            getDistanceCovered(
+              prevItem.latitude,
+              prevItem.longitude,
+              latestItem.latitude,
+              latestItem.longitude
+            )
+          );
+        });
       });
-    } else return;
+    } else return null;
   }, [trackEnabled]);
 
   const sub = () => {
@@ -69,8 +105,17 @@ const Fields = () => {
 
   const unsub = () => {
     setEnabled(false);
-    console.log(coordinates);
+    // Subscribe
+
+    // Unsubscribe
   };
+
+  const unsubscribe = RNLocation.subscribeToPermissionUpdates(
+    (currentPermission) => {
+      console.log(currentPermission);
+    }
+  );
+
   return (
     <View style={styles.container}>
       <MapView
@@ -87,34 +132,44 @@ const Fields = () => {
         zoomControlEnabled={true}
         maxZoomLevel={50}
       >
-        <Polygon
+        <Polyline
           coordinates={coordinates}
-          fillColor={"rgba(100, 100, 200, 0.3)"}
-          strokeColor='#000'
+          strokeColor={COLORS.primary}
+          fillColor={COLORS.primary}
+          strokeWidth={4}
         />
       </MapView>
-      {/* <View
-        style={{
-          position: "absolute",
-          top: 100,
-          left: 40,
-          backgroundColor: COLORS.background,
-          height: 50,
-          width: 300,
-          borderRadius: 8,
-        }}
-      /> */}
+      {showActionBox && (
+        <Animatable.View
+          animation='fadeInUp'
+          duration={300}
+          style={styles.actionBox}
+        >
+          <TouchableOpacity activeOpacity={0.6} style={styles.boxItem}>
+            <Text>Start Geo Fencing</Text>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.6} style={styles.boxItem}>
+            <Text>To Do & Calender</Text>
+          </TouchableOpacity>
+        </Animatable.View>
+      )}
+
       <TouchableOpacity
-        style={{ position: "absolute", bottom: 50, right: 40 }}
-        onPress={sub}
+        activeOpacity={0.6}
+        style={styles.iconView}
+        onPress={() => setShowActionBox(!showActionBox)}
       >
-        <Text>Start</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={{ position: "absolute", bottom: 30, right: 40 }}
-        onPress={unsub}
-      >
-        <Text>Stop</Text>
+        {!showActionBox ? (
+          <Image
+            source={require("../assets/icons/plus-icon.png")}
+            style={styles.icon}
+          />
+        ) : (
+          <Image
+            source={require("../assets/icons/close-icon.png")}
+            style={styles.icon}
+          />
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -128,5 +183,51 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
+  },
+  icon: {
+    width: 30,
+    height: 30,
+    resizeMode: "contain",
+  },
+  iconView: {
+    position: "absolute",
+    bottom: 50,
+    right: 40,
+    backgroundColor: COLORS.background,
+    width: 55,
+    height: 55,
+    borderRadius: 55,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+
+    elevation: 2,
+  },
+  actionBox: {
+    position: "absolute",
+    bottom: 110,
+    right: 40,
+    backgroundColor: COLORS.background,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+
+    elevation: 2,
+    borderRadius: 6,
+  },
+  boxItem: {
+    padding: 12,
   },
 });
