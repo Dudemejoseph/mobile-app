@@ -21,6 +21,7 @@ import { userSelector } from "../redux/features/userSlice";
 import {
   ACTIVITIES_SCREEN,
   CREATE_FARMS_SCREEN,
+  EMERGENCY_SCREEN,
   INVENTORY_SCREEN,
   TRACK_EXPENSES_SCREEN,
 } from "../constants/routeNames";
@@ -171,7 +172,11 @@ const Home = ({ navigation }) => {
             />
             <Text style={styles.btnTxt}>Generate Report</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.btn2} activeOpacity={0.6}>
+          <TouchableOpacity
+            style={styles.btn2}
+            activeOpacity={0.6}
+            onPress={() => navigate(EMERGENCY_SCREEN)}
+          >
             <Image
               source={require("../assets/icons/emergency-icon.png")}
               style={styles.btnIcon}

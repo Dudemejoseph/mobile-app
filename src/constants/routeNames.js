@@ -7,3 +7,5 @@ export const CREATE_FARMS_SCREEN = "Creaate-farms";
 export const ACTIVITIES_SCREEN = "Activities";
 export const TRACK_EXPENSES_SCREEN = "Track-Expenses";
 export const INVENTORY_SCREEN = "Inventory";
+export const EMERGENCY_SCREEN = "Emergency";
+export const GENERATE_REPORT_SCREEN = "Generate-Report";
