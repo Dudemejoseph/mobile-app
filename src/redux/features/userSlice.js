@@ -6,6 +6,7 @@ const initialState = {
   loading: false,
   isAuthenticated: false,
   user: null,
+  dashboard: null,
   error: null,
   message: null,
 };
@@ -32,9 +33,13 @@ const userSlice = createSlice({
       state.user = payload;
       state.message = "Account created successfully";
     },
+    setDashboard: (state, { payload }) => {
+      state.loading = false;
+      state.dashboard = payload;
+      state.isAuthenticated = true;
+    },
     fetchFail: (state, { payload }) => {
       state.loading = false;
-      state.isAuthenticated = false;
       state.error = payload;
     },
     loggedOut: (state) => {
@@ -47,8 +52,14 @@ const userSlice = createSlice({
   },
 });
 
-export const { fetch, fetchFail, loginSuccess, registerSuccess, loggedOut } =
-  userSlice.actions;
+export const {
+  fetch,
+  fetchFail,
+  loginSuccess,
+  registerSuccess,
+  loggedOut,
+  setDashboard,
+} = userSlice.actions;
 export default userSlice.reducer;
 export const userSelector = (state) => state.user;
 
@@ -63,6 +74,8 @@ export const loginUser = (data) => {
     try {
       const res = await axiosInstance.post("/auth/login", data);
       dispatch(loginSuccess(res.data.user));
+      await AsyncStorage.setItem("@userToken", res?.data?.token);
+      console.log(res.data.token);
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
       console.log(error);
@@ -76,7 +89,6 @@ export const loginUser = (data) => {
  * @returns
  */
 export const registerUser = (data) => {
-  console.log(data);
   return async (dispatch) => {
     dispatch(fetch());
     try {
@@ -105,6 +117,23 @@ export const activateUser = (token) => {
     } catch (error) {
       dispatch(fetchFail("Something went wrong, please try again"));
       console.log(error.response.data.message);
+    }
+  };
+};
+
+/**
+ * Fetch Dashboard
+ * @returns
+ */
+export const getDashboard = () => {
+  return async (dispatch) => {
+    dispatch(fetch());
+    try {
+      const res = await axiosInstance.get("/dashboard");
+      dispatch(setDashboard(res.data));
+      console.log(res.data);
+    } catch (error) {
+      dispatch(fetchFail(error.response.data.message));
     }
   };
 };

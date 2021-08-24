@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import Wrapper from "../components/Wrapper";
+import * as geolib from "geolib";
 import MapView, {
   PROVIDER_GOOGLE,
   Marker,
@@ -19,8 +20,18 @@ const Fields = () => {
   const [coordinates, setCoords] = useState([]);
   const [trackEnabled, setEnabled] = useState(false);
   const [distance, setDistance] = useState(0);
+  const [area, setArea] = useState(0);
+  const [hecres, setHecres] = useState(0);
   const [history, setHistory] = useState([]);
   const [showActionBox, setShowActionBox] = useState(false);
+
+  let polyPoints = coordinates.map(function (obj) {
+    return Object.keys(obj)
+      .sort()
+      .map(function (key) {
+        return obj[key];
+      });
+  });
 
   RNLocation.configure({
     distanceFilter: 10, // Meters
@@ -65,35 +76,6 @@ const Fields = () => {
           ...prev,
           { latitude: coords.latitude, longitude: coords.longitude },
         ]);
-        setDistance((prevDistance) => {
-          if (coordinates.length < 2) {
-            return 0;
-          }
-          const latestItem = coordinates[coordinates.length - 1];
-          const prevItem = coordinates[coordinates.length - 2];
-          let total = [];
-          const reducer = (accumulator, currentValue) =>
-            accumulator + currentValue;
-
-          total.push(
-            getDistanceCovered(
-              coords.latitude,
-              coords.longitude,
-              latestItem.latitude,
-              latestItem.longitude
-            )
-          );
-          console.log("@total", total.reduce(reducer));
-          return (
-            prevDistance +
-            getDistanceCovered(
-              prevItem.latitude,
-              prevItem.longitude,
-              latestItem.latitude,
-              latestItem.longitude
-            )
-          );
-        });
       });
     } else return null;
   }, [trackEnabled]);
@@ -105,7 +87,9 @@ const Fields = () => {
   const unsub = () => {
     setEnabled(false);
     // Subscribe
-
+    setDistance(geolib.getPathLength(coordinates, geolib.getDistance));
+    setArea(geolib.getAreaOfPolygon(polyPoints));
+    setHecres(geolib.convertArea(area, "ha").toFixed(3));
     // Unsubscribe
   };
 
@@ -138,17 +122,29 @@ const Fields = () => {
           strokeWidth={4}
         />
       </MapView>
+      <View style={styles.distanceView}>
+        <Text>Perimeter: {distance}m</Text>
+        <Text>Area: {hecres}ha</Text>
+      </View>
       {showActionBox && (
         <Animatable.View
           animation='fadeInUp'
           duration={300}
           style={styles.actionBox}
         >
-          <TouchableOpacity activeOpacity={0.6} style={styles.boxItem}>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={styles.boxItem}
+            onPress={sub}
+          >
             <Text>Start Geo Fencing</Text>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.6} style={styles.boxItem}>
-            <Text>To Do & Calender</Text>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={styles.boxItem}
+            onPress={unsub}
+          >
+            <Text>Stop Geo Fencing</Text>
           </TouchableOpacity>
         </Animatable.View>
       )}
@@ -191,7 +187,7 @@ const styles = StyleSheet.create({
   iconView: {
     position: "absolute",
     bottom: 50,
-    right: 40,
+    right: 20,
     backgroundColor: COLORS.background,
     width: 55,
     height: 55,
@@ -211,7 +207,7 @@ const styles = StyleSheet.create({
   actionBox: {
     position: "absolute",
     bottom: 110,
-    right: 40,
+    right: 20,
     backgroundColor: COLORS.background,
     alignItems: "center",
     justifyContent: "center",
@@ -228,5 +224,26 @@ const styles = StyleSheet.create({
   },
   boxItem: {
     padding: 12,
+  },
+  distanceView: {
+    position: "absolute",
+    top: 60,
+    right: 20,
+    left: 20,
+    backgroundColor: COLORS.background,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+
+    elevation: 2,
+    borderRadius: 6,
+    width: "90%",
+    height: 50,
   },
 });

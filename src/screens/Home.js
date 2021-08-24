@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   ImageBackground,
+  ActivityIndicator,
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import Toast from "react-native-toast-message";
@@ -16,8 +17,8 @@ import box1 from "../assets/images/box1.png";
 import box2 from "../assets/images/box2.png";
 import box3 from "../assets/images/box3.png";
 import box4 from "../assets/images/box4.png";
-import { useSelector } from "react-redux";
-import { userSelector } from "../redux/features/userSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { getDashboard, userSelector } from "../redux/features/userSlice";
 import {
   ACTIVITIES_SCREEN,
   CREATE_FARMS_SCREEN,
@@ -79,7 +80,9 @@ const actions = [
 
 const Home = ({ navigation }) => {
   const { navigate } = navigation;
-  const { user, message } = useSelector(userSelector);
+  const dispatch = useDispatch();
+  const { user, message, error, loading, dashboard } =
+    useSelector(userSelector);
 
   useEffect(() => {
     message &&
@@ -90,6 +93,36 @@ const Home = ({ navigation }) => {
         topOffset: 40,
       });
   }, [message]);
+
+  useEffect(() => {
+    error &&
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error,
+        topOffset: 40,
+      });
+  }, [error]);
+
+  // ========= Fetch Dashboard ==========
+  useEffect(() => {
+    dispatch(getDashboard());
+  }, [dispatch]);
+
+  if (loading) {
+    return (
+      <View
+        style={{
+          width: "100%",
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <ActivityIndicator size='large' color={COLORS.primary} />
+      </View>
+    );
+  }
 
   return (
     <Wrapper style={styles.container}>
