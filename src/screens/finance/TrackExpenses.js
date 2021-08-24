@@ -4,6 +4,27 @@ import { ScaledSheet } from "react-native-size-matters";
 import Wrapper from "../../components/Wrapper";
 import { COLORS } from "../../constants/theme";
 
+const data = [
+  {
+    id: "1",
+    activity: "weeding",
+    budget: "N700,000.00",
+    actual: "N8500,000.00",
+  },
+  {
+    id: "2",
+    activity: "Watering",
+    budget: "N700,000.00",
+    actual: "N8500,000.00",
+  },
+  {
+    id: "3",
+    activity: "Rigging",
+    budget: "N700,000.00",
+    actual: "N8500,000.00",
+  },
+];
+
 const TrackExpenses = ({ navigation }) => {
   return (
     <Wrapper>
@@ -27,7 +48,27 @@ const TrackExpenses = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.headerTxt}>Expenses</Text>
+        <Text style={styles.headerTxt}>Track Expenses</Text>
+
+        {/* ======= Table View ======== */}
+        <View style={styles.tableView}>
+          <View style={styles.tableHead}>
+            <Text style={styles.headTxt}>Activity</Text>
+            <Text style={styles.headTxt}>Budgeted</Text>
+            <Text style={styles.headTxt}>Actual</Text>
+          </View>
+
+          {/* ========= table Items ======= */}
+          {data.map((item) => {
+            return (
+              <View style={styles.tableRow} key={item.id}>
+                <Text style={styles.rowTxt}>{item.activity}</Text>
+                <Text style={styles.rowTxt}>{item.budget}</Text>
+                <Text style={styles.rowTxt}>{item.actual}</Text>
+              </View>
+            );
+          })}
+        </View>
       </ScrollView>
     </Wrapper>
   );
@@ -63,5 +104,31 @@ const styles = ScaledSheet.create({
     fontWeight: "500",
     fontFamily: "Poppins-Regular",
     marginTop: "20@vs",
+  },
+  tableView: {
+    borderRadius: 4,
+    width: "100%",
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    marginTop: "15@vs",
+  },
+  tableHead: {
+    flexDirection: "row",
+    backgroundColor: COLORS.surface,
+    padding: "12@ms",
+  },
+  headTxt: {
+    flex: 1,
+  },
+  tableRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  rowTxt: {
+    flex: 1,
+    borderWidth: 1,
+    padding: "10@ms",
+    fontSize: "12@ms",
+    borderColor: COLORS.border,
   },
 });
