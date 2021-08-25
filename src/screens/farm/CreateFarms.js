@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -10,8 +10,76 @@ import {
 import { ScaledSheet } from "react-native-size-matters";
 import Wrapper from "../../components/Wrapper";
 import { COLORS } from "../../constants/theme";
+import * as Animatable from "react-native-animatable";
+import { useDispatch, useSelector } from "react-redux";
+import { farmSelector, fetchCountries } from "../../redux/features/farmSlice";
+
+const sizes = [
+  {
+    id: "1",
+    name: "sqm (square meters)",
+  },
+  {
+    id: "2",
+    name: "sqkm (square kilometers)",
+  },
+  {
+    id: "3",
+    name: "ha (hectares)",
+  },
+  {
+    id: "4",
+    name: "sqft (square feet)",
+  },
+];
+
+const ownerships = [
+  {
+    id: "1",
+    name: "owned",
+  },
+  {
+    id: "2",
+    name: "rented",
+  },
+];
 
 const CreateFarms = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const { countries } = useSelector(farmSelector);
+  const [showSizePicker, setShowSize] = useState(false);
+  const [showOwnerPicker, setShowOwner] = useState(false);
+  const [name, setName] = useState("");
+  const [size, setSize] = useState("");
+  const [size_unit, setUnit] = useState("Size Unit");
+  const [loaction, setLocation] = useState("");
+  const [ownership, setOwnership] = useState("Ownership");
+  const [coordinates, setCoordinates] = useState([]);
+  const [lga_id, setLGA] = useState("");
+  const [state_id, setState] = useState("");
+
+  // ======== Country Picker ==========
+  const [country_id, setCountry] = useState("Country");
+  const [countryVisible, setCountryVisible] = useState(false);
+
+  const onShowCountryPicker = () => {
+    setCountryVisible(true);
+  };
+
+  const onSelectCountry = (item) => {
+    setCountry(item.label);
+    setCountryVisible(false);
+  };
+
+  const onCancelCountry = () => {
+    setCountryVisible(false);
+  };
+
+  //   ======= Fetch Countries ======
+  useEffect(() => {
+    dispatch(fetchCountries());
+  }, [dispatch]);
+
   return (
     <Wrapper>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -45,25 +113,116 @@ const CreateFarms = ({ navigation }) => {
               placeholder='Field Name'
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
+              value={name}
+              onChangeText={(val) => setName(val)}
             />
 
-            {/* ========== Size ========= */}
-            <TouchableOpacity activeOpacity={0.4} style={styles.dropBtn}>
-              <Text style={styles.dropTxt}>Size</Text>
-              <Image
-                source={require("../../assets/icons/drop-icon.png")}
-                style={styles.dropIcon}
-              />
-            </TouchableOpacity>
+            {/* ======== Size ========== */}
+            <TextInput
+              placeholder='Size'
+              style={styles.input}
+              placeholderTextColor={COLORS.text_grey}
+              value={size}
+              onChangeText={(val) => setSize(val)}
+            />
+
+            {/* ========== Size Unit ========= */}
+            <View>
+              <TouchableOpacity
+                activeOpacity={0.4}
+                style={styles.dropBtn}
+                onPress={() => setShowSize(!showSizePicker)}
+              >
+                <Text style={styles.dropTxt}>{size_unit}</Text>
+                <Image
+                  source={require("../../assets/icons/drop-icon.png")}
+                  style={styles.dropIcon}
+                />
+              </TouchableOpacity>
+              {showSizePicker && (
+                <Animatable.View style={styles.sizePicker} animation='fadeIn'>
+                  {sizes.map((item) => {
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={0.6}
+                        key={item.id}
+                        style={styles.size}
+                        onPress={() => {
+                          setUnit(item.name);
+                          setShowSize(false);
+                        }}
+                      >
+                        <Text>{item.name}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </Animatable.View>
+              )}
+            </View>
 
             {/* ========== Ownership ========= */}
-            <TouchableOpacity activeOpacity={0.4} style={styles.dropBtn}>
-              <Text style={styles.dropTxt}>Ownership</Text>
+            <TouchableOpacity
+              activeOpacity={0.4}
+              style={styles.dropBtn}
+              onPress={() => setShowOwner(!showOwnerPicker)}
+            >
+              <Text style={styles.dropTxt}>{ownership}</Text>
               <Image
                 source={require("../../assets/icons/drop-icon.png")}
                 style={styles.dropIcon}
               />
             </TouchableOpacity>
+            {showOwnerPicker && (
+              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
+                {ownerships.map((item) => {
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      key={item.id}
+                      style={styles.size}
+                      onPress={() => {
+                        setOwnership(item.name);
+                        setShowOwner(false);
+                      }}
+                    >
+                      <Text>{item.name}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </Animatable.View>
+            )}
+
+            {/* ========== Country ========= */}
+            <TouchableOpacity
+              activeOpacity={0.4}
+              style={styles.dropBtn}
+              onPress={onShowCountryPicker}
+            >
+              <Text style={styles.dropTxt}>Country</Text>
+              <Image
+                source={require("../../assets/icons/drop-icon.png")}
+                style={styles.dropIcon}
+              />
+            </TouchableOpacity>
+            <ModalFilterPicker
+              visible={countryVisible}
+              onSelect={onSelectCountry}
+              onCancel={onCancelCountry}
+              options={countriesArray}
+              listContainerStyle={{
+                backgroundColor: "#fff",
+                width: "90%",
+                marginTop: 100,
+                marginBottom: 20,
+                height: "60%",
+                borderRadius: 10,
+              }}
+              optionTextStyle={styles.optionTextStyle}
+              filterTextInputStyle={styles.fontModalStyle}
+              cancelButtonTextStyle={styles.cancelButtonTextStyle}
+              cancelButtonStyle={styles.cancelButtonStyle}
+              overlayStyle={styles.overlay}
+            />
 
             {/* ========== Location ========= */}
             <TouchableOpacity activeOpacity={0.4} style={styles.dropBtn}>
@@ -80,32 +239,6 @@ const CreateFarms = ({ navigation }) => {
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
             />
-
-            {/* ========== Crop type ========= */}
-            <TouchableOpacity activeOpacity={0.4} style={styles.dropBtn}>
-              <Text style={styles.dropTxt}>Crop Type</Text>
-              <Image
-                source={require("../../assets/icons/drop-icon.png")}
-                style={styles.dropIcon}
-              />
-            </TouchableOpacity>
-
-            {/* ======== Quantity========== */}
-            <TextInput
-              placeholder='Quantity Bought'
-              style={styles.input}
-              placeholderTextColor={COLORS.text_grey}
-            />
-
-            {/* ======== Description ========== */}
-            <TextInput
-              placeholder='Description...'
-              style={styles.inputDesc}
-              multiline
-              placeholderTextColor={COLORS.text_grey}
-            />
-
-            {/* ========= Buttons ======== */}
             <View style={styles.btnView}>
               <TouchableOpacity activeOpacity={0.6} style={styles.createBtn}>
                 <Text style={styles.createTxt}>Create</Text>
@@ -242,5 +375,49 @@ const styles = ScaledSheet.create({
     fontWeight: "500",
     fontFamily: "Poppins-Regular",
     color: COLORS.primary,
+  },
+  sizePicker: {
+    width: "100%",
+    backgroundColor: COLORS.background,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    marginTop: 5,
+    borderRadius: 4,
+    zIndex: 10000,
+  },
+  size: {
+    padding: "6@ms",
+  },
+  fontModalStyle: {
+    fontSize: 16,
+    padding: 15,
+  },
+  optionTextStyle: {
+    fontSize: 16,
+    paddingVertical: 13,
+    paddingHorizontal: 10,
+    alignContent: "flex-start",
+    textAlign: "left",
+    fontFamily: "CircularStd-Book",
+    width: "100%",
+  },
+  cancelButtonStyle: {
+    backgroundColor: "red",
+    paddingVertical: 10,
+    paddingHorizontal: 40,
+    borderRadius: 10,
+  },
+  cancelButtonTextStyle: {
+    color: "#fff",
+  },
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0,0,0,0.1)",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

@@ -39,6 +39,7 @@
     "react-native-location": "^2.5.0",
     "react-native-maps": "^0.28.0",
     "react-native-maps-directions": "^1.8.0",
+    "react-native-modal-filter-picker": "^2.0.0",
     "react-native-pager-view": "^5.4.0",
     "react-native-paper": "^4.9.2",
     "react-native-pie": "^1.1.2",

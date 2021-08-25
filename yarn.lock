@@ -6071,6 +6071,11 @@ react-native-maps@^0.28.0:
   dependencies:
     "@types/geojson" "^7946.0.7"
 
+react-native-modal-filter-picker@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-modal-filter-picker/-/react-native-modal-filter-picker-2.0.0.tgz#43614990d3026a3b8b8bea803131836b7d3b3cfc"
+  integrity sha512-QioTeGSL53A0q4mJsaahJaXIdxbvTIXdyIn9WEfwRoTldhZtp6L/8ZmxLMiRKvt2qUCA4BIus9eMfSaqGkm5WQ==
+
 react-native-pager-view@^5.4.0:
   version "5.4.0"
   resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-5.4.0.tgz#8e30a391a68da26e59f4ae724341b9208924b2ee"
