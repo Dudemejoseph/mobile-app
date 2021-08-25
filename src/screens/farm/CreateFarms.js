@@ -12,7 +12,12 @@ import Wrapper from "../../components/Wrapper";
 import { COLORS } from "../../constants/theme";
 import * as Animatable from "react-native-animatable";
 import { useDispatch, useSelector } from "react-redux";
-import { farmSelector, fetchCountries } from "../../redux/features/farmSlice";
+import {
+  createFarm,
+  farmSelector,
+  fetchCountries,
+  fetchStates,
+} from "../../redux/features/farmSlice";
 
 const sizes = [
   {
@@ -46,39 +51,46 @@ const ownerships = [
 
 const CreateFarms = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { countries } = useSelector(farmSelector);
+  const { states } = useSelector(farmSelector);
+  const [lgas, setLGAS] = useState([]);
+  const [selectedLGA, setSelectedLGA] = useState("LGA");
+  const [selectedState, setSelectedState] = useState("State");
   const [showSizePicker, setShowSize] = useState(false);
   const [showOwnerPicker, setShowOwner] = useState(false);
+  const [showStatesPicker, setShowStates] = useState(false);
+  const [showLGAPicker, setShowLGAPicker] = useState(false);
   const [name, setName] = useState("");
   const [size, setSize] = useState("");
   const [size_unit, setUnit] = useState("Size Unit");
-  const [loaction, setLocation] = useState("");
+  const [location, setLocation] = useState("");
   const [ownership, setOwnership] = useState("Ownership");
-  const [coordinates, setCoordinates] = useState([]);
+  const [coordinates, setCoordinates] = useState("");
+  const [country_id, setCountry] = useState(161);
   const [lga_id, setLGA] = useState("");
-  const [state_id, setState] = useState("");
-
-  // ======== Country Picker ==========
-  const [country_id, setCountry] = useState("Country");
-  const [countryVisible, setCountryVisible] = useState(false);
-
-  const onShowCountryPicker = () => {
-    setCountryVisible(true);
-  };
-
-  const onSelectCountry = (item) => {
-    setCountry(item.label);
-    setCountryVisible(false);
-  };
-
-  const onCancelCountry = () => {
-    setCountryVisible(false);
-  };
+  const [state_id, setStateID] = useState("");
 
   //   ======= Fetch Countries ======
   useEffect(() => {
     dispatch(fetchCountries());
+    dispatch(fetchStates());
   }, [dispatch]);
+
+  const submitFarmData = () => {
+    const data = {
+      name,
+      size,
+      size_unit,
+      location,
+      location_type: "address",
+      ownership,
+      coordinates,
+      country_id,
+      state_id,
+      lga_id,
+      crop_id: 1,
+    };
+    dispatch(createFarm(data));
+  };
 
   return (
     <Wrapper>
@@ -192,55 +204,89 @@ const CreateFarms = ({ navigation }) => {
               </Animatable.View>
             )}
 
-            {/* ========== Country ========= */}
+            {/* ========== States ========= */}
             <TouchableOpacity
               activeOpacity={0.4}
               style={styles.dropBtn}
-              onPress={onShowCountryPicker}
+              onPress={() => setShowStates(!showStatesPicker)}
             >
-              <Text style={styles.dropTxt}>Country</Text>
+              <Text style={styles.dropTxt}>{selectedState}</Text>
               <Image
                 source={require("../../assets/icons/drop-icon.png")}
                 style={styles.dropIcon}
               />
             </TouchableOpacity>
-            <ModalFilterPicker
-              visible={countryVisible}
-              onSelect={onSelectCountry}
-              onCancel={onCancelCountry}
-              options={countriesArray}
-              listContainerStyle={{
-                backgroundColor: "#fff",
-                width: "90%",
-                marginTop: 100,
-                marginBottom: 20,
-                height: "60%",
-                borderRadius: 10,
-              }}
-              optionTextStyle={styles.optionTextStyle}
-              filterTextInputStyle={styles.fontModalStyle}
-              cancelButtonTextStyle={styles.cancelButtonTextStyle}
-              cancelButtonStyle={styles.cancelButtonStyle}
-              overlayStyle={styles.overlay}
-            />
+            {showStatesPicker && (
+              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
+                {states.map((item) => {
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      key={item.id}
+                      style={styles.size}
+                      onPress={() => {
+                        setStateID(item.id);
+                        setLGAS(item.lgas);
+                        setSelectedState(item.name);
+                        setShowStates(false);
+                      }}
+                    >
+                      <Text>{item.name}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </Animatable.View>
+            )}
 
-            {/* ========== Location ========= */}
-            <TouchableOpacity activeOpacity={0.4} style={styles.dropBtn}>
-              <Text style={styles.dropTxt}>Location</Text>
-              <Image
-                source={require("../../assets/icons/drop-icon.png")}
-                style={styles.dropIcon}
-              />
-            </TouchableOpacity>
+            {/* ========== LGAs ========= */}
+            {lgas.length > 0 && (
+              <TouchableOpacity
+                activeOpacity={0.4}
+                style={styles.dropBtn}
+                onPress={() => setShowLGAPicker(!showLGAPicker)}
+              >
+                <Text style={styles.dropTxt}>{selectedLGA}</Text>
+                <Image
+                  source={require("../../assets/icons/drop-icon.png")}
+                  style={styles.dropIcon}
+                />
+              </TouchableOpacity>
+            )}
+            {showLGAPicker && (
+              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
+                {lgas.map((item) => {
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      key={item.id}
+                      style={styles.size}
+                      onPress={() => {
+                        setLGA(item.id);
+                        setSelectedLGA(item.name);
+                        setShowLGAPicker(false);
+                      }}
+                    >
+                      <Text>{item.name}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </Animatable.View>
+            )}
 
             {/* ======== Address ========== */}
             <TextInput
               placeholder='Address'
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
+              value={location}
+              onChangeText={(val) => setLocation(val)}
             />
             <View style={styles.btnView}>
-              <TouchableOpacity activeOpacity={0.6} style={styles.createBtn}>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                style={styles.createBtn}
+                onPress={submitFarmData}
+              >
                 <Text style={styles.createTxt}>Create</Text>
               </TouchableOpacity>
               <TouchableOpacity activeOpacity={0.6} style={styles.cancelBtn}>
@@ -387,37 +433,5 @@ const styles = ScaledSheet.create({
   },
   size: {
     padding: "6@ms",
-  },
-  fontModalStyle: {
-    fontSize: 16,
-    padding: 15,
-  },
-  optionTextStyle: {
-    fontSize: 16,
-    paddingVertical: 13,
-    paddingHorizontal: 10,
-    alignContent: "flex-start",
-    textAlign: "left",
-    fontFamily: "CircularStd-Book",
-    width: "100%",
-  },
-  cancelButtonStyle: {
-    backgroundColor: "red",
-    paddingVertical: 10,
-    paddingHorizontal: 40,
-    borderRadius: 10,
-  },
-  cancelButtonTextStyle: {
-    color: "#fff",
-  },
-  overlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0,0,0,0.1)",
-    justifyContent: "center",
-    alignItems: "center",
   },
 });
