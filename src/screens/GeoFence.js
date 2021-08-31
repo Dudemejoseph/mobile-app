@@ -11,7 +11,6 @@ import MapView, {
 } from "react-native-maps";
 import RNLocation from "react-native-location";
 import { COLORS } from "../constants/theme";
-import { getDistanceCovered } from "../utils/getDistance";
 import * as Animatable from "react-native-animatable";
 
 const GeoFence = () => {
@@ -227,7 +226,7 @@ const styles = StyleSheet.create({
   },
   distanceView: {
     position: "absolute",
-    top: 60,
+    top: 40,
     right: 20,
     left: 20,
     backgroundColor: COLORS.background,

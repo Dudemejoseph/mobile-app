@@ -1,38 +1,34 @@
 import React, { useState } from "react";
 import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import Wrapper from "../components/Wrapper";
-import {
-  ACTIVITIES_SCREEN,
-  GEO_FENCING_SCREEN,
-  SELECT_CROP_SCREEN,
-} from "../constants/routeNames";
-import { COLORS } from "../constants/theme";
+import Wrapper from "../../components/Wrapper";
+import { SELECT_CROP_SCREEN } from "../../constants/routeNames";
+import { COLORS } from "../../constants/theme";
 
 const farms = [
   {
     id: "1",
-    name: "Field One",
+    name: "Maize",
   },
   {
     id: "2",
-    name: "Field Two",
+    name: "Plantain",
   },
   {
     id: "3",
-    name: "Field Three",
+    name: "Cassava",
   },
   {
     id: "4",
-    name: "Field Four",
+    name: "Tomatoes",
   },
   {
     id: "5",
-    name: "Field Four",
+    name: "Onions",
   },
 ];
 
-const Fields = ({ navigation }) => {
+const SelectCrop = ({ navigation }) => {
   const [showMenu, setShowMenu] = useState(false);
   return (
     <Wrapper>
@@ -44,23 +40,23 @@ const Fields = ({ navigation }) => {
             onPress={() => navigation.goBack()}
           >
             <Image
-              source={require("../assets/icons/back-arrow.png")}
+              source={require("../../assets/icons/back-arrow.png")}
               style={styles.backIcon}
             />
           </TouchableOpacity>
           <TouchableOpacity>
             <Image
-              source={require("../assets/icons/bell-icon.png")}
+              source={require("../../assets/icons/bell-icon.png")}
               style={styles.bellIcon}
             />
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.headerTxt}>List of Farms</Text>
+        <Text style={styles.headerTxt}>Select Crops</Text>
 
         {/* ======= Log In Activities ========= */}
         <View style={styles.formView}>
-          <Text style={styles.headTxt}>Farms</Text>
+          <Text style={styles.headTxt}>Crops</Text>
           <View style={styles.farms}>
             {farms.map((item) => {
               return (
@@ -73,7 +69,7 @@ const Fields = ({ navigation }) => {
                     }}
                   >
                     <Image
-                      source={require("../assets/icons/menu-icon.png")}
+                      source={require("../../assets/icons/menu-icon.png")}
                       style={styles.menuIcon}
                     />
                   </TouchableOpacity>
@@ -85,29 +81,10 @@ const Fields = ({ navigation }) => {
                 <TouchableOpacity
                   activeOpacity={0.6}
                   onPress={() => {
-                    navigation.navigate(SELECT_CROP_SCREEN);
                     setShowMenu(false);
                   }}
                 >
-                  <Text style={styles.menuTxt}>Select Crop</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  activeOpacity={0.6}
-                  onPress={() => {
-                    navigation.navigate(GEO_FENCING_SCREEN);
-                    setShowMenu(false);
-                  }}
-                >
-                  <Text style={styles.menuTxt}>Start Geo Fencing</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  activeOpacity={0.6}
-                  onPress={() => {
-                    navigation.navigate(ACTIVITIES_SCREEN);
-                    setShowMenu(false);
-                  }}
-                >
-                  <Text style={styles.menuTxt}>Start Activity</Text>
+                  <Text style={styles.menuTxt}>Add To Field</Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -118,7 +95,7 @@ const Fields = ({ navigation }) => {
   );
 };
 
-export default Fields;
+export default SelectCrop;
 
 const styles = ScaledSheet.create({
   container: {

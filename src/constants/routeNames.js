@@ -9,4 +9,5 @@ export const TRACK_EXPENSES_SCREEN = "Track-Expenses";
 export const INVENTORY_SCREEN = "Inventory";
 export const EMERGENCY_SCREEN = "Emergency";
 export const GENERATE_REPORT_SCREEN = "Generate-Report";
-export const GEO_FENCING_SCREEN = "GeoFencing";
+export const GEO_FENCING_SCREEN = "Geo-Fencing";
+export const SELECT_CROP_SCREEN = "Select-Crop";
