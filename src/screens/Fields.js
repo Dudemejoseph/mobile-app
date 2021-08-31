@@ -1,249 +1,179 @@
-import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native";
+import React, { useState } from "react";
+import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import Wrapper from "../components/Wrapper";
-import * as geolib from "geolib";
-import MapView, {
-  PROVIDER_GOOGLE,
-  Marker,
-  Polygon,
-  Polyline,
-} from "react-native-maps";
-import RNLocation from "react-native-location";
 import { COLORS } from "../constants/theme";
-import { getDistanceCovered } from "../utils/getDistance";
-import * as Animatable from "react-native-animatable";
 
-const Fields = () => {
-  const [lat, setLat] = useState(37.78825);
-  const [lng, setLng] = useState(-122.4324);
-  const [coordinates, setCoords] = useState([]);
-  const [trackEnabled, setEnabled] = useState(false);
-  const [distance, setDistance] = useState(0);
-  const [area, setArea] = useState(0);
-  const [hecres, setHecres] = useState(0);
-  const [history, setHistory] = useState([]);
-  const [showActionBox, setShowActionBox] = useState(false);
+const farms = [
+  {
+    id: "1",
+    name: "Field One",
+  },
+  {
+    id: "2",
+    name: "Field Two",
+  },
+  {
+    id: "3",
+    name: "Field Three",
+  },
+  {
+    id: "4",
+    name: "Field Four",
+  },
+  {
+    id: "5",
+    name: "Field Four",
+  },
+];
 
-  let polyPoints = coordinates.map(function (obj) {
-    return Object.keys(obj)
-      .sort()
-      .map(function (key) {
-        return obj[key];
-      });
-  });
-
-  RNLocation.configure({
-    distanceFilter: 10, // Meters
-    desiredAccuracy: {
-      ios: "best",
-      android: "balancedPowerAccuracy",
-    },
-    // Android only
-    androidProvider: "auto",
-    interval: 5000, // Milliseconds
-    fastestInterval: 5000, // Milliseconds
-    maxWaitTime: 5000, // Milliseconds
-    // iOS Only
-    activityType: "other",
-    allowsBackgroundLocationUpdates: false,
-    headingFilter: 1, // Degrees
-    headingOrientation: "portrait",
-    pausesLocationUpdatesAutomatically: false,
-    showsBackgroundLocationIndicator: false,
-  });
-
-  RNLocation.requestPermission({
-    ios: "whenInUse", // or 'always'
-    android: {
-      detail: "coarse", // or 'fine'
-      rationale: {
-        title: "We need to access your location",
-        message: "We use your location to show where you are on the map",
-        buttonPositive: "OK",
-        buttonNegative: "Cancel",
-      },
-    },
-  });
-
-  useEffect(() => {
-    if (trackEnabled) {
-      RNLocation.subscribeToLocationUpdates((location) => {
-        const coords = location[0];
-        setLat(coords.latitude);
-        setLng(coords.longitude);
-        setCoords((prev) => [
-          ...prev,
-          { latitude: coords.latitude, longitude: coords.longitude },
-        ]);
-      });
-    } else return null;
-  }, [trackEnabled]);
-
-  const sub = () => {
-    setEnabled(true);
-  };
-
-  const unsub = () => {
-    setEnabled(false);
-    // Subscribe
-    setDistance(geolib.getPathLength(coordinates, geolib.getDistance));
-    setArea(geolib.getAreaOfPolygon(polyPoints));
-    setHecres(geolib.convertArea(area, "ha").toFixed(3));
-    // Unsubscribe
-  };
-
-  const unsubscribe = RNLocation.subscribeToPermissionUpdates(
-    (currentPermission) => {
-      console.log(currentPermission);
-    }
-  );
-
+const Fields = ({ navigation }) => {
+  const [showMenu, setShowMenu] = useState(false);
   return (
-    <View style={styles.container}>
-      <MapView
-        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-        style={styles.map}
-        region={{
-          latitude: lat,
-          longitude: lng,
-          latitudeDelta: 0.015,
-          longitudeDelta: 0.0121,
-        }}
-        showsUserLocation
-        zoomEnabled
-        zoomControlEnabled={true}
-        maxZoomLevel={50}
-      >
-        <Polyline
-          coordinates={coordinates}
-          strokeColor={COLORS.primary}
-          fillColor={COLORS.primary}
-          strokeWidth={4}
-        />
-      </MapView>
-      <View style={styles.distanceView}>
-        <Text>Perimeter: {distance}m</Text>
-        <Text>Area: {hecres}ha</Text>
-      </View>
-      {showActionBox && (
-        <Animatable.View
-          animation='fadeInUp'
-          duration={300}
-          style={styles.actionBox}
-        >
+    <Wrapper>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* ========= Header View ========= */}
+        <View style={styles.headerView}>
           <TouchableOpacity
             activeOpacity={0.6}
-            style={styles.boxItem}
-            onPress={sub}
+            onPress={() => navigation.goBack()}
           >
-            <Text>Start Geo Fencing</Text>
+            <Image
+              source={require("../assets/icons/back-arrow.png")}
+              style={styles.backIcon}
+            />
           </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.6}
-            style={styles.boxItem}
-            onPress={unsub}
-          >
-            <Text>Stop Geo Fencing</Text>
+          <TouchableOpacity>
+            <Image
+              source={require("../assets/icons/bell-icon.png")}
+              style={styles.bellIcon}
+            />
           </TouchableOpacity>
-        </Animatable.View>
-      )}
+        </View>
 
-      <TouchableOpacity
-        activeOpacity={0.6}
-        style={styles.iconView}
-        onPress={() => setShowActionBox(!showActionBox)}
-      >
-        {!showActionBox ? (
-          <Image
-            source={require("../assets/icons/plus-icon.png")}
-            style={styles.icon}
-          />
-        ) : (
-          <Image
-            source={require("../assets/icons/close-icon.png")}
-            style={styles.icon}
-          />
-        )}
-      </TouchableOpacity>
-    </View>
+        <Text style={styles.headerTxt}>List of Farms</Text>
+
+        {/* ======= Log In Activities ========= */}
+        <View style={styles.formView}>
+          <Text style={styles.headTxt}>Farms</Text>
+          <View style={styles.farms}>
+            {farms.map((item) => {
+              return (
+                <View key={item.id} style={styles.field}>
+                  <Text style={styles.fieldTxt}>{item.name}</Text>
+                  <TouchableOpacity
+                    activeOpacity={0.6}
+                    onPress={() => {
+                      setShowMenu(!showMenu);
+                    }}
+                  >
+                    <Image
+                      source={require("../assets/icons/menu-icon.png")}
+                      style={styles.menuIcon}
+                    />
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
+            {showMenu && (
+              <View style={styles.menu}>
+                <TouchableOpacity activeOpacity={0.6}>
+                  <Text style={styles.menuTxt}>Select Crop</Text>
+                  <Text style={styles.menuTxt}>Start Geo Fencing</Text>
+                  <Text style={styles.menuTxt}>Start Activity</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+        </View>
+      </ScrollView>
+    </Wrapper>
   );
 };
 
 export default Fields;
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject,
+    width: "100%",
+    backgroundColor: COLORS.background,
+    flex: 1,
   },
-  map: {
-    ...StyleSheet.absoluteFillObject,
+  headerView: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
-  icon: {
-    width: 30,
-    height: 30,
+  bellIcon: {
+    width: "24@ms",
+    height: "24@ms",
     resizeMode: "contain",
   },
-  iconView: {
-    position: "absolute",
-    bottom: 50,
-    right: 20,
-    backgroundColor: COLORS.background,
-    width: 55,
-    height: 55,
-    borderRadius: 55,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-
-    elevation: 2,
+  backIcon: {
+    width: "24@ms",
+    height: "24@ms",
+    resizeMode: "contain",
   },
-  actionBox: {
-    position: "absolute",
-    bottom: 110,
-    right: 20,
-    backgroundColor: COLORS.background,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
 
-    elevation: 2,
+  headerTxt: {
+    fontSize: "18@ms",
+    fontWeight: "500",
+    fontFamily: "Poppins-Regular",
+    marginTop: "20@vs",
+  },
+  formView: {
+    width: "100%",
+    marginTop: "20@ms",
+    borderTopRightRadius: 8,
+    borderTopLeftRadius: 8,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+
+  headTxt: {
+    fontWeight: "500",
+    fontSize: "14@ms",
+    fontFamily: "Poppins-Regular",
+    padding: "12@ms",
+    backgroundColor: COLORS.surface,
+    borderTopRightRadius: 8,
+    borderTopLeftRadius: 8,
+  },
+  farm: {
+    width: "100%",
+    padding: "14@ms",
+  },
+  menuIcon: {
+    width: "25@ms",
+    height: "25@ms",
+    resizeMode: "contain",
+  },
+  field: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: "12@ms",
+    borderTopWidth: 1,
+    borderColor: COLORS.border,
+    position: "relative",
+  },
+  fieldTxt: {
+    fontFamily: "Poppins-Regular",
+  },
+  menuTxt: {
+    fontFamily: "Poppins-Regular",
+    padding: "10@ms",
+  },
+  menu: {
+    backgroundColor: COLORS.background,
     borderRadius: 6,
-  },
-  boxItem: {
-    padding: 12,
-  },
-  distanceView: {
     position: "absolute",
-    top: 60,
-    right: 20,
-    left: 20,
-    backgroundColor: COLORS.background,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-
+    top: "40@vs",
+    right: "20@ms",
+    borderWidth: 1,
+    borderColor: COLORS.border,
     elevation: 2,
-    borderRadius: 6,
-    width: "90%",
-    height: 50,
   },
 });
