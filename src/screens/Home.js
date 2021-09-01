@@ -23,6 +23,7 @@ import {
   ACTIVITIES_SCREEN,
   CREATE_FARMS_SCREEN,
   EMERGENCY_SCREEN,
+  GEO_FENCING_SCREEN,
   INVENTORY_SCREEN,
   TRACK_EXPENSES_SCREEN,
 } from "../constants/routeNames";
@@ -59,7 +60,7 @@ const actions = [
   {
     name: "Create Farms",
     image: box1,
-    route: CREATE_FARMS_SCREEN,
+    route: GEO_FENCING_SCREEN,
   },
   {
     name: "Activities",
