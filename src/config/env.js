@@ -1,7 +1,5 @@
-import { BASE_URL } from "@env";
-
 const envVariables = {
-  BASE_URL,
+  BASE_URL: 'https://api.farmmonitor.africa/v1',
 };
 
 export default envVariables;

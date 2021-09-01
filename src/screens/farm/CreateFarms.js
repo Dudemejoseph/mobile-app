@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  ActivityIndicator
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import Wrapper from "../../components/Wrapper";
@@ -18,6 +19,7 @@ import {
   fetchCountries,
   fetchStates,
 } from "../../redux/features/farmSlice";
+import Toast from "react-native-toast-message";
 
 const sizes = [
   {
@@ -51,7 +53,7 @@ const ownerships = [
 
 const CreateFarms = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { states } = useSelector(farmSelector);
+  const { states, loading, message, error } = useSelector(farmSelector);
   const [lgas, setLGAS] = useState([]);
   const [selectedLGA, setSelectedLGA] = useState("LGA");
   const [selectedState, setSelectedState] = useState("State");
@@ -68,6 +70,26 @@ const CreateFarms = ({ navigation }) => {
   const [country_id, setCountry] = useState(161);
   const [lga_id, setLGA] = useState("");
   const [state_id, setStateID] = useState("");
+
+  useEffect(() => {
+    message &&
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: message,
+        topOffset: 40,
+      });
+  }, [message]);
+
+  useEffect(() => {
+    error &&
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error,
+        topOffset: 40,
+      });
+  }, [error]);
 
   //   ======= Fetch Countries ======
   useEffect(() => {
@@ -287,7 +309,7 @@ const CreateFarms = ({ navigation }) => {
                 style={styles.createBtn}
                 onPress={submitFarmData}
               >
-                <Text style={styles.createTxt}>Create</Text>
+                {loading ? <ActivityIndicator color={COLORS.background} size='small' /> : <Text style={styles.createTxt}>Create</Text>}
               </TouchableOpacity>
               <TouchableOpacity activeOpacity={0.6} style={styles.cancelBtn}>
                 <Text style={styles.cancelTxt}>Cancel</Text>
@@ -433,5 +455,8 @@ const styles = ScaledSheet.create({
   },
   size: {
     padding: "6@ms",
+  },
+  spinner: {
+    color: COLORS.primary,
   },
 });

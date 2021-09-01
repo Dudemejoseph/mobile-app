@@ -1,10 +1,11 @@
-import React, { useContext } from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import AuthRoute from "./AuthStack";
 import HomeStack from "./HomeStack";
-import { useSelector } from "react-redux";
-import userSlice, { userSelector } from "../redux/features/userSlice";
+import { useSelector, useDispatch } from "react-redux";
+import userSlice, { persistUser, userSelector } from "../redux/features/userSlice";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const theme = {
   ...DefaultTheme,
@@ -15,7 +16,15 @@ const theme = {
 };
 
 const AppNavContainer = () => {
-  const { isAuthenticated } = useSelector(userSelector);
+  let dispatch = useDispatch();
+  useEffect(() => {
+    const persistUserProcess = async() => {
+      await dispatch(persistUser());
+    };
+    persistUserProcess();
+  }, [])
+
+  const { isAuthenticated} = useSelector(userSelector);
   return (
     <SafeAreaProvider>
       <NavigationContainer theme={theme}>

@@ -4,12 +4,10 @@ import envs from "../config/env";
 
 let headers = {};
 
-console.log(envs.BASE_URL);
-
 // Create an Instance
 const axiosInstance = axios.create({
   baseURL: envs.BASE_URL,
-  timeout: 15000,
+  // timeout: 15000,
   headers,
 });
 

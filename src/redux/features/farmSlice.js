@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../helpers/api";
-import ModalFilterPicker from "react-native-modal-filter-picker";
 
 const initialState = {
   loading: false,
@@ -8,6 +7,7 @@ const initialState = {
   message: null,
   countries: null,
   states: null,
+  farms: null,
   lga: null,
 };
 
@@ -36,10 +36,19 @@ const farmSlice = createSlice({
       state.lga = payload;
       state.loading = false;
     },
+    setFarms: (state, {payload}) => {
+      state.loading = false;
+      state.farms = payload;
+    },
+    createFarmSuccess: (state) => {
+      state.loading = false;
+      state.message = 'Farm created successfully';
+      state.error = null;
+    },
   },
 });
 
-export const { fetch, fetchFail, setCountries, setStates, setLGA } =
+export const { fetch, fetchFail, setCountries, setStates, setLGA, createFarmSuccess, setFarms } =
   farmSlice.actions;
 export default farmSlice.reducer;
 export const farmSelector = (state) => state.farm;
@@ -51,6 +60,7 @@ export const createFarm = (data) => {
     try {
       const res = await axiosInstance.post("/farms", data);
       console.log(res.data);
+      dispatch(createFarmSuccess());
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
     }
@@ -76,6 +86,20 @@ export const fetchStates = () => {
     try {
       const res = await axiosInstance.get("/utility/states/161");
       dispatch(setStates(res.data.states));
+    } catch (error) {
+      dispatch(fetchFail(error.response.data.message));
+      console.log(error);
+    }
+  };
+};
+
+// ========= Fetch Farms =========
+export const fetchFarms = () => {
+  return async (dispatch) => {
+    try {
+      dispatch(fetch());
+      const res = await axiosInstance.get("/farms");
+      dispatch(setFarms(res.data));
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
       console.log(error);

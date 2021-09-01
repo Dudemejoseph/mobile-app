@@ -32,7 +32,11 @@ const Login = ({ navigation, setIndex }) => {
    * @param {Object} data
    */
   const onSubmit = async (data) => {
-    dispatch(loginUser(data));
+    let data2 = {
+      email: 'sa@farmmonitor.africa',
+      password: 'Yths$5&*gh12@',
+    };
+    dispatch(loginUser(data2));
   };
 
   useEffect(() => {

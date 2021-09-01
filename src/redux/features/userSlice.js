@@ -6,6 +6,7 @@ const initialState = {
   loading: false,
   isAuthenticated: false,
   user: null,
+  users: null,
   dashboard: null,
   error: null,
   message: null,
@@ -42,6 +43,10 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = payload;
     },
+    setUsers: (state, {payload}) => {
+      state.loading = false;
+      state.users = payload;
+    },
     loggedOut: (state) => {
       state.loading = false;
       state.message = null;
@@ -59,6 +64,7 @@ export const {
   registerSuccess,
   loggedOut,
   setDashboard,
+  setUsers
 } = userSlice.actions;
 export default userSlice.reducer;
 export const userSelector = (state) => state.user;
@@ -69,16 +75,20 @@ export const userSelector = (state) => state.user;
  * @returns
  */
 export const loginUser = (data) => {
+  console.log(data);
   return async (dispatch) => {
     dispatch(fetch());
     try {
       const res = await axiosInstance.post("/auth/login", data);
       dispatch(loginSuccess(res.data.user));
       await AsyncStorage.setItem("@userToken", res?.data?.token);
-      console.log(res.data.token);
+      await AsyncStorage.setItem('@userData',JSON.stringify({userData: res?.data.user}));
     } catch (error) {
-      dispatch(fetchFail(error.response.data.message));
-      console.log(error);
+      if(error.message === 'Request failed with status code 422'){
+        dispatch(fetchFail('Invalid credentials'));
+        return;
+      }
+      dispatch(fetchFail(error.message));
     }
   };
 };
@@ -122,6 +132,29 @@ export const activateUser = (token) => {
 };
 
 /**
+ * Persist User
+ * @param {*} data
+ * @returns
+ */
+ export const persistUser = () => {
+  return async (dispatch) => {
+    dispatch(fetch());
+    try {
+      let userInfo;
+      userInfo = await AsyncStorage.getItem('@userData');
+      const transformedData = JSON.parse(userInfo);
+
+      if(transformedData){
+        dispatch(loginSuccess(transformedData.userData))
+      }
+    } catch (error) {
+      dispatch(fetchFail("Something went wrong, please try again"));
+      console.log(error.response.data.message);
+    }
+  };
+};
+
+/**
  * Fetch Dashboard
  * @returns
  */
@@ -132,6 +165,22 @@ export const getDashboard = () => {
       const res = await axiosInstance.get("/dashboard");
       dispatch(setDashboard(res.data));
       console.log(res.data);
+    } catch (error) {
+      dispatch(fetchFail(error.response.data.message));
+    }
+  };
+};
+
+/**
+ * Fetch Users
+ * @returns
+ */
+ export const fetchUsers = () => {
+  return async (dispatch) => {
+    dispatch(fetch());
+    try {
+      const res = await axiosInstance.get("/users");
+      dispatch(setUsers(res.data));
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
     }

@@ -1,8 +1,10 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
+import { useDispatch } from "react-redux";
 import Wrapper from "../../components/Wrapper";
 import { COLORS } from "../../constants/theme";
+import { fetchExpenses } from "../../redux/features/expenses";
 
 const data = [
   {
@@ -26,6 +28,14 @@ const data = [
 ];
 
 const TrackExpenses = ({ navigation }) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const fetchExpensesProcess = () => {
+      dispatch(fetchExpenses())
+    };
+    fetchExpensesProcess();
+  }, []);
+
   return (
     <Wrapper>
       <ScrollView showsVerticalScrollIndicator={false}>

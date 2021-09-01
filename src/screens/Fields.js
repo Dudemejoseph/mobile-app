@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Text, View, ScrollView, TouchableOpacity, Image, ActivityIndicator } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
+import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../components/Wrapper";
 import {
   ACTIVITIES_SCREEN,
@@ -8,8 +9,9 @@ import {
   SELECT_CROP_SCREEN,
 } from "../constants/routeNames";
 import { COLORS } from "../constants/theme";
+import { farmSelector, fetchFarms } from "../redux/features/farmSlice";
 
-const farms = [
+const farms2 = [
   {
     id: "1",
     name: "Field One",
@@ -33,7 +35,33 @@ const farms = [
 ];
 
 const Fields = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const { loading, farms } = useSelector(farmSelector);
+
+  useEffect(() => {
+    const fetchFarmsProcess = () => {
+      dispatch(fetchFarms());
+    };
+    fetchFarmsProcess();
+  }, []);
+
   const [showMenu, setShowMenu] = useState(false);
+
+  if (loading && !farms) {
+    return (
+      <View
+        style={{
+          width: "100%",
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <ActivityIndicator size='large' color={COLORS.primary} />
+      </View>
+    );
+  }
+
   return (
     <Wrapper>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -62,7 +90,7 @@ const Fields = ({ navigation }) => {
         <View style={styles.formView}>
           <Text style={styles.headTxt}>Farms</Text>
           <View style={styles.farms}>
-            {farms.map((item) => {
+            {farms && farms.result.data.map((item) => {
               return (
                 <View key={item.id} style={styles.field}>
                   <Text style={styles.fieldTxt}>{item.name}</Text>
