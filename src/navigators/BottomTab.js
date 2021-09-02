@@ -6,7 +6,7 @@ import Home from "../screens/Home";
 import Fields from "../screens/Fields";
 import Members from "../screens/Members";
 import Calender from "../screens/Calender";
-import Finance from "../screens/Finance";
+import Finance from "../screens/finance/Finance";
 
 const Tab = createBottomTabNavigator();
 
@@ -86,7 +86,7 @@ const BottomTab = () => {
         name='Calender'
         component={Calender}
         options={{
-          tabBarLabel: "Calender",
+          tabBarLabel: "Crop Calender",
           tabBarLabelStyle: { fontSize: 12, paddingBottom: 5 },
           tabBarIcon: ({ color }) => (
             <Image

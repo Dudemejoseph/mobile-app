@@ -8,10 +8,10 @@ import {
   TextInput,
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import Wrapper from "../components/Wrapper";
-import { COLORS } from "../constants/theme";
+import Wrapper from "../../components/Wrapper";
+import { COLORS } from "../../constants/theme";
 
-const Finance = ({ navigation }) => {
+const AddExpense = ({ navigation }) => {
   return (
     <Wrapper>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -22,29 +22,29 @@ const Finance = ({ navigation }) => {
             onPress={() => navigation.goBack()}
           >
             <Image
-              source={require("../assets/icons/back-arrow.png")}
+              source={require("../../assets/icons/back-arrow.png")}
               style={styles.backIcon}
             />
           </TouchableOpacity>
           <TouchableOpacity>
             <Image
-              source={require("../assets/icons/bell-icon.png")}
+              source={require("../../assets/icons/bell-icon.png")}
               style={styles.bellIcon}
             />
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.headerTxt}>Finance</Text>
+        <Text style={styles.headerTxt}>Add Expense</Text>
 
         {/* ======= Log In Activities ========= */}
         <View style={styles.formView}>
-          <Text style={styles.headTxt}>Report</Text>
+          <Text style={styles.headTxt}>Expense</Text>
           <View style={styles.form}>
             {/* ========== Fertilizer Application ========= */}
             <TouchableOpacity activeOpacity={0.4} style={styles.dropBtn}>
-              <Text style={styles.dropTxt}>Report Sales</Text>
+              <Text style={styles.dropTxt}>Expense</Text>
               <Image
-                source={require("../assets/icons/drop-icon.png")}
+                source={require("../../assets/icons/drop-icon.png")}
                 style={styles.dropIcon}
               />
             </TouchableOpacity>
@@ -53,7 +53,7 @@ const Finance = ({ navigation }) => {
             <TouchableOpacity activeOpacity={0.4} style={styles.dropBtn}>
               <Text style={styles.dropTxt}>Activity</Text>
               <Image
-                source={require("../assets/icons/drop-icon.png")}
+                source={require("../../assets/icons/drop-icon.png")}
                 style={styles.dropIcon}
               />
             </TouchableOpacity>
@@ -68,7 +68,7 @@ const Finance = ({ navigation }) => {
             {/* ========== Select Date ========= */}
             <TouchableOpacity activeOpacity={0.4} style={styles.dateBtn}>
               <Image
-                source={require("../assets/icons/calender-icon.png")}
+                source={require("../../assets/icons/calender-icon.png")}
                 style={styles.dateIcon}
               />
               <Text style={styles.dropTxt}>Select Date</Text>
@@ -95,7 +95,7 @@ const Finance = ({ navigation }) => {
   );
 };
 
-export default Finance;
+export default AddExpense;
 
 const styles = ScaledSheet.create({
   container: {

@@ -43,7 +43,7 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = payload;
     },
-    setUsers: (state, {payload}) => {
+    setUsers: (state, { payload }) => {
       state.loading = false;
       state.users = payload;
     },
@@ -64,7 +64,7 @@ export const {
   registerSuccess,
   loggedOut,
   setDashboard,
-  setUsers
+  setUsers,
 } = userSlice.actions;
 export default userSlice.reducer;
 export const userSelector = (state) => state.user;
@@ -82,10 +82,13 @@ export const loginUser = (data) => {
       const res = await axiosInstance.post("/auth/login", data);
       dispatch(loginSuccess(res.data.user));
       await AsyncStorage.setItem("@userToken", res?.data?.token);
-      await AsyncStorage.setItem('@userData',JSON.stringify({userData: res?.data.user}));
+      await AsyncStorage.setItem(
+        "@userData",
+        JSON.stringify({ userData: res?.data.user })
+      );
     } catch (error) {
-      if(error.message === 'Request failed with status code 422'){
-        dispatch(fetchFail('Invalid credentials'));
+      if (error.message === "Request failed with status code 422") {
+        dispatch(fetchFail("Invalid credentials"));
         return;
       }
       dispatch(fetchFail(error.message));
@@ -136,16 +139,16 @@ export const activateUser = (token) => {
  * @param {*} data
  * @returns
  */
- export const persistUser = () => {
+export const persistUser = () => {
   return async (dispatch) => {
     dispatch(fetch());
     try {
       let userInfo;
-      userInfo = await AsyncStorage.getItem('@userData');
+      userInfo = await AsyncStorage.getItem("@userData");
       const transformedData = JSON.parse(userInfo);
 
-      if(transformedData){
-        dispatch(loginSuccess(transformedData.userData))
+      if (transformedData) {
+        dispatch(loginSuccess(transformedData.userData));
       }
     } catch (error) {
       dispatch(fetchFail("Something went wrong, please try again"));
@@ -162,7 +165,7 @@ export const getDashboard = () => {
   return async (dispatch) => {
     dispatch(fetch());
     try {
-      const res = await axiosInstance.get("/dashboard");
+      const res = await axiosInstance.get("/dashboard/mobile");
       dispatch(setDashboard(res.data));
       console.log(res.data);
     } catch (error) {
@@ -175,7 +178,7 @@ export const getDashboard = () => {
  * Fetch Users
  * @returns
  */
- export const fetchUsers = () => {
+export const fetchUsers = () => {
   return async (dispatch) => {
     dispatch(fetch());
     try {

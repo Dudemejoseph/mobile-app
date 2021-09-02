@@ -3,6 +3,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import BottomTab from "./BottomTab";
 import {
   ACTIVITIES_SCREEN,
+  ADD_EXPENSE_SCREEN,
+  ADD_FINANCE_SCREEN,
   CREATE_FARMS_SCREEN,
   EMERGENCY_SCREEN,
   GEO_FENCING_SCREEN,
@@ -17,6 +19,8 @@ import Inventory from "../screens/finance/Inventory";
 import Emergency from "../screens/Emergency";
 import GeoFence from "../screens/GeoFence";
 import SelectCrop from "../screens/farm/SelectCrop";
+import AddExpense from "../screens/finance/AddExpense";
+import AddFinance from "../screens/finance/AddFinance";
 
 const Stack = createStackNavigator();
 
@@ -35,6 +39,8 @@ const HomeStack = () => {
       <Stack.Screen name={EMERGENCY_SCREEN} component={Emergency} />
       <Stack.Screen name={GEO_FENCING_SCREEN} component={GeoFence} />
       <Stack.Screen name={SELECT_CROP_SCREEN} component={SelectCrop} />
+      <Stack.Screen name={ADD_EXPENSE_SCREEN} component={AddExpense} />
+      <Stack.Screen name={ADD_FINANCE_SCREEN} component={AddFinance} />
     </Stack.Navigator>
   );
 };

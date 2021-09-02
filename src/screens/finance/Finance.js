@@ -3,7 +3,10 @@ import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { useDispatch } from "react-redux";
 import Wrapper from "../../components/Wrapper";
-import { ADD_EXPENSE_SCREEN } from "../../constants/routeNames";
+import {
+  ADD_EXPENSE_SCREEN,
+  ADD_FINANCE_SCREEN,
+} from "../../constants/routeNames";
 import { COLORS } from "../../constants/theme";
 import { fetchExpenses } from "../../redux/features/expenses";
 
@@ -28,7 +31,7 @@ const data = [
   },
 ];
 
-const TrackExpenses = ({ navigation }) => {
+const Finance = ({ navigation }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchExpensesProcess = () => {
@@ -59,12 +62,12 @@ const TrackExpenses = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.headerTxt}>Track Expenses</Text>
+        <Text style={styles.headerTxt}>Report</Text>
 
         {/* ======= Table View ======== */}
         <View style={styles.tableView}>
           <View style={styles.tableHead}>
-            <Text style={styles.headTxt}>Expense</Text>
+            <Text style={styles.headTxt}>Activity</Text>
             <Text style={styles.headTxt}>Actual</Text>
           </View>
 
@@ -84,7 +87,7 @@ const TrackExpenses = ({ navigation }) => {
           <TouchableOpacity
             activeOpacity={0.6}
             style={styles.addBtn}
-            onPress={() => navigation.navigate(ADD_EXPENSE_SCREEN)}
+            onPress={() => navigation.navigate(ADD_FINANCE_SCREEN)}
           >
             <Text style={styles.addTxt}>Add Cost</Text>
           </TouchableOpacity>
@@ -94,7 +97,7 @@ const TrackExpenses = ({ navigation }) => {
   );
 };
 
-export default TrackExpenses;
+export default Finance;
 
 const styles = ScaledSheet.create({
   container: {

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import Wrapper from "../../components/Wrapper";
@@ -51,7 +51,8 @@ const ownerships = [
   },
 ];
 
-const CreateFarms = ({ navigation }) => {
+const CreateFarms = ({ navigation, route }) => {
+  const { hecres } = route.params;
   const dispatch = useDispatch();
   const { states, loading, message, error } = useSelector(farmSelector);
   const [lgas, setLGAS] = useState([]);
@@ -62,7 +63,7 @@ const CreateFarms = ({ navigation }) => {
   const [showStatesPicker, setShowStates] = useState(false);
   const [showLGAPicker, setShowLGAPicker] = useState(false);
   const [name, setName] = useState("");
-  const [size, setSize] = useState("");
+  const [size, setSize] = useState(hecres);
   const [size_unit, setUnit] = useState("Size Unit");
   const [location, setLocation] = useState("");
   const [ownership, setOwnership] = useState("Ownership");
@@ -309,7 +310,11 @@ const CreateFarms = ({ navigation }) => {
                 style={styles.createBtn}
                 onPress={submitFarmData}
               >
-                {loading ? <ActivityIndicator color={COLORS.background} size='small' /> : <Text style={styles.createTxt}>Create</Text>}
+                {loading ? (
+                  <ActivityIndicator color={COLORS.background} size='small' />
+                ) : (
+                  <Text style={styles.createTxt}>Create</Text>
+                )}
               </TouchableOpacity>
               <TouchableOpacity activeOpacity={0.6} style={styles.cancelBtn}>
                 <Text style={styles.cancelTxt}>Cancel</Text>

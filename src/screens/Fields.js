@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, ScrollView, TouchableOpacity, Image, ActivityIndicator } from "react-native";
+import {
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../components/Wrapper";
@@ -10,29 +17,6 @@ import {
 } from "../constants/routeNames";
 import { COLORS } from "../constants/theme";
 import { farmSelector, fetchFarms } from "../redux/features/farmSlice";
-
-const farms2 = [
-  {
-    id: "1",
-    name: "Field One",
-  },
-  {
-    id: "2",
-    name: "Field Two",
-  },
-  {
-    id: "3",
-    name: "Field Three",
-  },
-  {
-    id: "4",
-    name: "Field Four",
-  },
-  {
-    id: "5",
-    name: "Field Four",
-  },
-];
 
 const Fields = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -88,26 +72,34 @@ const Fields = ({ navigation }) => {
 
         {/* ======= Log In Activities ========= */}
         <View style={styles.formView}>
-          <Text style={styles.headTxt}>Farms</Text>
+          <View style={styles.tableHead}>
+            <Text style={styles.headTxt}>Farms</Text>
+            <Text style={styles.headTxtLocation}>Location</Text>
+            <Text style={styles.headTxt}>Size</Text>
+            <Text style={styles.headTxt}>Actions</Text>
+          </View>
           <View style={styles.farms}>
-            {farms && farms.result.data.map((item) => {
-              return (
-                <View key={item.id} style={styles.field}>
-                  <Text style={styles.fieldTxt}>{item.name}</Text>
-                  <TouchableOpacity
-                    activeOpacity={0.6}
-                    onPress={() => {
-                      setShowMenu(!showMenu);
-                    }}
-                  >
-                    <Image
-                      source={require("../assets/icons/menu-icon.png")}
-                      style={styles.menuIcon}
-                    />
-                  </TouchableOpacity>
-                </View>
-              );
-            })}
+            {farms &&
+              farms.result.data.map((item) => {
+                return (
+                  <View key={item.id} style={styles.field}>
+                    <Text style={styles.fieldTxt}>{item.name}</Text>
+                    <Text style={styles.fieldTxtLocation}>{item.location}</Text>
+                    <Text style={styles.fieldTxt}>{item.size} hecres</Text>
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      onPress={() => {
+                        setShowMenu(!showMenu);
+                      }}
+                    >
+                      <Image
+                        source={require("../assets/icons/menu-icon.png")}
+                        style={styles.menuIcon}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                );
+              })}
             {showMenu && (
               <View style={styles.menu}>
                 <TouchableOpacity
@@ -126,12 +118,11 @@ const Fields = ({ navigation }) => {
                     setShowMenu(false);
                   }}
                 >
-                  <Text style={styles.menuTxt}>Start Geo Fencing</Text>
+                  <Text style={styles.menuTxt}>Edit</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   activeOpacity={0.6}
                   onPress={() => {
-                    navigation.navigate(ACTIVITIES_SCREEN);
                     setShowMenu(false);
                   }}
                 >
@@ -184,30 +175,45 @@ const styles = ScaledSheet.create({
     borderTopLeftRadius: 8,
     borderWidth: 1,
     borderColor: COLORS.border,
+    flex: 1,
+    height: "100%",
   },
 
   headTxt: {
     fontWeight: "500",
-    fontSize: "14@ms",
+    fontSize: "12@ms",
     fontFamily: "Poppins-Regular",
     padding: "12@ms",
     backgroundColor: COLORS.surface,
     borderTopRightRadius: 8,
     borderTopLeftRadius: 8,
+    flex: 1,
+  },
+  headTxtLocation: {
+    fontWeight: "500",
+    fontSize: "12@ms",
+    fontFamily: "Poppins-Regular",
+    padding: "12@ms",
+    backgroundColor: COLORS.surface,
+    borderTopRightRadius: 8,
+    borderTopLeftRadius: 8,
+    flex: 2,
   },
   farm: {
     width: "100%",
-    padding: "14@ms",
+  },
+  farms: {
+    height: "300@vs",
   },
   menuIcon: {
     width: "25@ms",
     height: "25@ms",
     resizeMode: "contain",
+    borderWidth: 1,
   },
   field: {
     width: "100%",
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
     padding: "12@ms",
     borderTopWidth: 1,
@@ -216,6 +222,13 @@ const styles = ScaledSheet.create({
   },
   fieldTxt: {
     fontFamily: "Poppins-Regular",
+    flex: 1,
+    fontSize: "12@ms",
+  },
+  fieldTxtLocation: {
+    fontFamily: "Poppins-Regular",
+    flex: 2,
+    fontSize: "12@ms",
   },
   menuTxt: {
     fontFamily: "Poppins-Regular",
@@ -230,5 +243,10 @@ const styles = ScaledSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
     elevation: 2,
+    zIndex: 10000,
+  },
+  tableHead: {
+    flexDirection: "row",
+    alignItems: "center",
   },
 });
