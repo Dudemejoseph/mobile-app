@@ -23,11 +23,8 @@ const Fields = ({ navigation }) => {
   const { loading, farms } = useSelector(farmSelector);
 
   useEffect(() => {
-    const fetchFarmsProcess = () => {
-      dispatch(fetchFarms());
-    };
-    fetchFarmsProcess();
-  }, []);
+    dispatch(fetchFarms());
+  }, [dispatch]);
 
   const [showMenu, setShowMenu] = useState(false);
 

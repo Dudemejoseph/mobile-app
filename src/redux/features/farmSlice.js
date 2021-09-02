@@ -36,20 +36,27 @@ const farmSlice = createSlice({
       state.lga = payload;
       state.loading = false;
     },
-    setFarms: (state, {payload}) => {
+    setFarms: (state, { payload }) => {
       state.loading = false;
       state.farms = payload;
     },
     createFarmSuccess: (state) => {
       state.loading = false;
-      state.message = 'Farm created successfully';
+      state.message = "Farm created successfully";
       state.error = null;
     },
   },
 });
 
-export const { fetch, fetchFail, setCountries, setStates, setLGA, createFarmSuccess, setFarms } =
-  farmSlice.actions;
+export const {
+  fetch,
+  fetchFail,
+  setCountries,
+  setStates,
+  setLGA,
+  createFarmSuccess,
+  setFarms,
+} = farmSlice.actions;
 export default farmSlice.reducer;
 export const farmSelector = (state) => state.farm;
 
@@ -61,6 +68,7 @@ export const createFarm = (data) => {
       const res = await axiosInstance.post("/farms", data);
       console.log(res.data);
       dispatch(createFarmSuccess());
+      dispatch(fetchFarms());
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
     }
