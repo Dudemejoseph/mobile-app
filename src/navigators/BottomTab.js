@@ -45,10 +45,10 @@ const BottomTab = () => {
         }}
       />
       <Tab.Screen
-        name='Field'
+        name='Farms'
         component={Fields}
         options={{
-          tabBarLabel: "Field",
+          tabBarLabel: "Farms",
           tabBarLabelStyle: { fontSize: 12, paddingBottom: 5 },
           tabBarIcon: ({ color }) => (
             <Image
@@ -64,14 +64,14 @@ const BottomTab = () => {
         }}
       />
       <Tab.Screen
-        name='Members'
+        name='Camera'
         component={Members}
         options={{
-          tabBarLabel: "Members",
+          tabBarLabel: "Camera",
           tabBarLabelStyle: { fontSize: 12, paddingBottom: 5 },
           tabBarIcon: ({ color }) => (
             <Image
-              source={require("../assets/icons/members-icon.png")}
+              source={require("../assets/icons/camera.png")}
               style={{
                 tintColor: color,
                 width: 20,

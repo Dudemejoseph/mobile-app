@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../components/Wrapper";
 import {
   ACTIVITIES_SCREEN,
+  FARM_DETAILS_SCREEN,
   GEO_FENCING_SCREEN,
   SELECT_CROP_SCREEN,
 } from "../constants/routeNames";
@@ -69,32 +70,24 @@ const Fields = ({ navigation }) => {
 
         {/* ======= Log In Activities ========= */}
         <View style={styles.formView}>
-          <View style={styles.tableHead}>
-            <Text style={styles.headTxt}>Farms</Text>
-            <Text style={styles.headTxtLocation}>Location</Text>
-            <Text style={styles.headTxt}>Size</Text>
-            <Text style={styles.headTxt}>Actions</Text>
-          </View>
           <View style={styles.farms}>
             {farms &&
-              farms.result.data.map((item) => {
+              farms.map((item) => {
                 return (
-                  <View key={item.id} style={styles.field}>
+                  <TouchableOpacity
+                    activeOpacity={0.6}
+                    key={item.id}
+                    style={styles.field}
+                    onPress={() =>
+                      navigation.navigate(FARM_DETAILS_SCREEN, { item })
+                    }
+                  >
                     <Text style={styles.fieldTxt}>{item.name}</Text>
-                    <Text style={styles.fieldTxtLocation}>{item.location}</Text>
-                    <Text style={styles.fieldTxt}>{item.size} hecres</Text>
-                    <TouchableOpacity
-                      activeOpacity={0.6}
-                      onPress={() => {
-                        setShowMenu(!showMenu);
-                      }}
-                    >
-                      <Image
-                        source={require("../assets/icons/menu-icon.png")}
-                        style={styles.menuIcon}
-                      />
-                    </TouchableOpacity>
-                  </View>
+                    <Image
+                      source={require("../assets/icons/arrow-right.png")}
+                      style={styles.menuIcon}
+                    />
+                  </TouchableOpacity>
                 );
               })}
             {showMenu && (
@@ -170,8 +163,6 @@ const styles = ScaledSheet.create({
     marginTop: "20@ms",
     borderTopRightRadius: 8,
     borderTopLeftRadius: 8,
-    borderWidth: 1,
-    borderColor: COLORS.border,
     flex: 1,
     height: "100%",
   },
@@ -199,21 +190,17 @@ const styles = ScaledSheet.create({
   farm: {
     width: "100%",
   },
-  farms: {
-    height: "300@vs",
-  },
   menuIcon: {
-    width: "25@ms",
-    height: "25@ms",
+    width: "14@ms",
+    height: "14@ms",
     resizeMode: "contain",
-    borderWidth: 1,
   },
   field: {
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: "12@ms",
-    borderTopWidth: 1,
+    paddingVertical: "15@ms",
+    borderBottomWidth: 1,
     borderColor: COLORS.border,
     position: "relative",
   },

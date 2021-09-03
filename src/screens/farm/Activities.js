@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -8,10 +8,68 @@ import {
   TextInput,
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
+import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../../components/Wrapper";
 import { COLORS } from "../../constants/theme";
+import { farmSelector, fetchActivities } from "../../redux/features/farmSlice";
+
+const activities = [
+  {
+    id: "1",
+    name: "NPK",
+  },
+  {
+    id: "2",
+    name: "Urea",
+  },
+  {
+    id: "3",
+    name: "Water",
+  },
+  {
+    id: "4",
+    name: "Pre emergence herbicide",
+  },
+  {
+    id: "5",
+    name: "Post emergence herbicide",
+  },
+  {
+    id: "6",
+    name: "insecticide",
+  },
+  {
+    id: "7",
+    name: "fungicide",
+  },
+  {
+    id: "8",
+    name: "Seeds",
+  },
+  {
+    id: "9",
+    name: "Planting",
+  },
+  {
+    id: "10",
+    name: "Consultation",
+  },
+  {
+    id: "11",
+    name: "labor for spraying",
+  },
+  {
+    id: "12",
+    name: "labor for planting",
+  },
+];
 
 const Activities = ({ navigation }) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchActivities());
+  }, [dispatch]);
   return (
     <Wrapper>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -42,19 +100,12 @@ const Activities = ({ navigation }) => {
           <View style={styles.form}>
             {/* ========== Fertilizer Application ========= */}
             <TouchableOpacity activeOpacity={0.4} style={styles.dropBtn}>
-              <Text style={styles.dropTxt}>Fertilizer Application</Text>
+              <Text style={styles.dropTxt}>Select Activity</Text>
               <Image
                 source={require("../../assets/icons/drop-icon.png")}
                 style={styles.dropIcon}
               />
             </TouchableOpacity>
-
-            {/* ======== Amount ========== */}
-            <TextInput
-              placeholder='N0.00'
-              style={styles.input}
-              placeholderTextColor={COLORS.text_grey}
-            />
 
             {/* ========== Select Date ========= */}
             <TouchableOpacity activeOpacity={0.4} style={styles.dateBtn}>
@@ -76,7 +127,7 @@ const Activities = ({ navigation }) => {
 
             {/* ======== Description ========== */}
             <TextInput
-              placeholder='Description...'
+              placeholder='Note...'
               style={styles.inputDesc}
               multiline
               placeholderTextColor={COLORS.text_grey}

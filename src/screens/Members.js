@@ -1,5 +1,12 @@
-import React, {useEffect} from "react";
-import { Text, View, ScrollView, TouchableOpacity, Image, ActivityIndicator } from "react-native";
+import React, { useEffect } from "react";
+import {
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import Wrapper from "../components/Wrapper";
 import { COLORS } from "../constants/theme";
@@ -27,13 +34,13 @@ const data = [
   },
 ];
 
-const Members = () => {
+const Members = ({ navigation }) => {
   const dispatch = useDispatch();
   const { loading, users } = useSelector(userSelector);
 
   useEffect(() => {
     const fetchMembersProcess = () => {
-      dispatch(fetchUsers())
+      dispatch(fetchUsers());
     };
     fetchMembersProcess();
   }, []);
@@ -86,15 +93,16 @@ const Members = () => {
           </View>
 
           {/* ========= table Items ======= */}
-          {users && users.result.allusers.map((item) => {
-            return (
-              <View style={styles.tableRow} key={item.id}>
-                <Text style={styles.rowTxt}>{item.fullname}</Text>
-                <Text style={styles.rowTxt}>{item.role[0]}</Text>
-                <Text style={styles.rowTxt}>{item.email}</Text>
-              </View>
-            );
-          })}
+          {users &&
+            users.result.allusers.map((item) => {
+              return (
+                <View style={styles.tableRow} key={item.id}>
+                  <Text style={styles.rowTxt}>{item.fullname}</Text>
+                  <Text style={styles.rowTxt}>{item.role[0]}</Text>
+                  <Text style={styles.rowTxt}>{item.email}</Text>
+                </View>
+              );
+            })}
         </View>
       </ScrollView>
     </Wrapper>
