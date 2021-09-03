@@ -17,6 +17,7 @@ import {
   createFarm,
   farmSelector,
   fetchCountries,
+  fetchCrops,
   fetchStates,
 } from "../../redux/features/farmSlice";
 import Toast from "react-native-toast-message";
@@ -52,18 +53,20 @@ const ownerships = [
 ];
 
 const CreateFarms = ({ navigation, route }) => {
-  const { hecres } = route.params;
+  // const { hecres } = route.params;
   const dispatch = useDispatch();
-  const { states, loading, message, error } = useSelector(farmSelector);
+  const { states, loading, message, error, crops } = useSelector(farmSelector);
   const [lgas, setLGAS] = useState([]);
   const [selectedLGA, setSelectedLGA] = useState("LGA");
   const [selectedState, setSelectedState] = useState("State");
   const [showSizePicker, setShowSize] = useState(false);
   const [showOwnerPicker, setShowOwner] = useState(false);
+  const [showCropPicker, setShowCrop] = useState(false);
   const [showStatesPicker, setShowStates] = useState(false);
   const [showLGAPicker, setShowLGAPicker] = useState(false);
   const [name, setName] = useState("");
-  const [size, setSize] = useState(hecres);
+  const [crop, setCrop] = useState("Choose Crop");
+  const [size, setSize] = useState(0);
   const [size_unit, setUnit] = useState("Size Unit");
   const [location, setLocation] = useState("");
   const [ownership, setOwnership] = useState("Ownership");
@@ -71,6 +74,7 @@ const CreateFarms = ({ navigation, route }) => {
   const [country_id, setCountry] = useState(161);
   const [lga_id, setLGA] = useState("");
   const [state_id, setStateID] = useState("");
+  const [crop_id, setCropID] = useState("");
 
   useEffect(() => {
     message &&
@@ -96,6 +100,7 @@ const CreateFarms = ({ navigation, route }) => {
   useEffect(() => {
     dispatch(fetchCountries());
     dispatch(fetchStates());
+    dispatch(fetchCrops());
   }, [dispatch]);
 
   const submitFarmData = () => {
@@ -110,7 +115,7 @@ const CreateFarms = ({ navigation, route }) => {
       country_id,
       state_id,
       lga_id,
-      crop_id: 1,
+      crop_id,
     };
     dispatch(createFarm(data));
   };
@@ -151,6 +156,39 @@ const CreateFarms = ({ navigation, route }) => {
               value={name}
               onChangeText={(val) => setName(val)}
             />
+
+            {/* ========== Choose Crop ========= */}
+            <TouchableOpacity
+              activeOpacity={0.4}
+              style={styles.dropBtn}
+              onPress={() => setShowCrop(!showCropPicker)}
+            >
+              <Text style={styles.dropTxt}>{crop}</Text>
+              <Image
+                source={require("../../assets/icons/drop-icon.png")}
+                style={styles.dropIcon}
+              />
+            </TouchableOpacity>
+            {showCropPicker && (
+              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
+                {crops.map((item) => {
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      key={item.id}
+                      style={styles.size}
+                      onPress={() => {
+                        setCrop(item.name);
+                        setCropID(item.id);
+                        setShowCrop(false);
+                      }}
+                    >
+                      <Text>{item.name}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </Animatable.View>
+            )}
 
             {/* ======== Size ========== */}
             <TextInput

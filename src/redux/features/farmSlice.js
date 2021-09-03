@@ -8,6 +8,7 @@ const initialState = {
   countries: null,
   states: null,
   farms: null,
+  crops: null,
   lga: null,
 };
 
@@ -45,6 +46,10 @@ const farmSlice = createSlice({
       state.message = "Farm created successfully";
       state.error = null;
     },
+    setCrops: (state, { payload }) => {
+      state.loading = false;
+      state.crops = payload;
+    },
   },
 });
 
@@ -56,6 +61,7 @@ export const {
   setLGA,
   createFarmSuccess,
   setFarms,
+  setCrops,
 } = farmSlice.actions;
 export default farmSlice.reducer;
 export const farmSelector = (state) => state.farm;
@@ -110,6 +116,18 @@ export const fetchFarms = () => {
       dispatch(setFarms(res.data));
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
+      console.log(error);
+    }
+  };
+};
+
+// ========= Fetch List of Crops ======
+export const fetchCrops = () => {
+  return async (dispatch) => {
+    try {
+      const res = await axiosInstance.get("/crops");
+      dispatch(setCrops(res.data.crops));
+    } catch (error) {
       console.log(error);
     }
   };

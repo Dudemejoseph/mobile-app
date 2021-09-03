@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   Text,
@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
+import { Modal, Portal, Button } from "react-native-paper";
 import Toast from "react-native-toast-message";
 import Wrapper from "../components/Wrapper";
 import { COLORS } from "../constants/theme";
@@ -80,6 +81,8 @@ const actions = [
 ];
 
 const Home = ({ navigation }) => {
+  const [visible, setVisible] = React.useState(false);
+
   const { navigate } = navigation;
   const dispatch = useDispatch();
   const { user, message, error, loading, dashboard } =
@@ -109,6 +112,15 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     dispatch(getDashboard());
   }, [dispatch]);
+
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+  const containerStyle = {
+    backgroundColor: "white",
+    paddingVertical: 20,
+    marginHorizontal: 20,
+    borderRadius: 5,
+  };
 
   if (loading) {
     return (
@@ -183,7 +195,13 @@ const Home = ({ navigation }) => {
               <TouchableOpacity
                 key={item.name}
                 activeOpacity={0.6}
-                onPress={() => navigate(item.route)}
+                onPress={() => {
+                  if (item.name === "Create Farms") {
+                    showModal();
+                  } else {
+                    navigate(item.route);
+                  }
+                }}
               >
                 <ImageBackground
                   source={item.image}
@@ -219,6 +237,42 @@ const Home = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      <Portal>
+        <Modal
+          visible={visible}
+          onDismiss={hideModal}
+          contentContainerStyle={containerStyle}
+        >
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={styles.enter1}
+            onPress={() => {
+              navigation.navigate(CREATE_FARMS_SCREEN);
+              hideModal();
+            }}
+          >
+            <Text style={styles.enterTxt}>Create Farm</Text>
+            <Image
+              source={require("../assets/icons/arrow-right.png")}
+              style={styles.enterIcon}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={styles.enter}
+            onPress={() => {
+              navigation.navigate(GEO_FENCING_SCREEN);
+              hideModal();
+            }}
+          >
+            <Text style={styles.enterTxt}>Map Farm</Text>
+            <Image
+              source={require("../assets/icons/arrow-right.png")}
+              style={styles.enterIcon}
+            />
+          </TouchableOpacity>
+        </Modal>
+      </Portal>
     </Wrapper>
   );
 };
@@ -369,6 +423,32 @@ const styles = ScaledSheet.create({
     fontWeight: "500",
     fontSize: "12@ms",
     color: "#FA0000",
+    fontFamily: "Poppins-Regular",
+  },
+  enter1: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: "12@ms",
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
+  },
+  enter: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: "12@ms",
+  },
+  enterIcon: {
+    width: "12@ms",
+    height: "12@ms",
+    resizeMode: "contain",
+  },
+  enterTxt: {
+    fontWeight: "500",
+    fontSize: "14@ms",
     fontFamily: "Poppins-Regular",
   },
 });

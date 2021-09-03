@@ -34,7 +34,7 @@ const slides = [
 ];
 
 const Onboarding = ({ navigation }) => {
-  const { isAuthenticated, loading} = useSelector(userSelector);
+  const { isAuthenticated, loading } = useSelector(userSelector);
   const [currentIndex, setCurrentIndex] = useState(0);
   const { navigate } = navigation;
 
@@ -86,7 +86,7 @@ const Onboarding = ({ navigation }) => {
         />
       </View>
       <Paginator data={slides} scrollX={scrollX} />
-      {loading && <View style={styles.cta}>
+      <View style={styles.cta}>
         <TouchableOpacity
           activeOpacity={0.6}
           style={styles.signupBtn}
@@ -94,7 +94,7 @@ const Onboarding = ({ navigation }) => {
         >
           <Text style={styles.signupBtnTxt}>Get Started</Text>
         </TouchableOpacity>
-      </View>}
+      </View>
     </View>
   );
 };
