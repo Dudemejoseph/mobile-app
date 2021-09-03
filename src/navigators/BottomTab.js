@@ -4,9 +4,9 @@ import { Image, Platform } from "react-native";
 import { COLORS } from "../constants/theme";
 import Home from "../screens/Home";
 import Fields from "../screens/Fields";
-import Members from "../screens/Members";
 import Calender from "../screens/Calender";
 import Finance from "../screens/finance/Finance";
+import Camera from "../screens/Camera";
 
 const Tab = createBottomTabNavigator();
 
@@ -65,7 +65,7 @@ const BottomTab = () => {
       />
       <Tab.Screen
         name='Camera'
-        component={Members}
+        component={Camera}
         options={{
           tabBarLabel: "Camera",
           tabBarLabelStyle: { fontSize: 12, paddingBottom: 5 },

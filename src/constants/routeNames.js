@@ -14,3 +14,4 @@ export const SELECT_CROP_SCREEN = "Select-Crop";
 export const ADD_EXPENSE_SCREEN = "Add-Expense";
 export const ADD_FINANCE_SCREEN = "Add-Finance";
 export const FARM_DETAILS_SCREEN = "Farm-Details";
+export const CAMERA_SCREEN = "Camera";

@@ -13,28 +13,7 @@ import { COLORS } from "../constants/theme";
 import { fetchUsers, userSelector } from "../redux/features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-const data = [
-  {
-    id: "1",
-    activity: "weeding",
-    budget: "N700,000.00",
-    actual: "N8500,000.00",
-  },
-  {
-    id: "2",
-    activity: "Watering",
-    budget: "N700,000.00",
-    actual: "N8500,000.00",
-  },
-  {
-    id: "3",
-    activity: "Rigging",
-    budget: "N700,000.00",
-    actual: "N8500,000.00",
-  },
-];
-
-const Members = ({ navigation }) => {
+const Camera = ({ navigation }) => {
   const dispatch = useDispatch();
   const { loading, users } = useSelector(userSelector);
 
@@ -82,34 +61,13 @@ const Members = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.headerTxt}>Members</Text>
-
-        {/* ======= Table View ======== */}
-        <View style={styles.tableView}>
-          <View style={styles.tableHead}>
-            <Text style={styles.headTxt}>Name</Text>
-            <Text style={styles.headTxt}>roles</Text>
-            <Text style={styles.headTxt}>email</Text>
-          </View>
-
-          {/* ========= table Items ======= */}
-          {users &&
-            users.result.allusers.map((item) => {
-              return (
-                <View style={styles.tableRow} key={item.id}>
-                  <Text style={styles.rowTxt}>{item.fullname}</Text>
-                  <Text style={styles.rowTxt}>{item.role[0]}</Text>
-                  <Text style={styles.rowTxt}>{item.email}</Text>
-                </View>
-              );
-            })}
-        </View>
+        <Text style={styles.headerTxt}>Camera</Text>
       </ScrollView>
     </Wrapper>
   );
 };
 
-export default Members;
+export default Camera;
 
 const styles = ScaledSheet.create({
   container: {
