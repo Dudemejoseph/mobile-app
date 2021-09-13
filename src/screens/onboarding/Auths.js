@@ -46,8 +46,8 @@ const Auths = ({ navigation }) => {
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: "first", title: "Register" },
-    { key: "second", title: "Login" },
+    { key: "first", title: "Login" },
+    { key: "second", title: "Register" },
   ]);
   return (
     <Wrapper>
@@ -57,14 +57,14 @@ const Auths = ({ navigation }) => {
         navigationState={{ index, routes }}
         renderScene={SceneMap({
           first: () => (
+            <Login navigation={navigation} setIndex={setIndex} index={index} />
+          ),
+          second: () => (
             <Register
               navigation={navigation}
               setIndex={setIndex}
               index={index}
             />
-          ),
-          second: () => (
-            <Login navigation={navigation} setIndex={setIndex} index={index} />
           ),
         })}
         onIndexChange={setIndex}

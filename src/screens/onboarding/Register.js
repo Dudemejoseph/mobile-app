@@ -199,7 +199,7 @@ const Register = ({ setIndex }) => {
           {/* ===== Login ====== */}
           <View style={styles.login}>
             <Text style={styles.loginTxt}>Already have an account?</Text>
-            <TouchableOpacity activeOpacity={0.6} onPress={() => setIndex(1)}>
+            <TouchableOpacity activeOpacity={0.6} onPress={() => setIndex(0)}>
               <Text style={styles.loginTxt2}>Login</Text>
             </TouchableOpacity>
           </View>

@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../../components/Wrapper";
 import { COLORS } from "../../constants/theme";
 import { farmSelector, fetchActivities } from "../../redux/features/farmSlice";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const activities = [
   {
@@ -66,6 +67,21 @@ const activities = [
 
 const Activities = ({ navigation }) => {
   const dispatch = useDispatch();
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [selectedDate, setDate] = useState("Select Date");
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleDate = (date) => {
+    setDate(date.toString().substr(0, 16));
+    hideDatePicker();
+  };
 
   useEffect(() => {
     dispatch(fetchActivities());
@@ -96,7 +112,7 @@ const Activities = ({ navigation }) => {
 
         {/* ======= Log In Activities ========= */}
         <View style={styles.formView}>
-          <Text style={styles.headTxt}>Log In Activities</Text>
+          <Text style={styles.headTxt}>Record Activities</Text>
           <View style={styles.form}>
             {/* ========== Fertilizer Application ========= */}
             <TouchableOpacity activeOpacity={0.4} style={styles.dropBtn}>
@@ -108,13 +124,23 @@ const Activities = ({ navigation }) => {
             </TouchableOpacity>
 
             {/* ========== Select Date ========= */}
-            <TouchableOpacity activeOpacity={0.4} style={styles.dateBtn}>
+            <TouchableOpacity
+              activeOpacity={0.4}
+              style={styles.dateBtn}
+              onPress={showDatePicker}
+            >
               <Image
                 source={require("../../assets/icons/calender-icon.png")}
                 style={styles.dateIcon}
               />
-              <Text style={styles.dropTxt}>Select Date</Text>
+              <Text style={styles.dropTxt}>{selectedDate}</Text>
             </TouchableOpacity>
+            <DateTimePickerModal
+              isVisible={isDatePickerVisible}
+              mode='date'
+              onConfirm={handleDate}
+              onCancel={hideDatePicker}
+            />
 
             {/* ========== Time Frame ========= */}
             <TouchableOpacity activeOpacity={0.4} style={styles.dropBtn}>

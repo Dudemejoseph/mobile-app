@@ -137,7 +137,7 @@ const Login = ({ navigation, setIndex }) => {
           {/* ===== Login ====== */}
           <View style={styles.login}>
             <Text style={styles.loginTxt}>Don't have an account?</Text>
-            <TouchableOpacity activeOpacity={0.6} onPress={() => setIndex(0)}>
+            <TouchableOpacity activeOpacity={0.6} onPress={() => setIndex(1)}>
               <Text style={styles.loginTxt2}>Register</Text>
             </TouchableOpacity>
           </View>
