@@ -88,6 +88,8 @@ const Home = ({ navigation }) => {
   const { user, message, error, loading, dashboard } =
     useSelector(userSelector);
 
+  console.log(user);
+
   useEffect(() => {
     message &&
       Toast.show({

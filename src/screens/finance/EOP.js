@@ -6,7 +6,6 @@ import Wrapper from "../../components/Wrapper";
 import {
   ADD_EXPENSE_SCREEN,
   ADD_FINANCE_SCREEN,
-  EOP_SCREEN,
 } from "../../constants/routeNames";
 import { COLORS } from "../../constants/theme";
 import { fetchExpenses } from "../../redux/features/expenses";
@@ -15,27 +14,36 @@ import { userSelector } from "../../redux/features/userSlice";
 const data = [
   {
     id: "1",
-    activity: "weeding",
-    budget: "N700,000.00",
-    actual: "N8500,000.00",
+    name: "weeding",
+    expense: "N70,000.00",
+    estimate: "N50,000.00",
+    actual: "N50,000.00",
   },
   {
     id: "2",
-    activity: "Watering",
-    budget: "N700,000.00",
-    actual: "N8500,000.00",
+    name: "weeding",
+    expense: "N70,000.00",
+    estimate: "N50,000.00",
+    actual: "N50,000.00",
   },
   {
     id: "3",
-    activity: "Rigging",
-    budget: "N700,000.00",
-    actual: "N8500,000.00",
+    name: "weeding",
+    expense: "N70,000.00",
+    estimate: "N50,000.00",
+    actual: "N50,000.00",
+  },
+  {
+    id: "4",
+    name: "weeding",
+    expense: "N70,000.00",
+    estimate: "N50,000.00",
+    actual: "N50,000.00",
   },
 ];
 
-const Finance = ({ navigation }) => {
+const Eop = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { user } = useSelector(userSelector);
   useEffect(() => {
     const fetchExpensesProcess = () => {
       dispatch(fetchExpenses());
@@ -65,23 +73,14 @@ const Finance = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        {user?.role[0] === "admin" && (
-          <View style={styles.eopView}>
-            <Text style={styles.headerTxt}>Report</Text>
-            <TouchableOpacity
-              activeOpacity={0.6}
-              style={styles.eopBtn}
-              onPress={() => navigation.navigate(EOP_SCREEN)}
-            >
-              <Text style={styles.eopTxt}>View EOP</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+        <Text style={styles.eopTxt}>EOP</Text>
 
         {/* ======= Table View ======== */}
         <View style={styles.tableView}>
           <View style={styles.tableHead}>
-            <Text style={styles.headTxt}>Activity</Text>
+            <Text style={styles.headTxt}>Crop Name</Text>
+            <Text style={styles.headTxt}>Expense</Text>
+            <Text style={styles.headTxt}>Estimate</Text>
             <Text style={styles.headTxt}>Actual</Text>
           </View>
 
@@ -89,7 +88,9 @@ const Finance = ({ navigation }) => {
           {data.map((item) => {
             return (
               <View style={styles.tableRow} key={item.id}>
-                <Text style={styles.rowTxt}>{item.activity}</Text>
+                <Text style={styles.rowTxt}>{item.name}</Text>
+                <Text style={styles.rowTxt}>{item.expense}</Text>
+                <Text style={styles.rowTxt}>{item.estimate}</Text>
                 <Text style={styles.rowTxt}>{item.actual}</Text>
               </View>
             );
@@ -98,12 +99,8 @@ const Finance = ({ navigation }) => {
 
         {/* ====== Add Button ===== */}
         <View style={styles.btnView}>
-          <TouchableOpacity
-            activeOpacity={0.6}
-            style={styles.addBtn}
-            onPress={() => navigation.navigate(ADD_FINANCE_SCREEN)}
-          >
-            <Text style={styles.addTxt}>Add Cost</Text>
+          <TouchableOpacity activeOpacity={0.6} style={styles.addBtn}>
+            <Text style={styles.addTxt}>Save</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -111,7 +108,7 @@ const Finance = ({ navigation }) => {
   );
 };
 
-export default Finance;
+export default Eop;
 
 const styles = ScaledSheet.create({
   container: {
@@ -156,6 +153,7 @@ const styles = ScaledSheet.create({
   },
   headTxt: {
     flex: 1,
+    fontSize: "12@ms",
   },
   tableRow: {
     flexDirection: "row",
@@ -167,6 +165,7 @@ const styles = ScaledSheet.create({
     padding: "10@ms",
     fontSize: "12@ms",
     borderColor: COLORS.border,
+    fontSize: "10@ms",
   },
   btnView: {
     width: "100%",
@@ -187,21 +186,9 @@ const styles = ScaledSheet.create({
     fontFamily: "Poppins-Regular",
     color: COLORS.background,
   },
-  eopView: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: "20@vs",
-  },
-  eopBtn: {
-    paddingHorizontal: "15@ms",
-    paddingVertical: "8@vs",
-    backgroundColor: "transparent",
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: COLORS.primary,
-  },
   eopTxt: {
-    color: COLORS.primary,
+    marginTop: "40@vs",
+    fontSize: "18@ms",
+    fontWeight: "500",
   },
 });

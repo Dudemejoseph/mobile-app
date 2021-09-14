@@ -131,6 +131,13 @@ const AddInventory = ({ navigation }) => {
               placeholderTextColor={COLORS.text_grey}
             />
 
+            {/* ======== Amount checked out ========== */}
+            <TextInput
+              placeholder='Amount checked'
+              style={styles.input}
+              placeholderTextColor={COLORS.text_grey}
+            />
+
             {/* ======== Description ========== */}
             <TextInput
               placeholder='Purpose...'
