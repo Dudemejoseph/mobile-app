@@ -9,6 +9,7 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "start:clean": "watchman watch-del-all && rm -rf $TMPDIR/react-* && rm -rf $TMPDIR/metro-* && rm -rf $TMPDIR/haste-map-* && react-native start -- --reset-cache",
+    "pod": "cd ios && pod install && cd ..",
     "test": "jest",
     "lint": "eslint ."
   },
@@ -32,6 +33,8 @@
     "react-native-animatable": "^1.3.3",
     "react-native-bootsplash": "^3.2.4",
     "react-native-calendars": "^1.1266.0",
+    "react-native-camera": "^4.2.0",
+    "react-native-camera-hooks": "^0.5.1",
     "react-native-chart-kit": "^6.11.0",
     "react-native-dotenv": "^3.2.0",
     "react-native-geocoding": "^0.5.0",

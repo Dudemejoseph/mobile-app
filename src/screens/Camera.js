@@ -1,67 +1,107 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Text,
   View,
   ScrollView,
   TouchableOpacity,
   Image,
-  ActivityIndicator,
+  Dimensions,
+  TextInput,
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import Wrapper from "../components/Wrapper";
 import { COLORS } from "../constants/theme";
 import { fetchUsers, userSelector } from "../redux/features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { RNCamera } from "react-native-camera";
 
-const Camera = ({ navigation }) => {
+const width = Dimensions.get("window").width;
+const height = Dimensions.get("window").height;
+
+const Camera = ({ navigation, initialProps }) => {
   const dispatch = useDispatch();
   const { loading, users } = useSelector(userSelector);
+  const camera = useRef(null);
+  const [image, setImage] = useState();
 
-  useEffect(() => {
-    const fetchMembersProcess = () => {
-      dispatch(fetchUsers());
-    };
-    fetchMembersProcess();
-  }, []);
+  const takePicture = async () => {
+    if (camera) {
+      const options = { quality: 0.5, base64: true };
+      const data = await camera.current.takePictureAsync(options);
+      setImage(data.uri);
+    }
+  };
 
-  if (loading && !users) {
-    return (
-      <View
-        style={{
-          width: "100%",
-          flex: 1,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <ActivityIndicator size='large' color={COLORS.primary} />
-      </View>
-    );
-  }
+  const PendingView = () => (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "lightgreen",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Text>Waiting</Text>
+    </View>
+  );
 
   return (
     <Wrapper>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* ========= Header View ========= */}
-        <View style={styles.headerView}>
-          <TouchableOpacity
-            activeOpacity={0.6}
-            onPress={() => navigation.goBack()}
-          >
-            <Image
-              source={require("../assets/icons/back-arrow.png")}
-              style={styles.backIcon}
+        <RNCamera
+          ref={camera}
+          style={styles.preview}
+          type={RNCamera.Constants.Type.back}
+          flashMode={RNCamera.Constants.FlashMode.on}
+          androidCameraPermissionOptions={{
+            title: "Permission to use camera",
+            message: "We need your permission to use your camera",
+            buttonPositive: "Ok",
+            buttonNegative: "Cancel",
+          }}
+        >
+          {({ camera, status, recordAudioPermissionStatus }) => {
+            if (status !== "READY") return <PendingView />;
+            return (
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "flex-end",
+                  flex: 1,
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => takePicture(camera)}
+                  style={styles.capture}
+                >
+                  <Image
+                    source={require("../assets/icons/diaphragm.png")}
+                    style={styles.captureIcon}
+                  />
+                </TouchableOpacity>
+              </View>
+            );
+          }}
+        </RNCamera>
+        <View>
+          {image && <Image source={{ uri: image }} style={styles.img} />}
+          {/* ======== Description ========== */}
+          {image && (
+            <TextInput
+              placeholder='Description...'
+              style={styles.inputDesc}
+              multiline
+              placeholderTextColor={COLORS.text_grey}
             />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Image
-              source={require("../assets/icons/bell-icon.png")}
-              style={styles.bellIcon}
-            />
-          </TouchableOpacity>
-        </View>
+          )}
 
-        <Text style={styles.headerTxt}>Camera</Text>
+          {image && (
+            <TouchableOpacity activeOpacity={0.4} style={styles.btn}>
+              <Text style={styles.btnTxt}>Submit</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </ScrollView>
     </Wrapper>
   );
@@ -105,6 +145,18 @@ const styles = ScaledSheet.create({
     borderColor: COLORS.border,
     marginTop: "15@vs",
   },
+  inputDesc: {
+    width: "100%",
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 4,
+    color: COLORS.text_dark,
+    paddingHorizontal: "10@ms",
+    fontFamily: "Poppins-Regular",
+    marginTop: "15@vs",
+    backgroundColor: COLORS.surface,
+    marginBottom: "20@vs",
+  },
   tableHead: {
     flexDirection: "row",
     backgroundColor: COLORS.surface,
@@ -123,5 +175,44 @@ const styles = ScaledSheet.create({
     padding: 5,
     fontSize: 12,
     borderColor: COLORS.border,
+  },
+  preview: {
+    flex: 1,
+    height: 600,
+  },
+  capture: {
+    width: "70@ms",
+    height: "70@ms",
+    backgroundColor: COLORS.background,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 70,
+    marginBottom: "20@vs",
+  },
+  captureIcon: {
+    width: "50@ms",
+    height: "50@ms",
+  },
+  img: {
+    width: "100%",
+    height: "300@ms",
+    marginTop: "20@vs",
+  },
+  btn: {
+    width: "100%",
+    padding: "13@ms",
+    backgroundColor: COLORS.primary,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 4,
+    marginBottom: "20@vs",
+  },
+
+  btnTxt: {
+    fontWeight: "600",
+    fontSize: "18@ms",
+    fontFamily: "Poppins-Regular",
+    color: COLORS.background,
   },
 });
