@@ -5,6 +5,7 @@ import {
   ACTIVITIES_SCREEN,
   ADD_EXPENSE_SCREEN,
   ADD_FINANCE_SCREEN,
+  ADD_INVENTORY_SCREEN,
   CREATE_FARMS_SCREEN,
   EMERGENCY_SCREEN,
   FARM_DETAILS_SCREEN,
@@ -23,6 +24,7 @@ import SelectCrop from "../screens/farm/SelectCrop";
 import AddExpense from "../screens/finance/AddExpense";
 import AddFinance from "../screens/finance/AddFinance";
 import FarmDetails from "../screens/farm/FarmDetails";
+import AddInventory from "../screens/finance/AddInventory";
 
 const Stack = createStackNavigator();
 
@@ -44,6 +46,7 @@ const HomeStack = () => {
       <Stack.Screen name={ADD_EXPENSE_SCREEN} component={AddExpense} />
       <Stack.Screen name={ADD_FINANCE_SCREEN} component={AddFinance} />
       <Stack.Screen name={FARM_DETAILS_SCREEN} component={FarmDetails} />
+      <Stack.Screen name={ADD_INVENTORY_SCREEN} component={AddInventory} />
     </Stack.Navigator>
   );
 };

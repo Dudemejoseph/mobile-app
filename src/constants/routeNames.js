@@ -15,3 +15,4 @@ export const ADD_EXPENSE_SCREEN = "Add-Expense";
 export const ADD_FINANCE_SCREEN = "Add-Finance";
 export const FARM_DETAILS_SCREEN = "Farm-Details";
 export const CAMERA_SCREEN = "Camera";
+export const ADD_INVENTORY_SCREEN = "AddInventory";
