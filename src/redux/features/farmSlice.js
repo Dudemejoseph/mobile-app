@@ -11,6 +11,7 @@ const initialState = {
   crops: null,
   lga: null,
   activities: null,
+  cropActivities: null,
 };
 
 const farmSlice = createSlice({
@@ -55,6 +56,15 @@ const farmSlice = createSlice({
       state.loading = false;
       state.activities = payload;
     },
+    setCropActivities: (state, { payload }) => {
+      state.loading = false;
+      state.activities = payload;
+    },
+    createFarmActivity: (state) => {
+      state.loading = false;
+      state.message = "Activity created successfully";
+      state.error = null;
+    },
   },
 });
 
@@ -68,6 +78,8 @@ export const {
   setFarms,
   setCrops,
   setActivities,
+  setCropActivities,
+  createFarmActivity,
 } = farmSlice.actions;
 export default farmSlice.reducer;
 export const farmSelector = (state) => state.farm;
@@ -78,7 +90,6 @@ export const createFarm = (data) => {
     dispatch(fetch());
     try {
       const res = await axiosInstance.post("/farms", data);
-      console.log(res.data);
       dispatch(createFarmSuccess());
       dispatch(fetchFarms());
     } catch (error) {
@@ -147,6 +158,31 @@ export const fetchActivities = () => {
       dispatch(setActivities(res.data.result.farm_activities));
     } catch (error) {
       console.log(error);
+    }
+  };
+};
+
+// ========= Fetch Crop Activities ======
+export const fetchCropActivities = () => {
+  return async (dispatch) => {
+    try {
+      const res = await axiosInstance.get("/crop/activity");
+      dispatch(setCropActivities(res.data.result));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+// ========= Post Crop Activities ======
+export const submitCropActivities = (data) => {
+  return async (dispatch) => {
+    dispatch(fetch());
+    try {
+      const res = await axiosInstance.post("/farm-activities", data);
+      dispatch(createFarmActivity());
+    } catch (error) {
+      dispatch(fetchFail(error?.response?.data?.message));
     }
   };
 };

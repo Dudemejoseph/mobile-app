@@ -7,7 +7,7 @@ let headers = {};
 // Create an Instance
 const axiosInstance = axios.create({
   baseURL: envs.BASE_URL,
-  // timeout: 15000,
+  timeout: 15000,
   headers,
 });
 

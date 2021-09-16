@@ -14,6 +14,7 @@ import { COLORS } from "../constants/theme";
 import * as Animatable from "react-native-animatable";
 import { createFarm } from "../redux/features/farmSlice";
 import { CREATE_FARMS_SCREEN } from "../constants/routeNames";
+import backIcon from "../assets/icons/back-arrow.png";
 
 const GeoFence = ({ navigation }) => {
   const [lat, setLat] = useState(37.78825);
@@ -123,6 +124,12 @@ const GeoFence = ({ navigation }) => {
         />
       </MapView>
       <View style={styles.distanceView}>
+        <TouchableOpacity
+          activeOpacity={0.4}
+          onPress={() => navigation.goBack()}
+        >
+          <Image source={backIcon} style={styles.backIcon} />
+        </TouchableOpacity>
         <Text>Perimeter: {distance}m</Text>
         <Text>Area: {hecres}ha</Text>
       </View>
@@ -235,8 +242,9 @@ const styles = StyleSheet.create({
     left: 20,
     backgroundColor: COLORS.background,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
     shadowColor: "#000",
+    flexDirection: "row",
     shadowOffset: {
       width: 0,
       height: 1,
@@ -248,5 +256,10 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     width: "90%",
     height: 50,
+    padding: 10,
+  },
+  backIcon: {
+    width: 20,
+    height: 20,
   },
 });

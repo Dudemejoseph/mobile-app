@@ -34,7 +34,7 @@ const AddExpense = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.headerTxt}>Add Expense</Text>
+        <Text style={styles.headerTxt}>Record Expense</Text>
 
         {/* ======= Log In Activities ========= */}
         <View style={styles.formView}>
@@ -85,7 +85,7 @@ const AddExpense = ({ navigation }) => {
             {/* ========= Buttons ======== */}
             <View style={styles.btnView}>
               <TouchableOpacity activeOpacity={0.6} style={styles.createBtn}>
-                <Text style={styles.createTxt}>Save</Text>
+                <Text style={styles.createTxt}>Done</Text>
               </TouchableOpacity>
             </View>
           </View>

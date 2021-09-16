@@ -8,6 +8,7 @@ const initialState = {
   user: null,
   users: null,
   dashboard: null,
+  dashboardTwo: null,
   error: null,
   message: null,
 };
@@ -39,6 +40,11 @@ const userSlice = createSlice({
       state.dashboard = payload;
       state.isAuthenticated = true;
     },
+    setDashboardTwo: (state, { payload }) => {
+      state.loading = false;
+      state.dashboardTwo = payload;
+      state.isAuthenticated = true;
+    },
     fetchFail: (state, { payload }) => {
       state.loading = false;
       state.error = payload;
@@ -64,6 +70,7 @@ export const {
   registerSuccess,
   loggedOut,
   setDashboard,
+  setDashboardTwo,
   setUsers,
 } = userSlice.actions;
 export default userSlice.reducer;
@@ -166,8 +173,13 @@ export const getDashboard = () => {
     dispatch(fetch());
     try {
       const res = await axiosInstance.get("/dashboard/mobile");
-      dispatch(setDashboard(res.data));
-      console.log(res.data);
+
+      const data = [];
+      res?.data?.result?.Data.map(({ crop, percentage, color, size }) => {
+        const a = { crop, percentage, color, size };
+        data.push(a);
+      });
+      dispatch(setDashboard(data));
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
     }

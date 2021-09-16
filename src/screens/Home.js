@@ -28,34 +28,7 @@ import {
   INVENTORY_SCREEN,
   TRACK_EXPENSES_SCREEN,
 } from "../constants/routeNames";
-
-const data = [
-  {
-    name: "Barley",
-    percentage: 30,
-    color: "#3C7300",
-  },
-  {
-    name: "Malt",
-    percentage: 20,
-    color: "#FFD6D6",
-  },
-  {
-    name: "Maize",
-    percentage: 20,
-    color: "#EEEEEE",
-  },
-  {
-    name: "Rice",
-    percentage: 20,
-    color: "#282D58",
-  },
-  {
-    name: "Beans",
-    percentage: 10,
-    color: "#D9E8FF",
-  },
-];
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const actions = [
   {
@@ -82,11 +55,35 @@ const actions = [
 
 const Home = ({ navigation }) => {
   const [visible, setVisible] = React.useState(false);
+  const [user, setUser] = useState(null);
 
   const { navigate } = navigation;
   const dispatch = useDispatch();
-  const { user, message, error, loading, dashboard } =
-    useSelector(userSelector);
+  const { message, error, loading, dashboard } = useSelector(userSelector);
+
+  const getUser = async () => {
+    try {
+      const res = await AsyncStorage.getItem("@userData");
+      const serialized = JSON.parse(res);
+      setUser(serialized);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    let unmounted = false;
+
+    setTimeout(() => {
+      if (!unmounted) {
+        getUser();
+      }
+    }, 3000);
+
+    return () => {
+      unmounted = true;
+    };
+  }, []);
 
   useEffect(() => {
     message &&
@@ -151,39 +148,42 @@ const Home = ({ navigation }) => {
         </View>
 
         {/* ========= Head Text ======== */}
-        <Text style={styles.headTxt}>Welcome, {user.firstname}</Text>
+        <Text style={styles.headTxt}>Welcome, {user?.firstname}</Text>
 
         {/* ======== Slide View ======== */}
         <View style={styles.slideView}>
           <View style={styles.chartView}>
             <View style={styles.col1}>
               <Text style={styles.col1Txt}>Work Done</Text>
-              <Pie
-                radius={60}
-                innerRadius={45}
-                sections={data}
-                strokeCap={"butt"}
-              />
+              {dashboard && (
+                <Pie
+                  radius={60}
+                  innerRadius={45}
+                  sections={dashboard}
+                  strokeCap={"butt"}
+                />
+              )}
             </View>
             <View style={styles.col2}>
-              {data.map((item) => {
-                return (
-                  <View key={item.color} style={styles.list}>
-                    <View style={styles.row}>
-                      <View
-                        style={{
-                          backgroundColor: item.color,
-                          width: 11,
-                          height: 11,
-                          marginRight: 6,
-                        }}
-                      />
-                      <Text style={styles.chartTxt}>{item.name}</Text>
+              {dashboard &&
+                dashboard.map((item) => {
+                  return (
+                    <View key={item.color} style={styles.list}>
+                      <View style={styles.row}>
+                        <View
+                          style={{
+                            backgroundColor: `#${item?.color}`,
+                            width: 11,
+                            height: 11,
+                            marginRight: 6,
+                          }}
+                        />
+                        <Text style={styles.chartTxt}>{item?.crop}</Text>
+                      </View>
+                      <Text style={styles.chartTxt}>{item?.size}ha</Text>
                     </View>
-                    <Text style={styles.chartTxt}>{item.percentage}ha</Text>
-                  </View>
-                );
-              })}
+                  );
+                })}
             </View>
           </View>
         </View>

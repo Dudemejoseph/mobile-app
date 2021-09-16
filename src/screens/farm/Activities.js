@@ -6,13 +6,24 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../../components/Wrapper";
 import { COLORS } from "../../constants/theme";
-import { farmSelector, fetchActivities } from "../../redux/features/farmSlice";
+import * as Animatable from "react-native-animatable";
+import {
+  createFarmActivity,
+  farmSelector,
+  fetchActivities,
+  fetchCropActivities,
+  fetchCrops,
+  fetchFarms,
+  submitCropActivities,
+} from "../../redux/features/farmSlice";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import Toast from "react-native-toast-message";
 
 const activities = [
   {
@@ -67,8 +78,19 @@ const activities = [
 
 const Activities = ({ navigation }) => {
   const dispatch = useDispatch();
+  const { crops, loading, message, error, farms } = useSelector(farmSelector);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [selectedDate, setDate] = useState("Select Date");
+  const [isDatePickerVisible2, setDatePickerVisibility2] = useState(false);
+  const [start_date, setStartDate] = useState("Select Start Date");
+  const [end_date, setEndDate] = useState("Select End Date");
+  const [crop, setCrop] = useState("Choose Crop");
+  const [crop_id, setCropID] = useState("");
+  const [farm, setFarm] = useState("Choose Farm");
+  const [farm_id, setFarmID] = useState("");
+  const [activity, setActivity] = useState("Select activity");
+  const [showCropPicker, setShowCrop] = useState(false);
+  const [showFarmPicker, setShowFarm] = useState(false);
+  const [showActivityPicker, setShowActivity] = useState(false);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -79,13 +101,54 @@ const Activities = ({ navigation }) => {
   };
 
   const handleDate = (date) => {
-    setDate(date.toString().substr(0, 16));
+    setStartDate(date.toString().substr(0, 16));
     hideDatePicker();
+  };
+
+  const showDatePicker2 = () => {
+    setDatePickerVisibility2(true);
+  };
+
+  const hideDatePicker2 = () => {
+    setDatePickerVisibility2(false);
+  };
+
+  const handleEndDate = (date) => {
+    setEndDate(date.toString().substr(0, 16));
+    hideDatePicker2();
   };
 
   useEffect(() => {
     dispatch(fetchActivities());
+    dispatch(fetchCropActivities());
+    dispatch(fetchCrops());
+    dispatch(fetchFarms());
   }, [dispatch]);
+
+  const createCropActivity = () => {
+    const data = { activity, crop_id, start_date, end_date, farm_id };
+    dispatch(submitCropActivities(data));
+  };
+
+  useEffect(() => {
+    message &&
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: message,
+        topOffset: 40,
+      });
+  }, [message]);
+
+  useEffect(() => {
+    error &&
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error,
+        topOffset: 40,
+      });
+  }, [error]);
   return (
     <Wrapper>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -114,14 +177,103 @@ const Activities = ({ navigation }) => {
         <View style={styles.formView}>
           <Text style={styles.headTxt}>Record Activities</Text>
           <View style={styles.form}>
-            {/* ========== Fertilizer Application ========= */}
-            <TouchableOpacity activeOpacity={0.4} style={styles.dropBtn}>
-              <Text style={styles.dropTxt}>Select Activity</Text>
+            {/* ========== Choose Farm ========= */}
+            <TouchableOpacity
+              activeOpacity={0.4}
+              style={styles.dropBtn}
+              onPress={() => setShowFarm(!showFarmPicker)}
+            >
+              <Text style={styles.dropTxt}>{farm}</Text>
               <Image
                 source={require("../../assets/icons/drop-icon.png")}
                 style={styles.dropIcon}
               />
             </TouchableOpacity>
+            {showFarmPicker && (
+              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
+                {farms.map((item) => {
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      key={item.id}
+                      style={styles.size}
+                      onPress={() => {
+                        setFarm(item.name);
+                        setFarmID(item.id);
+                        setShowFarm(false);
+                      }}
+                    >
+                      <Text>{item.name}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </Animatable.View>
+            )}
+
+            {/* ========== Fertilizer Application ========= */}
+            <TouchableOpacity
+              activeOpacity={0.4}
+              style={styles.dropBtn}
+              onPress={() => setShowActivity(!showActivityPicker)}
+            >
+              <Text style={styles.dropTxt}>{activity}</Text>
+              <Image
+                source={require("../../assets/icons/drop-icon.png")}
+                style={styles.dropIcon}
+              />
+            </TouchableOpacity>
+            {showActivityPicker && (
+              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
+                {activities.map((item) => {
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      key={item.id}
+                      style={styles.size}
+                      onPress={() => {
+                        setActivity(item.name);
+                        setShowActivity(false);
+                      }}
+                    >
+                      <Text>{item.name}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </Animatable.View>
+            )}
+
+            {/* ========== Choose Crop ========= */}
+            <TouchableOpacity
+              activeOpacity={0.4}
+              style={styles.dropBtn}
+              onPress={() => setShowCrop(!showCropPicker)}
+            >
+              <Text style={styles.dropTxt}>{crop}</Text>
+              <Image
+                source={require("../../assets/icons/drop-icon.png")}
+                style={styles.dropIcon}
+              />
+            </TouchableOpacity>
+            {showCropPicker && (
+              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
+                {crops.map((item) => {
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      key={item.id}
+                      style={styles.size}
+                      onPress={() => {
+                        setCrop(item.name);
+                        setCropID(item.id);
+                        setShowCrop(false);
+                      }}
+                    >
+                      <Text>{item.name}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </Animatable.View>
+            )}
 
             {/* ========== Select Date ========= */}
             <TouchableOpacity
@@ -133,7 +285,7 @@ const Activities = ({ navigation }) => {
                 source={require("../../assets/icons/calender-icon.png")}
                 style={styles.dateIcon}
               />
-              <Text style={styles.dropTxt}>{selectedDate}</Text>
+              <Text style={styles.dropTxt}>{start_date}</Text>
             </TouchableOpacity>
             <DateTimePickerModal
               isVisible={isDatePickerVisible}
@@ -142,14 +294,24 @@ const Activities = ({ navigation }) => {
               onCancel={hideDatePicker}
             />
 
-            {/* ========== Time Frame ========= */}
-            <TouchableOpacity activeOpacity={0.4} style={styles.dropBtn}>
-              <Text style={styles.dropTxt}>Time Frame</Text>
+            {/* ========== Select Date 2 ========= */}
+            <TouchableOpacity
+              activeOpacity={0.4}
+              style={styles.dateBtn}
+              onPress={showDatePicker2}
+            >
               <Image
-                source={require("../../assets/icons/drop-icon.png")}
-                style={styles.dropIcon}
+                source={require("../../assets/icons/calender-icon.png")}
+                style={styles.dateIcon}
               />
+              <Text style={styles.dropTxt}>{end_date}</Text>
             </TouchableOpacity>
+            <DateTimePickerModal
+              isVisible={isDatePickerVisible2}
+              mode='date'
+              onConfirm={handleEndDate}
+              onCancel={hideDatePicker2}
+            />
 
             {/* ======== Description ========== */}
             <TextInput
@@ -161,8 +323,16 @@ const Activities = ({ navigation }) => {
 
             {/* ========= Buttons ======== */}
             <View style={styles.btnView}>
-              <TouchableOpacity activeOpacity={0.6} style={styles.createBtn}>
-                <Text style={styles.createTxt}>Create</Text>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                style={styles.createBtn}
+                onPress={createCropActivity}
+              >
+                {loading ? (
+                  <ActivityIndicator color={COLORS.background} size='small' />
+                ) : (
+                  <Text style={styles.createTxt}>Create</Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>
@@ -304,5 +474,17 @@ const styles = ScaledSheet.create({
     fontWeight: "500",
     fontFamily: "Poppins-Regular",
     color: COLORS.background,
+  },
+  sizePicker: {
+    width: "100%",
+    backgroundColor: COLORS.background,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    marginTop: 5,
+    borderRadius: 4,
+    zIndex: 10000,
+  },
+  size: {
+    padding: "6@ms",
   },
 });
