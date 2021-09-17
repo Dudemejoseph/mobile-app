@@ -9,6 +9,7 @@ const initialState = {
   states: null,
   farms: null,
   lga: null,
+  farmActivities: null,
 };
 
 const farmSlice = createSlice({
@@ -45,10 +46,14 @@ const farmSlice = createSlice({
       state.message = 'Farm created successfully';
       state.error = null;
     },
+    setFarmActivities: (state, {payload}) => {
+      state.loading = false;
+      state.farmActivities = payload;
+    },
   },
 });
 
-export const { fetch, fetchFail, setCountries, setStates, setLGA, createFarmSuccess, setFarms } =
+export const { fetch, fetchFail, setCountries, setStates, setLGA, createFarmSuccess, setFarms, setFarmActivities } =
   farmSlice.actions;
 export default farmSlice.reducer;
 export const farmSelector = (state) => state.farm;
@@ -59,7 +64,6 @@ export const createFarm = (data) => {
     dispatch(fetch());
     try {
       const res = await axiosInstance.post("/farms", data);
-      console.log(res.data);
       dispatch(createFarmSuccess());
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
@@ -75,7 +79,6 @@ export const fetchCountries = () => {
       dispatch(setCountries(res.data.countries));
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
-      console.log(error);
     }
   };
 };
@@ -88,7 +91,6 @@ export const fetchStates = () => {
       dispatch(setStates(res.data.states));
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
-      console.log(error);
     }
   };
 };
@@ -102,7 +104,19 @@ export const fetchFarms = () => {
       dispatch(setFarms(res.data));
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
-      console.log(error);
+    }
+  };
+};
+
+// Fetch farm calendars
+export const fetchFarmActivitiesAction = () => {
+  return async (dispatch) => {
+    try {
+      dispatch(fetch());
+      const res = await axiosInstance.get("/farm-activities");
+      dispatch(setFarmActivities(res.data.result?.farm_activities));
+    } catch (error) {
+      dispatch(fetchFail(error.message))
     }
   };
 };
