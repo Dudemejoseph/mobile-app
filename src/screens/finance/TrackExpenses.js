@@ -81,12 +81,15 @@ const TrackExpenses = ({ navigation }) => {
 
         {/* ====== Add Button ===== */}
         <View style={styles.btnView}>
+          <TouchableOpacity activeOpacity={0.6} style={styles.exportBtn}>
+            <Text style={styles.exportTxt}>Export</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.6}
             style={styles.addBtn}
             onPress={() => navigation.navigate(ADD_EXPENSE_SCREEN)}
           >
-            <Text style={styles.addTxt}>Add Cost</Text>
+            <Text style={styles.addTxt}>Add Expense</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -169,5 +172,19 @@ const styles = ScaledSheet.create({
     fontWeight: "500",
     fontFamily: "Poppins-Regular",
     color: COLORS.background,
+  },
+  exportBtn: {
+    paddingHorizontal: "20@ms",
+    paddingVertical: "10@vs",
+    borderRadius: 4,
+    marginRight: "10@ms",
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+  },
+  exportTxt: {
+    fontSize: "12@ms",
+    fontWeight: "500",
+    fontFamily: "Poppins-Regular",
+    color: COLORS.primary,
   },
 });

@@ -106,12 +106,15 @@ const Inventory = ({ navigation }) => {
         </ScrollView>
 
         <View style={styles.add}>
+          <TouchableOpacity activeOpacity={0.6} style={styles.exportBtn}>
+            <Text style={styles.exportTxt}>Export</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.btn}
             activeOpacity={0.4}
             onPress={() => navigation.navigate(ADD_INVENTORY_SCREEN)}
           >
-            <Text style={styles.btnTxt}>Add Cost</Text>
+            <Text style={styles.btnTxt}>Add Inventory</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -211,5 +214,19 @@ const styles = ScaledSheet.create({
 
   btnTxt: {
     color: COLORS.background,
+  },
+  exportBtn: {
+    paddingHorizontal: "20@ms",
+    paddingVertical: "10@vs",
+    borderRadius: 4,
+    marginRight: "10@ms",
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+  },
+  exportTxt: {
+    fontSize: "12@ms",
+    fontWeight: "500",
+    fontFamily: "Poppins-Regular",
+    color: COLORS.primary,
   },
 });
