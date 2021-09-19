@@ -60,7 +60,7 @@ const Fields = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity>
             <Image
-              source={require("../assets/icons/bell-icon.png")}
+              source={require("../assets/icons/user-profile.png")}
               style={styles.bellIcon}
             />
           </TouchableOpacity>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -6,12 +6,166 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
+import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../../components/Wrapper";
 import { COLORS } from "../../constants/theme";
+import * as Animatable from "react-native-animatable";
+import {
+  createFarmActivity,
+  farmSelector,
+  fetchActivities,
+  fetchCropActivities,
+  fetchCrops,
+  fetchFarms,
+  submitCropActivities,
+} from "../../redux/features/farmSlice";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import Toast from "react-native-toast-message";
+
+const activities = [
+  {
+    id: "1",
+    name: "NPK",
+  },
+  {
+    id: "2",
+    name: "Urea",
+  },
+  {
+    id: "3",
+    name: "Water",
+  },
+  {
+    id: "4",
+    name: "Pre emergence herbicide",
+  },
+  {
+    id: "5",
+    name: "Post emergence herbicide",
+  },
+  {
+    id: "6",
+    name: "insecticide",
+  },
+  {
+    id: "7",
+    name: "fungicide",
+  },
+  {
+    id: "8",
+    name: "Seeds",
+  },
+];
+const labors = [
+  {
+    id: "1",
+    name: "Planting/Seeding",
+  },
+  {
+    id: "2",
+    name: "Spraying",
+  },
+  {
+    id: "3",
+    name: "Application of NPK",
+  },
+  {
+    id: "4",
+    name: "Application of Urea",
+  },
+];
+const mechanizations = [
+  {
+    id: "1",
+    name: "Ploughing",
+  },
+  {
+    id: "2",
+    name: "Harrowing",
+  },
+  {
+    id: "3",
+    name: "Ridging",
+  },
+];
+const logisticss = [
+  {
+    id: "1",
+    name: "Transportation",
+  },
+  {
+    id: "2",
+    name: "Feeding",
+  },
+  {
+    id: "3",
+    name: "Airtime",
+  },
+];
+const contigencies = [
+  {
+    id: "1",
+    name: "Weeding",
+  },
+];
+const others = [
+  {
+    id: "1",
+    name: "Consultation",
+  },
+  {
+    id: "2",
+    name: "Insurance",
+  },
+  {
+    id: "3",
+    name: "Interest",
+  },
+];
 
 const AddFinance = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const { loading, message, error } = useSelector(farmSelector);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [start_date, setStartDate] = useState("Select Date");
+  const [category, setCategory] = useState("Select Activity");
+  const [showActivityPicker, setShowActivity] = useState(false);
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleDate = (date) => {
+    setStartDate(date.toString().substr(0, 16));
+    hideDatePicker();
+  };
+
+  useEffect(() => {
+    message &&
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: message,
+        topOffset: 40,
+      });
+  }, [message]);
+
+  useEffect(() => {
+    error &&
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error,
+        topOffset: 40,
+      });
+  }, [error]);
   return (
     <Wrapper>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -28,55 +182,79 @@ const AddFinance = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity>
             <Image
-              source={require("../../assets/icons/bell-icon.png")}
+              source={require("../../assets/icons/user-profile.png")}
               style={styles.bellIcon}
             />
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.headerTxt}>Finance</Text>
+        <Text style={styles.headerTxt}>Add Finance</Text>
 
         {/* ======= Log In Activities ========= */}
         <View style={styles.formView}>
-          <Text style={styles.headTxt}>Expense</Text>
+          <Text style={styles.headTxt}>Record Finance</Text>
           <View style={styles.form}>
-            {/* ========== Fertilizer Application ========= */}
-            <TouchableOpacity activeOpacity={0.4} style={styles.dropBtn}>
-              <Text style={styles.dropTxt}>Expense</Text>
-              <Image
-                source={require("../../assets/icons/drop-icon.png")}
-                style={styles.dropIcon}
-              />
-            </TouchableOpacity>
-
             {/* ========== Activity ========= */}
-            <TouchableOpacity activeOpacity={0.4} style={styles.dropBtn}>
-              <Text style={styles.dropTxt}>Activity</Text>
+            <TouchableOpacity
+              activeOpacity={0.4}
+              style={styles.dropBtn}
+              onPress={() => setShowActivity(!showActivityPicker)}
+            >
+              <Text style={styles.dropTxt}>{category}</Text>
               <Image
                 source={require("../../assets/icons/drop-icon.png")}
                 style={styles.dropIcon}
               />
             </TouchableOpacity>
+            {showActivityPicker && (
+              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
+                {activities.map((item) => {
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      key={item.id}
+                      style={styles.size}
+                      onPress={() => {
+                        setCategory(item.name);
+                        setShowActivity(false);
+                      }}
+                    >
+                      <Text>{item.name}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </Animatable.View>
+            )}
 
-            {/* ======== Amount ========== */}
+            {/* ======== Price ========== */}
             <TextInput
-              placeholder='N0.00'
+              placeholder='Price'
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
             />
 
             {/* ========== Select Date ========= */}
-            <TouchableOpacity activeOpacity={0.4} style={styles.dateBtn}>
+            <TouchableOpacity
+              activeOpacity={0.4}
+              style={styles.dateBtn}
+              onPress={showDatePicker}
+            >
               <Image
                 source={require("../../assets/icons/calender-icon.png")}
                 style={styles.dateIcon}
               />
-              <Text style={styles.dropTxt}>Select Date</Text>
+              <Text style={styles.dropTxt}>{start_date}</Text>
             </TouchableOpacity>
+            <DateTimePickerModal
+              isVisible={isDatePickerVisible}
+              mode='date'
+              onConfirm={handleDate}
+              onCancel={hideDatePicker}
+            />
 
             {/* ======== Description ========== */}
             <TextInput
-              placeholder='Description...'
+              placeholder='Note...'
               style={styles.inputDesc}
               multiline
               placeholderTextColor={COLORS.text_grey}
@@ -85,7 +263,7 @@ const AddFinance = ({ navigation }) => {
             {/* ========= Buttons ======== */}
             <View style={styles.btnView}>
               <TouchableOpacity activeOpacity={0.6} style={styles.createBtn}>
-                <Text style={styles.createTxt}>Save</Text>
+                <Text style={styles.createTxt}>Done</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -133,6 +311,17 @@ const styles = ScaledSheet.create({
     borderTopLeftRadius: 8,
     borderWidth: 1,
     borderColor: COLORS.border,
+  },
+  input: {
+    width: "100%",
+    height: "40@vs",
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 4,
+    color: COLORS.text_dark,
+    paddingHorizontal: "10@ms",
+    fontFamily: "Poppins-Regular",
+    marginTop: "15@vs",
   },
 
   headTxt: {
@@ -227,5 +416,17 @@ const styles = ScaledSheet.create({
     fontWeight: "500",
     fontFamily: "Poppins-Regular",
     color: COLORS.background,
+  },
+  sizePicker: {
+    width: "100%",
+    backgroundColor: COLORS.background,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    marginTop: 5,
+    borderRadius: 4,
+    zIndex: 10000,
+  },
+  size: {
+    padding: "6@ms",
   },
 });

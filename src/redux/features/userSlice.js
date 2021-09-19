@@ -182,9 +182,17 @@ export const getDashboard = () => {
       dispatch(setDashboard(data));
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
+      dispatch(loggedOut());
+      AsyncStorage.clear();
     }
   };
 };
+
+// export const logoutUser = () => {
+//   return async (dispatch) => {
+//     dispatch(loggedOut());
+//   };
+// };
 
 /**
  * Fetch Users
@@ -198,6 +206,8 @@ export const fetchUsers = () => {
       dispatch(setUsers(res.data));
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
+      dispatch(loggedOut());
+      AsyncStorage.clear();
     }
   };
 };

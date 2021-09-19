@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { Modal, Portal, Button } from "react-native-paper";
+import { Modal, Portal } from "react-native-paper";
 import Toast from "react-native-toast-message";
 import Wrapper from "../components/Wrapper";
 import { COLORS } from "../constants/theme";
@@ -141,7 +141,7 @@ const Home = ({ navigation }) => {
         <View style={styles.headerView}>
           <TouchableOpacity>
             <Image
-              source={require("../assets/icons/bell-icon.png")}
+              source={require("../assets/icons/user-profile.png")}
               style={styles.bellIcon}
             />
           </TouchableOpacity>

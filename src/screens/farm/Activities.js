@@ -138,6 +138,7 @@ const Activities = ({ navigation }) => {
         text2: message,
         topOffset: 40,
       });
+    message && navigation.navigate("Home");
   }, [message]);
 
   useEffect(() => {

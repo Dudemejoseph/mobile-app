@@ -49,7 +49,8 @@ axiosInstance.interceptors.response.use(
     }
 
     if (error.response && error.response.status === 401) {
-      removeToken();
+      AsyncStorage.clear();
+      AsyncStorage.removeItem("@userToken");
     } else {
       return new Promise((resolve, reject) => {
         reject(error);

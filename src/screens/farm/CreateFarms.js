@@ -84,6 +84,8 @@ const CreateFarms = ({ navigation, route }) => {
         text2: message,
         topOffset: 40,
       });
+
+    message && navigation.navigate("Farms");
   }, [message]);
 
   useEffect(() => {

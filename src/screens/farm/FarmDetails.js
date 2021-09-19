@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import Wrapper from "../../components/Wrapper";
+import { ACTIVITIES_SCREEN } from "../../constants/routeNames";
 import { COLORS } from "../../constants/theme";
 
 const FarmDetails = ({ navigation, route }) => {
@@ -49,7 +50,11 @@ const FarmDetails = ({ navigation, route }) => {
           <TouchableOpacity style={styles.editBtn} activeOpacity={0.6}>
             <Text style={styles.editTxt}>Edit Farm</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.activityBtn} activeOpacity={0.6}>
+          <TouchableOpacity
+            style={styles.activityBtn}
+            activeOpacity={0.6}
+            onPress={() => navigation.navigate(ACTIVITIES_SCREEN)}
+          >
             <Text style={styles.activityTxt}>Start Activity</Text>
           </TouchableOpacity>
         </View>

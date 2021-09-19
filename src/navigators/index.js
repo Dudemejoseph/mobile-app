@@ -29,6 +29,7 @@ const AppNavContainer = () => {
     setLoading(true);
     try {
       const res = await AsyncStorage.getItem("@userToken");
+      console.log(res);
       if (res) setToken(true);
       setLoading(false);
     } catch (error) {
