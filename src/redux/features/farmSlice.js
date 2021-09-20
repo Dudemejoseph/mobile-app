@@ -10,8 +10,7 @@ const initialState = {
   farms: null,
   crops: null,
   lga: null,
-  activities: null,
-  cropActivities: null,
+  farmActivities: null,
 };
 
 const farmSlice = createSlice({
@@ -65,22 +64,15 @@ const farmSlice = createSlice({
       state.message = "Activity created successfully";
       state.error = null;
     },
+    setFarmActivities: (state, {payload}) => {
+      state.loading = false;
+      state.farmActivities = payload;
+    },
   },
 });
 
-export const {
-  fetch,
-  fetchFail,
-  setCountries,
-  setStates,
-  setLGA,
-  createFarmSuccess,
-  setFarms,
-  setCrops,
-  setActivities,
-  setCropActivities,
-  createFarmActivity,
-} = farmSlice.actions;
+export const { fetch, fetchFail, setCountries, setStates, setLGA, createFarmSuccess, setFarms, setFarmActivities } =
+  farmSlice.actions;
 export default farmSlice.reducer;
 export const farmSelector = (state) => state.farm;
 
@@ -106,7 +98,6 @@ export const fetchCountries = () => {
       dispatch(setCountries(res.data.countries));
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
-      console.log(error);
     }
   };
 };
@@ -119,7 +110,6 @@ export const fetchStates = () => {
       dispatch(setStates(res.data.states));
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
-      console.log(error);
     }
   };
 };
@@ -133,7 +123,19 @@ export const fetchFarms = () => {
       dispatch(setFarms(res.data.result.data));
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
-      console.log(error);
+    }
+  };
+};
+
+// Fetch farm calendars
+export const fetchFarmActivitiesAction = () => {
+  return async (dispatch) => {
+    try {
+      dispatch(fetch());
+      const res = await axiosInstance.get("/farm-activities");
+      dispatch(setFarmActivities(res.data.result?.farm_activities));
+    } catch (error) {
+      dispatch(fetchFail(error.message))
     }
   };
 };

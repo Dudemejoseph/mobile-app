@@ -153,9 +153,9 @@ export const persistUser = () => {
       userInfo = await AsyncStorage.getItem("@userData");
       const transformedData = JSON.parse(userInfo);
 
-      if (transformedData) {
-        dispatch(loginSuccess(transformedData.userData));
-      }
+      if(transformedData){
+        dispatch(loginSuccess(transformedData.userData))
+      } else {dispatch(loggedOut())}
     } catch (error) {
       dispatch(fetchFail("Something went wrong, please try again"));
       console.log(error.response.data.message);
