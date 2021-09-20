@@ -14,6 +14,7 @@ import {
   ACTIVITIES_SCREEN,
   FARM_DETAILS_SCREEN,
   GEO_FENCING_SCREEN,
+  PROFILE_SCREEN,
   SELECT_CROP_SCREEN,
 } from "../constants/routeNames";
 import { COLORS } from "../constants/theme";
@@ -58,7 +59,7 @@ const Fields = ({ navigation }) => {
               style={styles.backIcon}
             />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate(PROFILE_SCREEN)}>
             <Image
               source={require("../assets/icons/user-profile.png")}
               style={styles.bellIcon}

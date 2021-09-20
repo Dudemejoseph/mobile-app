@@ -7,11 +7,13 @@ import {
   ADD_FINANCE_SCREEN,
   ADD_INVENTORY_SCREEN,
   CREATE_FARMS_SCREEN,
+  EDIT_PROFILE_SCREEN,
   EMERGENCY_SCREEN,
   EOP_SCREEN,
   FARM_DETAILS_SCREEN,
   GEO_FENCING_SCREEN,
   INVENTORY_SCREEN,
+  PROFILE_SCREEN,
   SELECT_CROP_SCREEN,
   TRACK_EXPENSES_SCREEN,
 } from "../constants/routeNames";
@@ -27,6 +29,8 @@ import AddFinance from "../screens/finance/AddFinance";
 import FarmDetails from "../screens/farm/FarmDetails";
 import AddInventory from "../screens/finance/AddInventory";
 import Eop from "../screens/finance/EOP";
+import Profile from "../screens/Profile";
+import EditProfile from "../screens/EditProfile";
 
 const Stack = createStackNavigator();
 
@@ -50,6 +54,8 @@ const HomeStack = () => {
       <Stack.Screen name={FARM_DETAILS_SCREEN} component={FarmDetails} />
       <Stack.Screen name={ADD_INVENTORY_SCREEN} component={AddInventory} />
       <Stack.Screen name={EOP_SCREEN} component={Eop} />
+      <Stack.Screen name={PROFILE_SCREEN} component={Profile} />
+      <Stack.Screen name={EDIT_PROFILE_SCREEN} component={EditProfile} />
     </Stack.Navigator>
   );
 };

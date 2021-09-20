@@ -17,3 +17,5 @@ export const FARM_DETAILS_SCREEN = "Farm-Details";
 export const CAMERA_SCREEN = "Camera";
 export const ADD_INVENTORY_SCREEN = "AddInventory";
 export const EOP_SCREEN = "EOP";
+export const PROFILE_SCREEN = "Profile";
+export const EDIT_PROFILE_SCREEN = "EditProfile";

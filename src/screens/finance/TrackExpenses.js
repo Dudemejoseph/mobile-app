@@ -30,12 +30,6 @@ const data = [
 
 const TrackExpenses = ({ navigation }) => {
   const dispatch = useDispatch();
-  useEffect(() => {
-    const fetchExpensesProcess = () => {
-      dispatch(fetchExpenses());
-    };
-    fetchExpensesProcess();
-  }, []);
 
   return (
     <Wrapper>

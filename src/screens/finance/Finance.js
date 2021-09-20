@@ -1,15 +1,26 @@
-import React, { useEffect } from "react";
-import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from "react";
+import {
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../../components/Wrapper";
 import {
-  ADD_EXPENSE_SCREEN,
   ADD_FINANCE_SCREEN,
   EOP_SCREEN,
+  PROFILE_SCREEN,
 } from "../../constants/routeNames";
 import { COLORS } from "../../constants/theme";
-import { fetchExpenses } from "../../redux/features/expenses";
+import {
+  fetchFinances,
+  transactionsSelector,
+} from "../../redux/features/transactionSlice";
 import { userSelector } from "../../redux/features/userSlice";
 
 const data = [
@@ -35,13 +46,54 @@ const data = [
 
 const Finance = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { user } = useSelector(userSelector);
+  const { finances, loading } = useSelector(transactionsSelector);
+
+  const [user, setUser] = useState(null);
+
+  const getUser = async () => {
+    try {
+      const res = await AsyncStorage.getItem("@userData");
+      const serialized = JSON.parse(res);
+      setUser(serialized?.userData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    let unmounted = false;
+
+    setTimeout(() => {
+      if (!unmounted) {
+        getUser();
+      }
+    }, 3000);
+
+    return () => {
+      unmounted = true;
+    };
+  }, []);
   useEffect(() => {
     const fetchExpensesProcess = () => {
-      dispatch(fetchExpenses());
+      dispatch(fetchFinances());
     };
     fetchExpensesProcess();
   }, []);
+
+  if (loading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: COLORS.background,
+        }}
+      >
+        <ActivityIndicator size='large' color={COLORS.primary} />
+      </View>
+    );
+  }
 
   return (
     <Wrapper>
@@ -57,7 +109,10 @@ const Finance = ({ navigation }) => {
               style={styles.backIcon}
             />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => navigation.navigate(PROFILE_SCREEN)}
+          >
             <Image
               source={require("../../assets/icons/user-profile.png")}
               style={styles.bellIcon}
@@ -82,15 +137,18 @@ const Finance = ({ navigation }) => {
         <View style={styles.tableView}>
           <View style={styles.tableHead}>
             <Text style={styles.headTxt}>Activity</Text>
-            <Text style={styles.headTxt}>Actual</Text>
+            <Text style={styles.headTxt}>Amount</Text>
           </View>
 
           {/* ========= table Items ======= */}
-          {data.map((item) => {
+          {finances?.data.map((item) => {
             return (
               <View style={styles.tableRow} key={item.id}>
                 <Text style={styles.rowTxt}>{item.activity}</Text>
-                <Text style={styles.rowTxt}>{item.actual}</Text>
+                <Text style={styles.rowTxt}>
+                  {"\u20A6"}
+                  {item.amount}
+                </Text>
               </View>
             );
           })}
@@ -124,6 +182,12 @@ const styles = ScaledSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  headText: {
+    fontSize: "18@ms",
+    fontWeight: "500",
+    fontFamily: "Poppins-Regular",
+    marginTop: "30@vs",
   },
   bellIcon: {
     width: "24@ms",

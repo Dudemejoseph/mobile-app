@@ -26,9 +26,11 @@ import {
   EMERGENCY_SCREEN,
   GEO_FENCING_SCREEN,
   INVENTORY_SCREEN,
+  PROFILE_SCREEN,
   TRACK_EXPENSES_SCREEN,
 } from "../constants/routeNames";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { fetchFarms } from "../redux/features/farmSlice";
 
 const actions = [
   {
@@ -108,6 +110,7 @@ const Home = ({ navigation }) => {
   // ========= Fetch Dashboard ==========
   useEffect(() => {
     dispatch(getDashboard());
+    dispatch(fetchFarms());
   }, [dispatch]);
 
   const showModal = () => setVisible(true);
@@ -118,6 +121,8 @@ const Home = ({ navigation }) => {
     marginHorizontal: 20,
     borderRadius: 5,
   };
+
+  console.log(user);
 
   if (loading) {
     return (
@@ -139,7 +144,7 @@ const Home = ({ navigation }) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* ========= Header View ========= */}
         <View style={styles.headerView}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate(PROFILE_SCREEN)}>
             <Image
               source={require("../assets/icons/user-profile.png")}
               style={styles.bellIcon}
@@ -148,7 +153,7 @@ const Home = ({ navigation }) => {
         </View>
 
         {/* ========= Head Text ======== */}
-        <Text style={styles.headTxt}>Welcome, {user?.firstname}</Text>
+        <Text style={styles.headTxt}>Welcome, {user?.userData?.firstname}</Text>
 
         {/* ======== Slide View ======== */}
         <View style={styles.slideView}>

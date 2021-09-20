@@ -82,12 +82,11 @@ export const userSelector = (state) => state.user;
  * @returns
  */
 export const loginUser = (data) => {
-  console.log(data);
   return async (dispatch) => {
     dispatch(fetch());
     try {
       const res = await axiosInstance.post("/auth/login", data);
-      dispatch(loginSuccess(res.data.user));
+      dispatch(loginSuccess(res?.data?.user));
       await AsyncStorage.setItem("@userToken", res?.data?.token);
       await AsyncStorage.setItem(
         "@userData",
@@ -188,11 +187,18 @@ export const getDashboard = () => {
   };
 };
 
-// export const logoutUser = () => {
-//   return async (dispatch) => {
-//     dispatch(loggedOut());
-//   };
-// };
+export const logoutUser = () => {
+  return async (dispatch) => {
+    try {
+      const res = await axiosInstance.post("/logout");
+      console.log(res);
+      dispatch(loggedOut());
+      AsyncStorage.clear();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
 
 /**
  * Fetch Users

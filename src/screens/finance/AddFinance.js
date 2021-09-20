@@ -24,6 +24,11 @@ import {
 } from "../../redux/features/farmSlice";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Toast from "react-native-toast-message";
+import {
+  addFinance,
+  transactionsSelector,
+} from "../../redux/features/transactionSlice";
+import { PROFILE_SCREEN } from "../../constants/routeNames";
 
 const activities = [
   {
@@ -59,93 +64,19 @@ const activities = [
     name: "Seeds",
   },
 ];
-const labors = [
-  {
-    id: "1",
-    name: "Planting/Seeding",
-  },
-  {
-    id: "2",
-    name: "Spraying",
-  },
-  {
-    id: "3",
-    name: "Application of NPK",
-  },
-  {
-    id: "4",
-    name: "Application of Urea",
-  },
-];
-const mechanizations = [
-  {
-    id: "1",
-    name: "Ploughing",
-  },
-  {
-    id: "2",
-    name: "Harrowing",
-  },
-  {
-    id: "3",
-    name: "Ridging",
-  },
-];
-const logisticss = [
-  {
-    id: "1",
-    name: "Transportation",
-  },
-  {
-    id: "2",
-    name: "Feeding",
-  },
-  {
-    id: "3",
-    name: "Airtime",
-  },
-];
-const contigencies = [
-  {
-    id: "1",
-    name: "Weeding",
-  },
-];
-const others = [
-  {
-    id: "1",
-    name: "Consultation",
-  },
-  {
-    id: "2",
-    name: "Insurance",
-  },
-  {
-    id: "3",
-    name: "Interest",
-  },
-];
 
 const AddFinance = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { loading, message, error } = useSelector(farmSelector);
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [start_date, setStartDate] = useState("Select Date");
-  const [category, setCategory] = useState("Select Activity");
+  const { farms } = useSelector(farmSelector);
+  const { error, message, loading } = useSelector(transactionsSelector);
+
+  const [activity, setActivity] = useState("Select Activity");
   const [showActivityPicker, setShowActivity] = useState(false);
-
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
-
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-
-  const handleDate = (date) => {
-    setStartDate(date.toString().substr(0, 16));
-    hideDatePicker();
-  };
+  const [farm, setFarm] = useState("Select Farm");
+  const [farm_id, setFarmID] = useState("");
+  const [showFarmPicker, setShowFarm] = useState(false);
+  const [amount, setAmount] = useState("");
+  const [note, setNote] = useState("");
 
   useEffect(() => {
     message &&
@@ -155,6 +86,8 @@ const AddFinance = ({ navigation }) => {
         text2: message,
         topOffset: 40,
       });
+
+    message && navigation.navigate("Finance");
   }, [message]);
 
   useEffect(() => {
@@ -166,6 +99,18 @@ const AddFinance = ({ navigation }) => {
         topOffset: 40,
       });
   }, [error]);
+
+  const addToFinance = () => {
+    const data = {
+      farm_id,
+      amount: parseFloat(amount),
+      note,
+      activity,
+      type: "credit",
+    };
+    console.log(data);
+    dispatch(addFinance(data));
+  };
   return (
     <Wrapper>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -180,7 +125,10 @@ const AddFinance = ({ navigation }) => {
               style={styles.backIcon}
             />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={() => navigation.navigate(PROFILE_SCREEN)}
+          >
             <Image
               source={require("../../assets/icons/user-profile.png")}
               style={styles.bellIcon}
@@ -194,13 +142,46 @@ const AddFinance = ({ navigation }) => {
         <View style={styles.formView}>
           <Text style={styles.headTxt}>Record Finance</Text>
           <View style={styles.form}>
+            {/* ========== Farms ========= */}
+            <TouchableOpacity
+              activeOpacity={0.4}
+              style={styles.dropBtn}
+              onPress={() => setShowFarm(!showFarmPicker)}
+            >
+              <Text style={styles.dropTxt}>{farm}</Text>
+              <Image
+                source={require("../../assets/icons/drop-icon.png")}
+                style={styles.dropIcon}
+              />
+            </TouchableOpacity>
+            {showFarmPicker && (
+              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
+                {farms.map((item) => {
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      key={item.id}
+                      style={styles.size}
+                      onPress={() => {
+                        setFarm(item.name);
+                        setShowFarm(false);
+                        setFarmID(item?.id);
+                      }}
+                    >
+                      <Text>{item.name}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </Animatable.View>
+            )}
+
             {/* ========== Activity ========= */}
             <TouchableOpacity
               activeOpacity={0.4}
               style={styles.dropBtn}
               onPress={() => setShowActivity(!showActivityPicker)}
             >
-              <Text style={styles.dropTxt}>{category}</Text>
+              <Text style={styles.dropTxt}>{activity}</Text>
               <Image
                 source={require("../../assets/icons/drop-icon.png")}
                 style={styles.dropIcon}
@@ -215,7 +196,7 @@ const AddFinance = ({ navigation }) => {
                       key={item.id}
                       style={styles.size}
                       onPress={() => {
-                        setCategory(item.name);
+                        setActivity(item.name);
                         setShowActivity(false);
                       }}
                     >
@@ -226,30 +207,12 @@ const AddFinance = ({ navigation }) => {
               </Animatable.View>
             )}
 
-            {/* ======== Price ========== */}
+            {/* ======== Amount ========== */}
             <TextInput
-              placeholder='Price'
+              placeholder='Amount'
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
-            />
-
-            {/* ========== Select Date ========= */}
-            <TouchableOpacity
-              activeOpacity={0.4}
-              style={styles.dateBtn}
-              onPress={showDatePicker}
-            >
-              <Image
-                source={require("../../assets/icons/calender-icon.png")}
-                style={styles.dateIcon}
-              />
-              <Text style={styles.dropTxt}>{start_date}</Text>
-            </TouchableOpacity>
-            <DateTimePickerModal
-              isVisible={isDatePickerVisible}
-              mode='date'
-              onConfirm={handleDate}
-              onCancel={hideDatePicker}
+              onChangeText={(val) => setAmount(val)}
             />
 
             {/* ======== Description ========== */}
@@ -258,12 +221,21 @@ const AddFinance = ({ navigation }) => {
               style={styles.inputDesc}
               multiline
               placeholderTextColor={COLORS.text_grey}
+              onChangeText={(val) => setNote(val)}
             />
 
             {/* ========= Buttons ======== */}
             <View style={styles.btnView}>
-              <TouchableOpacity activeOpacity={0.6} style={styles.createBtn}>
-                <Text style={styles.createTxt}>Done</Text>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                style={styles.createBtn}
+                onPress={addToFinance}
+              >
+                {loading ? (
+                  <ActivityIndicator size='small' color={COLORS.background} />
+                ) : (
+                  <Text style={styles.createTxt}>Done</Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>
