@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import Wrapper from "../../components/Wrapper";
@@ -17,6 +17,7 @@ import {
   createFarm,
   farmSelector,
   fetchCountries,
+  fetchCrops,
   fetchStates,
 } from "../../redux/features/farmSlice";
 import Toast from "react-native-toast-message";
@@ -51,18 +52,21 @@ const ownerships = [
   },
 ];
 
-const CreateFarms = ({ navigation }) => {
+const CreateFarms = ({ navigation, route }) => {
+  // const { hecres } = route.params;
   const dispatch = useDispatch();
-  const { states, loading, message, error } = useSelector(farmSelector);
+  const { states, loading, message, error, crops } = useSelector(farmSelector);
   const [lgas, setLGAS] = useState([]);
   const [selectedLGA, setSelectedLGA] = useState("LGA");
   const [selectedState, setSelectedState] = useState("State");
   const [showSizePicker, setShowSize] = useState(false);
   const [showOwnerPicker, setShowOwner] = useState(false);
+  const [showCropPicker, setShowCrop] = useState(false);
   const [showStatesPicker, setShowStates] = useState(false);
   const [showLGAPicker, setShowLGAPicker] = useState(false);
   const [name, setName] = useState("");
-  const [size, setSize] = useState("");
+  const [crop, setCrop] = useState("Choose Crop");
+  const [size, setSize] = useState(0);
   const [size_unit, setUnit] = useState("Size Unit");
   const [location, setLocation] = useState("");
   const [ownership, setOwnership] = useState("Ownership");
@@ -70,6 +74,7 @@ const CreateFarms = ({ navigation }) => {
   const [country_id, setCountry] = useState(161);
   const [lga_id, setLGA] = useState("");
   const [state_id, setStateID] = useState("");
+  const [crop_id, setCropID] = useState("");
 
   useEffect(() => {
     message &&
@@ -79,6 +84,8 @@ const CreateFarms = ({ navigation }) => {
         text2: message,
         topOffset: 40,
       });
+
+    message && navigation.navigate("Farms");
   }, [message]);
 
   useEffect(() => {
@@ -95,6 +102,7 @@ const CreateFarms = ({ navigation }) => {
   useEffect(() => {
     dispatch(fetchCountries());
     dispatch(fetchStates());
+    dispatch(fetchCrops());
   }, [dispatch]);
 
   const submitFarmData = () => {
@@ -109,7 +117,7 @@ const CreateFarms = ({ navigation }) => {
       country_id,
       state_id,
       lga_id,
-      crop_id: 1,
+      crop_id,
     };
     dispatch(createFarm(data));
   };
@@ -150,6 +158,39 @@ const CreateFarms = ({ navigation }) => {
               value={name}
               onChangeText={(val) => setName(val)}
             />
+
+            {/* ========== Choose Crop ========= */}
+            <TouchableOpacity
+              activeOpacity={0.4}
+              style={styles.dropBtn}
+              onPress={() => setShowCrop(!showCropPicker)}
+            >
+              <Text style={styles.dropTxt}>{crop}</Text>
+              <Image
+                source={require("../../assets/icons/drop-icon.png")}
+                style={styles.dropIcon}
+              />
+            </TouchableOpacity>
+            {showCropPicker && (
+              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
+                {crops.map((item) => {
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      key={item.id}
+                      style={styles.size}
+                      onPress={() => {
+                        setCrop(item.name);
+                        setCropID(item.id);
+                        setShowCrop(false);
+                      }}
+                    >
+                      <Text>{item.name}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </Animatable.View>
+            )}
 
             {/* ======== Size ========== */}
             <TextInput
@@ -309,7 +350,11 @@ const CreateFarms = ({ navigation }) => {
                 style={styles.createBtn}
                 onPress={submitFarmData}
               >
-                {loading ? <ActivityIndicator color={COLORS.background} size='small' /> : <Text style={styles.createTxt}>Create</Text>}
+                {loading ? (
+                  <ActivityIndicator color={COLORS.background} size='small' />
+                ) : (
+                  <Text style={styles.createTxt}>Create</Text>
+                )}
               </TouchableOpacity>
               <TouchableOpacity activeOpacity={0.6} style={styles.cancelBtn}>
                 <Text style={styles.cancelTxt}>Cancel</Text>

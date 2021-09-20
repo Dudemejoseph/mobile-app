@@ -12,8 +12,11 @@ import MapView, {
 import RNLocation from "react-native-location";
 import { COLORS } from "../constants/theme";
 import * as Animatable from "react-native-animatable";
+import { createFarm } from "../redux/features/farmSlice";
+import { CREATE_FARMS_SCREEN } from "../constants/routeNames";
+import backIcon from "../assets/icons/back-arrow.png";
 
-const GeoFence = () => {
+const GeoFence = ({ navigation }) => {
   const [lat, setLat] = useState(37.78825);
   const [lng, setLng] = useState(-122.4324);
   const [coordinates, setCoords] = useState([]);
@@ -21,7 +24,6 @@ const GeoFence = () => {
   const [distance, setDistance] = useState(0);
   const [area, setArea] = useState(0);
   const [hecres, setHecres] = useState(0);
-  const [history, setHistory] = useState([]);
   const [showActionBox, setShowActionBox] = useState(false);
 
   let polyPoints = coordinates.map(function (obj) {
@@ -40,9 +42,9 @@ const GeoFence = () => {
     },
     // Android only
     androidProvider: "auto",
-    interval: 5000, // Milliseconds
-    fastestInterval: 5000, // Milliseconds
-    maxWaitTime: 5000, // Milliseconds
+    // interval: 5000, // Milliseconds
+    // fastestInterval: 5000, // Milliseconds
+    // maxWaitTime: 5000, // Milliseconds
     // iOS Only
     activityType: "other",
     allowsBackgroundLocationUpdates: false,
@@ -122,6 +124,12 @@ const GeoFence = () => {
         />
       </MapView>
       <View style={styles.distanceView}>
+        <TouchableOpacity
+          activeOpacity={0.4}
+          onPress={() => navigation.goBack()}
+        >
+          <Image source={backIcon} style={styles.backIcon} />
+        </TouchableOpacity>
         <Text>Perimeter: {distance}m</Text>
         <Text>Area: {hecres}ha</Text>
       </View>
@@ -141,9 +149,12 @@ const GeoFence = () => {
           <TouchableOpacity
             activeOpacity={0.6}
             style={styles.boxItem}
-            onPress={unsub}
+            onPress={() => {
+              unsub();
+              navigation.navigate(CREATE_FARMS_SCREEN, { hecres });
+            }}
           >
-            <Text>Stop Geo Fencing</Text>
+            <Text>Create Farm</Text>
           </TouchableOpacity>
         </Animatable.View>
       )}
@@ -231,8 +242,9 @@ const styles = StyleSheet.create({
     left: 20,
     backgroundColor: COLORS.background,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
     shadowColor: "#000",
+    flexDirection: "row",
     shadowOffset: {
       width: 0,
       height: 1,
@@ -244,5 +256,10 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     width: "90%",
     height: 50,
+    padding: 10,
+  },
+  backIcon: {
+    width: 20,
+    height: 20,
   },
 });

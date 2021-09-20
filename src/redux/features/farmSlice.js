@@ -8,6 +8,7 @@ const initialState = {
   countries: null,
   states: null,
   farms: null,
+  crops: null,
   lga: null,
   farmActivities: null,
 };
@@ -37,13 +38,30 @@ const farmSlice = createSlice({
       state.lga = payload;
       state.loading = false;
     },
-    setFarms: (state, {payload}) => {
+    setFarms: (state, { payload }) => {
       state.loading = false;
       state.farms = payload;
     },
     createFarmSuccess: (state) => {
       state.loading = false;
-      state.message = 'Farm created successfully';
+      state.message = "Farm created successfully";
+      state.error = null;
+    },
+    setCrops: (state, { payload }) => {
+      state.loading = false;
+      state.crops = payload;
+    },
+    setActivities: (state, { payload }) => {
+      state.loading = false;
+      state.activities = payload;
+    },
+    setCropActivities: (state, { payload }) => {
+      state.loading = false;
+      state.activities = payload;
+    },
+    createFarmActivity: (state) => {
+      state.loading = false;
+      state.message = "Activity created successfully";
       state.error = null;
     },
     setFarmActivities: (state, {payload}) => {
@@ -65,6 +83,7 @@ export const createFarm = (data) => {
     try {
       const res = await axiosInstance.post("/farms", data);
       dispatch(createFarmSuccess());
+      dispatch(fetchFarms());
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
     }
@@ -101,7 +120,7 @@ export const fetchFarms = () => {
     try {
       dispatch(fetch());
       const res = await axiosInstance.get("/farms");
-      dispatch(setFarms(res.data));
+      dispatch(setFarms(res.data.result.data));
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
     }
@@ -117,6 +136,55 @@ export const fetchFarmActivitiesAction = () => {
       dispatch(setFarmActivities(res.data.result?.farm_activities));
     } catch (error) {
       dispatch(fetchFail(error.message))
+    }
+  };
+};
+
+// ========= Fetch List of Crops ======
+export const fetchCrops = () => {
+  return async (dispatch) => {
+    try {
+      const res = await axiosInstance.get("/crops");
+      dispatch(setCrops(res.data.crops));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+// ========= Fetch List of Crops ======
+export const fetchActivities = () => {
+  return async (dispatch) => {
+    try {
+      const res = await axiosInstance.get("/farm-activities");
+      dispatch(setActivities(res.data.result.farm_activities));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+// ========= Fetch Crop Activities ======
+export const fetchCropActivities = () => {
+  return async (dispatch) => {
+    try {
+      const res = await axiosInstance.get("/crop/activity");
+      dispatch(setCropActivities(res.data.result));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+// ========= Post Crop Activities ======
+export const submitCropActivities = (data) => {
+  return async (dispatch) => {
+    dispatch(fetch());
+    try {
+      const res = await axiosInstance.post("/farm-activities", data);
+      dispatch(createFarmActivity());
+    } catch (error) {
+      dispatch(fetchFail(error?.response?.data?.message));
     }
   };
 };

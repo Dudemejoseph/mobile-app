@@ -1,11 +1,16 @@
 import React, { useEffect } from "react";
 import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../../components/Wrapper";
-import { ADD_EXPENSE_SCREEN } from "../../constants/routeNames";
+import {
+  ADD_EXPENSE_SCREEN,
+  ADD_FINANCE_SCREEN,
+  EOP_SCREEN,
+} from "../../constants/routeNames";
 import { COLORS } from "../../constants/theme";
 import { fetchExpenses } from "../../redux/features/expenses";
+import { userSelector } from "../../redux/features/userSlice";
 
 const data = [
   {
@@ -28,8 +33,9 @@ const data = [
   },
 ];
 
-const TrackExpenses = ({ navigation }) => {
+const Finance = ({ navigation }) => {
   const dispatch = useDispatch();
+  const { user } = useSelector(userSelector);
   useEffect(() => {
     const fetchExpensesProcess = () => {
       dispatch(fetchExpenses());
@@ -59,12 +65,23 @@ const TrackExpenses = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.headerTxt}>Track Expenses</Text>
+        {user?.role[0] === "admin" && (
+          <View style={styles.eopView}>
+            <Text style={styles.headerTxt}>Report</Text>
+            <TouchableOpacity
+              activeOpacity={0.6}
+              style={styles.eopBtn}
+              onPress={() => navigation.navigate(EOP_SCREEN)}
+            >
+              <Text style={styles.eopTxt}>View EOP</Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
         {/* ======= Table View ======== */}
         <View style={styles.tableView}>
           <View style={styles.tableHead}>
-            <Text style={styles.headTxt}>Expense</Text>
+            <Text style={styles.headTxt}>Activity</Text>
             <Text style={styles.headTxt}>Actual</Text>
           </View>
 
@@ -81,15 +98,12 @@ const TrackExpenses = ({ navigation }) => {
 
         {/* ====== Add Button ===== */}
         <View style={styles.btnView}>
-          <TouchableOpacity activeOpacity={0.6} style={styles.exportBtn}>
-            <Text style={styles.exportTxt}>Export</Text>
-          </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.6}
             style={styles.addBtn}
-            onPress={() => navigation.navigate(ADD_EXPENSE_SCREEN)}
+            onPress={() => navigation.navigate(ADD_FINANCE_SCREEN)}
           >
-            <Text style={styles.addTxt}>Add Expense</Text>
+            <Text style={styles.addTxt}>Add Cost</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -97,7 +111,7 @@ const TrackExpenses = ({ navigation }) => {
   );
 };
 
-export default TrackExpenses;
+export default Finance;
 
 const styles = ScaledSheet.create({
   container: {
@@ -173,18 +187,21 @@ const styles = ScaledSheet.create({
     fontFamily: "Poppins-Regular",
     color: COLORS.background,
   },
-  exportBtn: {
-    paddingHorizontal: "20@ms",
-    paddingVertical: "10@vs",
+  eopView: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: "20@vs",
+  },
+  eopBtn: {
+    paddingHorizontal: "15@ms",
+    paddingVertical: "8@vs",
+    backgroundColor: "transparent",
     borderRadius: 4,
-    marginRight: "10@ms",
     borderWidth: 1,
     borderColor: COLORS.primary,
   },
-  exportTxt: {
-    fontSize: "12@ms",
-    fontWeight: "500",
-    fontFamily: "Poppins-Regular",
+  eopTxt: {
     color: COLORS.primary,
   },
 });

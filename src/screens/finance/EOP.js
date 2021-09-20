@@ -1,34 +1,48 @@
 import React, { useEffect } from "react";
 import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../../components/Wrapper";
-import { ADD_EXPENSE_SCREEN } from "../../constants/routeNames";
+import {
+  ADD_EXPENSE_SCREEN,
+  ADD_FINANCE_SCREEN,
+} from "../../constants/routeNames";
 import { COLORS } from "../../constants/theme";
 import { fetchExpenses } from "../../redux/features/expenses";
+import { userSelector } from "../../redux/features/userSlice";
 
 const data = [
   {
     id: "1",
-    activity: "weeding",
-    budget: "N700,000.00",
-    actual: "N8500,000.00",
+    name: "weeding",
+    expense: "N70,000.00",
+    estimate: "N50,000.00",
+    actual: "N50,000.00",
   },
   {
     id: "2",
-    activity: "Watering",
-    budget: "N700,000.00",
-    actual: "N8500,000.00",
+    name: "weeding",
+    expense: "N70,000.00",
+    estimate: "N50,000.00",
+    actual: "N50,000.00",
   },
   {
     id: "3",
-    activity: "Rigging",
-    budget: "N700,000.00",
-    actual: "N8500,000.00",
+    name: "weeding",
+    expense: "N70,000.00",
+    estimate: "N50,000.00",
+    actual: "N50,000.00",
+  },
+  {
+    id: "4",
+    name: "weeding",
+    expense: "N70,000.00",
+    estimate: "N50,000.00",
+    actual: "N50,000.00",
   },
 ];
 
-const TrackExpenses = ({ navigation }) => {
+const Eop = ({ navigation }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchExpensesProcess = () => {
@@ -53,18 +67,20 @@ const TrackExpenses = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity>
             <Image
-              source={require("../../assets/icons/user-profile.png")}
+              source={require("../../assets/icons/bell-icon.png")}
               style={styles.bellIcon}
             />
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.headerTxt}>Track Expenses</Text>
+        <Text style={styles.eopTxt}>EOP</Text>
 
         {/* ======= Table View ======== */}
         <View style={styles.tableView}>
           <View style={styles.tableHead}>
+            <Text style={styles.headTxt}>Crop Name</Text>
             <Text style={styles.headTxt}>Expense</Text>
+            <Text style={styles.headTxt}>Estimate</Text>
             <Text style={styles.headTxt}>Actual</Text>
           </View>
 
@@ -72,7 +88,9 @@ const TrackExpenses = ({ navigation }) => {
           {data.map((item) => {
             return (
               <View style={styles.tableRow} key={item.id}>
-                <Text style={styles.rowTxt}>{item.activity}</Text>
+                <Text style={styles.rowTxt}>{item.name}</Text>
+                <Text style={styles.rowTxt}>{item.expense}</Text>
+                <Text style={styles.rowTxt}>{item.estimate}</Text>
                 <Text style={styles.rowTxt}>{item.actual}</Text>
               </View>
             );
@@ -81,15 +99,8 @@ const TrackExpenses = ({ navigation }) => {
 
         {/* ====== Add Button ===== */}
         <View style={styles.btnView}>
-          <TouchableOpacity activeOpacity={0.6} style={styles.exportBtn}>
-            <Text style={styles.exportTxt}>Export</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.6}
-            style={styles.addBtn}
-            onPress={() => navigation.navigate(ADD_EXPENSE_SCREEN)}
-          >
-            <Text style={styles.addTxt}>Add Expense</Text>
+          <TouchableOpacity activeOpacity={0.6} style={styles.addBtn}>
+            <Text style={styles.addTxt}>Save</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -97,7 +108,7 @@ const TrackExpenses = ({ navigation }) => {
   );
 };
 
-export default TrackExpenses;
+export default Eop;
 
 const styles = ScaledSheet.create({
   container: {
@@ -142,6 +153,7 @@ const styles = ScaledSheet.create({
   },
   headTxt: {
     flex: 1,
+    fontSize: "12@ms",
   },
   tableRow: {
     flexDirection: "row",
@@ -153,6 +165,7 @@ const styles = ScaledSheet.create({
     padding: "10@ms",
     fontSize: "12@ms",
     borderColor: COLORS.border,
+    fontSize: "10@ms",
   },
   btnView: {
     width: "100%",
@@ -173,18 +186,9 @@ const styles = ScaledSheet.create({
     fontFamily: "Poppins-Regular",
     color: COLORS.background,
   },
-  exportBtn: {
-    paddingHorizontal: "20@ms",
-    paddingVertical: "10@vs",
-    borderRadius: 4,
-    marginRight: "10@ms",
-    borderWidth: 1,
-    borderColor: COLORS.primary,
-  },
-  exportTxt: {
-    fontSize: "12@ms",
+  eopTxt: {
+    marginTop: "40@vs",
+    fontSize: "18@ms",
     fontWeight: "500",
-    fontFamily: "Poppins-Regular",
-    color: COLORS.primary,
   },
 });

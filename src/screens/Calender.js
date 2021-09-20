@@ -7,7 +7,7 @@ import { fetchFarmActivitiesAction } from "../redux/features/farmSlice";
 
 const timeToString = (time) => {
   const date = new Date(time);
-  return date.toISOString().split('T')[0];
+  return date.toISOString().split("T")[0];
 };
 
 const Calender = () => {
@@ -57,7 +57,7 @@ const Calender = () => {
           const numItems = Math.floor(Math.random() * 3 + 1);
           for (let j = 0; j < numItems; j++) {
             items[strTime].push({
-              name: 'Item for ' + strTime + ' #' + j,
+              name: "Item for " + strTime + " #" + j,
               height: Math.max(50, Math.floor(Math.random() * 150)),
             });
           }
@@ -117,51 +117,54 @@ const Calender = () => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <Wrapper style={styles.content}>
       <Agenda
         items={items}
         loadItemsForMonth={loadActivityItems}
         selected={Date.now()}
         renderItem={(item, firstItemInDay) => renderItem(item, firstItemInDay)}
       />
-    </View>
+    </Wrapper>
   );
 };
 
 const styles = StyleSheet.create({
   agendaItemContainer: {
-    backgroundColor: '#4d6eff',
+    backgroundColor: "#4d6eff",
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
     paddingHorizontal: 15,
     paddingVertical: 15,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   agendaItemContainer2: {
     marginTop: 10,
-    backgroundColor: '#fdf1db',
+    backgroundColor: "#fdf1db",
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
     paddingHorizontal: 15,
     paddingVertical: 15,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   agendaTimeRangeText: {
-    color: '#f2f2f2',
+    color: "#f2f2f2",
     fontSize: 12,
-    fontWeight: 'normal',
+    fontWeight: "normal",
   },
   agendaActivityText: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 14,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   durationText: {
-    color: '#f2f2f2',
+    color: "#f2f2f2",
     fontSize: 12,
-    fontWeight: 'normal',
+    fontWeight: "normal",
+  },
+  content: {
+    paddingHorizontal: 0,
   },
 });
 

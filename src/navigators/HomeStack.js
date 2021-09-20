@@ -3,8 +3,13 @@ import { createStackNavigator } from "@react-navigation/stack";
 import BottomTab from "./BottomTab";
 import {
   ACTIVITIES_SCREEN,
+  ADD_EXPENSE_SCREEN,
+  ADD_FINANCE_SCREEN,
+  ADD_INVENTORY_SCREEN,
   CREATE_FARMS_SCREEN,
   EMERGENCY_SCREEN,
+  EOP_SCREEN,
+  FARM_DETAILS_SCREEN,
   GEO_FENCING_SCREEN,
   INVENTORY_SCREEN,
   SELECT_CROP_SCREEN,
@@ -17,6 +22,11 @@ import Inventory from "../screens/finance/Inventory";
 import Emergency from "../screens/Emergency";
 import GeoFence from "../screens/GeoFence";
 import SelectCrop from "../screens/farm/SelectCrop";
+import AddExpense from "../screens/finance/AddExpense";
+import AddFinance from "../screens/finance/AddFinance";
+import FarmDetails from "../screens/farm/FarmDetails";
+import AddInventory from "../screens/finance/AddInventory";
+import Eop from "../screens/finance/EOP";
 
 const Stack = createStackNavigator();
 
@@ -35,6 +45,11 @@ const HomeStack = () => {
       <Stack.Screen name={EMERGENCY_SCREEN} component={Emergency} />
       <Stack.Screen name={GEO_FENCING_SCREEN} component={GeoFence} />
       <Stack.Screen name={SELECT_CROP_SCREEN} component={SelectCrop} />
+      <Stack.Screen name={ADD_EXPENSE_SCREEN} component={AddExpense} />
+      <Stack.Screen name={ADD_FINANCE_SCREEN} component={AddFinance} />
+      <Stack.Screen name={FARM_DETAILS_SCREEN} component={FarmDetails} />
+      <Stack.Screen name={ADD_INVENTORY_SCREEN} component={AddInventory} />
+      <Stack.Screen name={EOP_SCREEN} component={Eop} />
     </Stack.Navigator>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -8,10 +8,33 @@ import {
   TextInput,
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import Wrapper from "../components/Wrapper";
-import { COLORS } from "../constants/theme";
+import { useDispatch, useSelector } from "react-redux";
+import Wrapper from "../../components/Wrapper";
+import { COLORS } from "../../constants/theme";
+import { farmSelector, fetchActivities } from "../../redux/features/farmSlice";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
-const Finance = ({ navigation }) => {
+const AddInventory = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [selectedDate, setDate] = useState("Select Date");
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleDate = (date) => {
+    setDate(date.toString().substr(0, 16));
+    hideDatePicker();
+  };
+
+  useEffect(() => {
+    dispatch(fetchActivities());
+  }, [dispatch]);
   return (
     <Wrapper>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -22,61 +45,102 @@ const Finance = ({ navigation }) => {
             onPress={() => navigation.goBack()}
           >
             <Image
-              source={require("../assets/icons/back-arrow.png")}
+              source={require("../../assets/icons/back-arrow.png")}
               style={styles.backIcon}
             />
           </TouchableOpacity>
           <TouchableOpacity>
             <Image
-              source={require("../assets/icons/bell-icon.png")}
+              source={require("../../assets/icons/user-profile.png")}
               style={styles.bellIcon}
             />
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.headerTxt}>Finance</Text>
+        <Text style={styles.headerTxt}>Inventory</Text>
 
         {/* ======= Log In Activities ========= */}
         <View style={styles.formView}>
-          <Text style={styles.headTxt}>Report</Text>
+          <Text style={styles.headTxt}>Add Inventory</Text>
           <View style={styles.form}>
-            {/* ========== Fertilizer Application ========= */}
-            <TouchableOpacity activeOpacity={0.4} style={styles.dropBtn}>
-              <Text style={styles.dropTxt}>Report Sales</Text>
+            {/* ========== Select Date ========= */}
+            <TouchableOpacity
+              activeOpacity={0.4}
+              style={styles.dateBtn}
+              onPress={showDatePicker}
+            >
               <Image
-                source={require("../assets/icons/drop-icon.png")}
-                style={styles.dropIcon}
+                source={require("../../assets/icons/calender-icon.png")}
+                style={styles.dateIcon}
               />
+              <Text style={styles.dropTxt}>{selectedDate}</Text>
             </TouchableOpacity>
+            <DateTimePickerModal
+              isVisible={isDatePickerVisible}
+              mode='date'
+              onConfirm={handleDate}
+              onCancel={hideDatePicker}
+            />
 
-            {/* ========== Activity ========= */}
-            <TouchableOpacity activeOpacity={0.4} style={styles.dropBtn}>
-              <Text style={styles.dropTxt}>Activity</Text>
-              <Image
-                source={require("../assets/icons/drop-icon.png")}
-                style={styles.dropIcon}
-              />
-            </TouchableOpacity>
-
-            {/* ======== Amount ========== */}
+            {/* ======== Product ========== */}
             <TextInput
-              placeholder='N0.00'
+              placeholder='Product'
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
             />
 
-            {/* ========== Select Date ========= */}
-            <TouchableOpacity activeOpacity={0.4} style={styles.dateBtn}>
-              <Image
-                source={require("../assets/icons/calender-icon.png")}
-                style={styles.dateIcon}
-              />
-              <Text style={styles.dropTxt}>Select Date</Text>
-            </TouchableOpacity>
+            {/* ======== Brand ========== */}
+            <TextInput
+              placeholder='Brand'
+              style={styles.input}
+              placeholderTextColor={COLORS.text_grey}
+            />
+
+            {/* ======== Starting Stock ========== */}
+            <TextInput
+              placeholder='Starting Stock'
+              style={styles.input}
+              placeholderTextColor={COLORS.text_grey}
+            />
+
+            {/* ======== Added Stock ========== */}
+            <TextInput
+              placeholder='Added Stock'
+              style={styles.input}
+              placeholderTextColor={COLORS.text_grey}
+            />
+
+            {/* ======== Used Stock ========== */}
+            <TextInput
+              placeholder='Used Stock'
+              style={styles.input}
+              placeholderTextColor={COLORS.text_grey}
+            />
+
+            {/* ======== Remaining Stock ========== */}
+            <TextInput
+              placeholder='Remaining Stock'
+              style={styles.input}
+              placeholderTextColor={COLORS.text_grey}
+            />
+
+            {/* ======== Variance ========== */}
+            <TextInput
+              placeholder='Variance'
+              style={styles.input}
+              placeholderTextColor={COLORS.text_grey}
+            />
+
+            {/* ======== Amount checked out ========== */}
+            <TextInput
+              placeholder='Amount checked'
+              style={styles.input}
+              placeholderTextColor={COLORS.text_grey}
+            />
 
             {/* ======== Description ========== */}
             <TextInput
-              placeholder='Description...'
+              placeholder='Purpose...'
               style={styles.inputDesc}
               multiline
               placeholderTextColor={COLORS.text_grey}
@@ -85,7 +149,7 @@ const Finance = ({ navigation }) => {
             {/* ========= Buttons ======== */}
             <View style={styles.btnView}>
               <TouchableOpacity activeOpacity={0.6} style={styles.createBtn}>
-                <Text style={styles.createTxt}>Save</Text>
+                <Text style={styles.createTxt}>Create</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -95,7 +159,7 @@ const Finance = ({ navigation }) => {
   );
 };
 
-export default Finance;
+export default AddInventory;
 
 const styles = ScaledSheet.create({
   container: {

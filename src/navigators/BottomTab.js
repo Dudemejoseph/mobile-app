@@ -4,9 +4,9 @@ import { Image, Platform } from "react-native";
 import { COLORS } from "../constants/theme";
 import Home from "../screens/Home";
 import Fields from "../screens/Fields";
-import Members from "../screens/Members";
 import Calender from "../screens/Calender";
-import Finance from "../screens/Finance";
+import Finance from "../screens/finance/Finance";
+import Camera from "../screens/Camera";
 
 const Tab = createBottomTabNavigator();
 
@@ -45,10 +45,10 @@ const BottomTab = () => {
         }}
       />
       <Tab.Screen
-        name='Field'
+        name='Farms'
         component={Fields}
         options={{
-          tabBarLabel: "Field",
+          tabBarLabel: "Farms",
           tabBarLabelStyle: { fontSize: 12, paddingBottom: 5 },
           tabBarIcon: ({ color }) => (
             <Image
@@ -64,14 +64,14 @@ const BottomTab = () => {
         }}
       />
       <Tab.Screen
-        name='Members'
-        component={Members}
+        name='Camera'
+        component={Camera}
         options={{
-          tabBarLabel: "Members",
+          tabBarLabel: "Camera",
           tabBarLabelStyle: { fontSize: 12, paddingBottom: 5 },
           tabBarIcon: ({ color }) => (
             <Image
-              source={require("../assets/icons/members-icon.png")}
+              source={require("../assets/icons/camera.png")}
               style={{
                 tintColor: color,
                 width: 20,
@@ -86,7 +86,7 @@ const BottomTab = () => {
         name='Calender'
         component={Calender}
         options={{
-          tabBarLabel: "Calender",
+          tabBarLabel: "Crop Calender",
           tabBarLabelStyle: { fontSize: 12, paddingBottom: 5 },
           tabBarIcon: ({ color }) => (
             <Image

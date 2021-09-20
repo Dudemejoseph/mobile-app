@@ -8,6 +8,7 @@ module.exports = {
         path: ".env.local",
         safe: true,
       },
+      "react-native-reanimated/plugin",
     ],
   ],
 };

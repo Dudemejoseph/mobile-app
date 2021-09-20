@@ -58,38 +58,80 @@ const activities = [
     id: "8",
     name: "Seeds",
   },
+];
+const labors = [
   {
-    id: "9",
-    name: "Planting",
+    id: "1",
+    name: "Planting/Seeding",
   },
   {
-    id: "10",
+    id: "2",
+    name: "Spraying",
+  },
+  {
+    id: "3",
+    name: "Application of NPK",
+  },
+  {
+    id: "4",
+    name: "Application of Urea",
+  },
+];
+const mechanizations = [
+  {
+    id: "1",
+    name: "Ploughing",
+  },
+  {
+    id: "2",
+    name: "Harrowing",
+  },
+  {
+    id: "3",
+    name: "Ridging",
+  },
+];
+const logisticss = [
+  {
+    id: "1",
+    name: "Transportation",
+  },
+  {
+    id: "2",
+    name: "Feeding",
+  },
+  {
+    id: "3",
+    name: "Airtime",
+  },
+];
+const contigencies = [
+  {
+    id: "1",
+    name: "Weeding",
+  },
+];
+const others = [
+  {
+    id: "1",
     name: "Consultation",
   },
   {
-    id: "11",
-    name: "labor for spraying",
+    id: "2",
+    name: "Insurance",
   },
   {
-    id: "12",
-    name: "labor for planting",
+    id: "3",
+    name: "Interest",
   },
 ];
 
-const Activities = ({ navigation }) => {
+const AddFinance = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { crops, loading, message, error, farms } = useSelector(farmSelector);
+  const { loading, message, error } = useSelector(farmSelector);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [isDatePickerVisible2, setDatePickerVisibility2] = useState(false);
-  const [start_date, setStartDate] = useState("Select Start Date");
-  const [end_date, setEndDate] = useState("Select End Date");
-  const [crop, setCrop] = useState("Choose Crop");
-  const [crop_id, setCropID] = useState("");
-  const [farm, setFarm] = useState("Choose Farm");
-  const [farm_id, setFarmID] = useState("");
-  const [activity, setActivity] = useState("Select activity");
-  const [showCropPicker, setShowCrop] = useState(false);
-  const [showFarmPicker, setShowFarm] = useState(false);
+  const [start_date, setStartDate] = useState("Select Date");
+  const [category, setCategory] = useState("Select Activity");
   const [showActivityPicker, setShowActivity] = useState(false);
 
   const showDatePicker = () => {
@@ -105,31 +147,6 @@ const Activities = ({ navigation }) => {
     hideDatePicker();
   };
 
-  const showDatePicker2 = () => {
-    setDatePickerVisibility2(true);
-  };
-
-  const hideDatePicker2 = () => {
-    setDatePickerVisibility2(false);
-  };
-
-  const handleEndDate = (date) => {
-    setEndDate(date.toString().substr(0, 16));
-    hideDatePicker2();
-  };
-
-  useEffect(() => {
-    dispatch(fetchActivities());
-    dispatch(fetchCropActivities());
-    dispatch(fetchCrops());
-    dispatch(fetchFarms());
-  }, [dispatch]);
-
-  const createCropActivity = () => {
-    const data = { activity, crop_id, start_date, end_date, farm_id };
-    dispatch(submitCropActivities(data));
-  };
-
   useEffect(() => {
     message &&
       Toast.show({
@@ -138,7 +155,6 @@ const Activities = ({ navigation }) => {
         text2: message,
         topOffset: 40,
       });
-    message && navigation.navigate("Home");
   }, [message]);
 
   useEffect(() => {
@@ -166,58 +182,25 @@ const Activities = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity>
             <Image
-              source={require("../../assets/icons/bell-icon.png")}
+              source={require("../../assets/icons/user-profile.png")}
               style={styles.bellIcon}
             />
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.headerTxt}>Activities</Text>
+        <Text style={styles.headerTxt}>Add Finance</Text>
 
         {/* ======= Log In Activities ========= */}
         <View style={styles.formView}>
-          <Text style={styles.headTxt}>Record Activities</Text>
+          <Text style={styles.headTxt}>Record Finance</Text>
           <View style={styles.form}>
-            {/* ========== Choose Farm ========= */}
-            <TouchableOpacity
-              activeOpacity={0.4}
-              style={styles.dropBtn}
-              onPress={() => setShowFarm(!showFarmPicker)}
-            >
-              <Text style={styles.dropTxt}>{farm}</Text>
-              <Image
-                source={require("../../assets/icons/drop-icon.png")}
-                style={styles.dropIcon}
-              />
-            </TouchableOpacity>
-            {showFarmPicker && (
-              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
-                {farms.map((item) => {
-                  return (
-                    <TouchableOpacity
-                      activeOpacity={0.6}
-                      key={item.id}
-                      style={styles.size}
-                      onPress={() => {
-                        setFarm(item.name);
-                        setFarmID(item.id);
-                        setShowFarm(false);
-                      }}
-                    >
-                      <Text>{item.name}</Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </Animatable.View>
-            )}
-
-            {/* ========== Fertilizer Application ========= */}
+            {/* ========== Activity ========= */}
             <TouchableOpacity
               activeOpacity={0.4}
               style={styles.dropBtn}
               onPress={() => setShowActivity(!showActivityPicker)}
             >
-              <Text style={styles.dropTxt}>{activity}</Text>
+              <Text style={styles.dropTxt}>{category}</Text>
               <Image
                 source={require("../../assets/icons/drop-icon.png")}
                 style={styles.dropIcon}
@@ -232,7 +215,7 @@ const Activities = ({ navigation }) => {
                       key={item.id}
                       style={styles.size}
                       onPress={() => {
-                        setActivity(item.name);
+                        setCategory(item.name);
                         setShowActivity(false);
                       }}
                     >
@@ -243,38 +226,12 @@ const Activities = ({ navigation }) => {
               </Animatable.View>
             )}
 
-            {/* ========== Choose Crop ========= */}
-            <TouchableOpacity
-              activeOpacity={0.4}
-              style={styles.dropBtn}
-              onPress={() => setShowCrop(!showCropPicker)}
-            >
-              <Text style={styles.dropTxt}>{crop}</Text>
-              <Image
-                source={require("../../assets/icons/drop-icon.png")}
-                style={styles.dropIcon}
-              />
-            </TouchableOpacity>
-            {showCropPicker && (
-              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
-                {crops.map((item) => {
-                  return (
-                    <TouchableOpacity
-                      activeOpacity={0.6}
-                      key={item.id}
-                      style={styles.size}
-                      onPress={() => {
-                        setCrop(item.name);
-                        setCropID(item.id);
-                        setShowCrop(false);
-                      }}
-                    >
-                      <Text>{item.name}</Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </Animatable.View>
-            )}
+            {/* ======== Price ========== */}
+            <TextInput
+              placeholder='Price'
+              style={styles.input}
+              placeholderTextColor={COLORS.text_grey}
+            />
 
             {/* ========== Select Date ========= */}
             <TouchableOpacity
@@ -295,25 +252,6 @@ const Activities = ({ navigation }) => {
               onCancel={hideDatePicker}
             />
 
-            {/* ========== Select Date 2 ========= */}
-            <TouchableOpacity
-              activeOpacity={0.4}
-              style={styles.dateBtn}
-              onPress={showDatePicker2}
-            >
-              <Image
-                source={require("../../assets/icons/calender-icon.png")}
-                style={styles.dateIcon}
-              />
-              <Text style={styles.dropTxt}>{end_date}</Text>
-            </TouchableOpacity>
-            <DateTimePickerModal
-              isVisible={isDatePickerVisible2}
-              mode='date'
-              onConfirm={handleEndDate}
-              onCancel={hideDatePicker2}
-            />
-
             {/* ======== Description ========== */}
             <TextInput
               placeholder='Note...'
@@ -324,16 +262,8 @@ const Activities = ({ navigation }) => {
 
             {/* ========= Buttons ======== */}
             <View style={styles.btnView}>
-              <TouchableOpacity
-                activeOpacity={0.6}
-                style={styles.createBtn}
-                onPress={createCropActivity}
-              >
-                {loading ? (
-                  <ActivityIndicator color={COLORS.background} size='small' />
-                ) : (
-                  <Text style={styles.createTxt}>Create</Text>
-                )}
+              <TouchableOpacity activeOpacity={0.6} style={styles.createBtn}>
+                <Text style={styles.createTxt}>Done</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -343,7 +273,7 @@ const Activities = ({ navigation }) => {
   );
 };
 
-export default Activities;
+export default AddFinance;
 
 const styles = ScaledSheet.create({
   container: {
@@ -381,6 +311,17 @@ const styles = ScaledSheet.create({
     borderTopLeftRadius: 8,
     borderWidth: 1,
     borderColor: COLORS.border,
+  },
+  input: {
+    width: "100%",
+    height: "40@vs",
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 4,
+    color: COLORS.text_dark,
+    paddingHorizontal: "10@ms",
+    fontFamily: "Poppins-Regular",
+    marginTop: "15@vs",
   },
 
   headTxt: {

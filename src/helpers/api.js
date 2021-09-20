@@ -7,7 +7,7 @@ let headers = {};
 // Create an Instance
 const axiosInstance = axios.create({
   baseURL: envs.BASE_URL,
-  // timeout: 15000,
+  timeout: 15000,
   headers,
 });
 
@@ -49,7 +49,8 @@ axiosInstance.interceptors.response.use(
     }
 
     if (error.response && error.response.status === 401) {
-      removeToken();
+      AsyncStorage.clear();
+      AsyncStorage.removeItem("@userToken");
     } else {
       return new Promise((resolve, reject) => {
         reject(error);

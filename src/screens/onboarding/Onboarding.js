@@ -34,7 +34,7 @@ const slides = [
 ];
 
 const Onboarding = ({ navigation }) => {
-  const { isAuthenticated, loading} = useSelector(userSelector);
+  const { isAuthenticated, loading } = useSelector(userSelector);
   const [currentIndex, setCurrentIndex] = useState(0);
   const { navigate } = navigation;
 
