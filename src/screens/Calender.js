@@ -4,6 +4,7 @@ import { Agenda } from 'react-native-calendars';
 import { useDispatch, useSelector } from "react-redux";
 import { COLORS } from "../constants/theme";
 import { fetchFarmActivitiesAction } from "../redux/features/farmSlice";
+import Wrapper from '../components/Wrapper';
 
 const timeToString = (time) => {
   const date = new Date(time);

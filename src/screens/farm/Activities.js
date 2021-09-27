@@ -1,29 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Text,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  Image,
-  TextInput,
   ActivityIndicator,
+  Image,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
+import * as Animatable from "react-native-animatable";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { ScaledSheet } from "react-native-size-matters";
+import Toast from "react-native-toast-message";
 import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../../components/Wrapper";
 import { COLORS } from "../../constants/theme";
-import * as Animatable from "react-native-animatable";
 import {
-  createFarmActivity,
   farmSelector,
-  fetchActivities,
   fetchCropActivities,
   fetchCrops,
+  fetchFarmActivitiesAction,
   fetchFarms,
   submitCropActivities,
 } from "../../redux/features/farmSlice";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import Toast from "react-native-toast-message";
 
 const activities = [
   {
@@ -78,7 +77,8 @@ const activities = [
 
 const Activities = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { crops, loading, message, error, farms } = useSelector(farmSelector);
+  const { crops, loading, message, error, farms, farmActivities } =
+    useSelector(farmSelector);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isDatePickerVisible2, setDatePickerVisibility2] = useState(false);
   const [start_date, setStartDate] = useState("Select Start Date");
@@ -119,7 +119,7 @@ const Activities = ({ navigation }) => {
   };
 
   useEffect(() => {
-    dispatch(fetchActivities());
+    dispatch(fetchFarmActivitiesAction());
     dispatch(fetchCropActivities());
     dispatch(fetchCrops());
     dispatch(fetchFarms());
@@ -191,7 +191,7 @@ const Activities = ({ navigation }) => {
               />
             </TouchableOpacity>
             {showFarmPicker && (
-              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
+              <Animatable.View style={styles.sizePicker} animation="fadeIn">
                 {farms.map((item) => {
                   return (
                     <TouchableOpacity
@@ -224,19 +224,19 @@ const Activities = ({ navigation }) => {
               />
             </TouchableOpacity>
             {showActivityPicker && (
-              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
-                {activities.map((item) => {
+              <Animatable.View style={styles.sizePicker} animation="fadeIn">
+                {farmActivities && farmActivities.map((item) => {
                   return (
                     <TouchableOpacity
                       activeOpacity={0.6}
                       key={item.id}
                       style={styles.size}
                       onPress={() => {
-                        setActivity(item.name);
+                        setActivity(item.activity);
                         setShowActivity(false);
                       }}
                     >
-                      <Text>{item.name}</Text>
+                      <Text>{item.activity}</Text>
                     </TouchableOpacity>
                   );
                 })}
@@ -256,7 +256,7 @@ const Activities = ({ navigation }) => {
               />
             </TouchableOpacity>
             {showCropPicker && (
-              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
+              <Animatable.View style={styles.sizePicker} animation="fadeIn">
                 {crops.map((item) => {
                   return (
                     <TouchableOpacity
@@ -290,7 +290,7 @@ const Activities = ({ navigation }) => {
             </TouchableOpacity>
             <DateTimePickerModal
               isVisible={isDatePickerVisible}
-              mode='date'
+              mode="date"
               onConfirm={handleDate}
               onCancel={hideDatePicker}
             />
@@ -309,14 +309,14 @@ const Activities = ({ navigation }) => {
             </TouchableOpacity>
             <DateTimePickerModal
               isVisible={isDatePickerVisible2}
-              mode='date'
+              mode="date"
               onConfirm={handleEndDate}
               onCancel={hideDatePicker2}
             />
 
             {/* ======== Description ========== */}
             <TextInput
-              placeholder='Note...'
+              placeholder="Note..."
               style={styles.inputDesc}
               multiline
               placeholderTextColor={COLORS.text_grey}
@@ -330,7 +330,7 @@ const Activities = ({ navigation }) => {
                 onPress={createCropActivity}
               >
                 {loading ? (
-                  <ActivityIndicator color={COLORS.background} size='small' />
+                  <ActivityIndicator color={COLORS.background} size="small" />
                 ) : (
                   <Text style={styles.createTxt}>Create</Text>
                 )}
