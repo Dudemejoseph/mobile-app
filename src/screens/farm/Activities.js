@@ -24,64 +24,12 @@ import {
   submitCropActivities,
 } from "../../redux/features/farmSlice";
 
-const activities = [
-  {
-    id: "1",
-    name: "NPK",
-  },
-  {
-    id: "2",
-    name: "Urea",
-  },
-  {
-    id: "3",
-    name: "Water",
-  },
-  {
-    id: "4",
-    name: "Pre emergence herbicide",
-  },
-  {
-    id: "5",
-    name: "Post emergence herbicide",
-  },
-  {
-    id: "6",
-    name: "insecticide",
-  },
-  {
-    id: "7",
-    name: "fungicide",
-  },
-  {
-    id: "8",
-    name: "Seeds",
-  },
-  {
-    id: "9",
-    name: "Planting",
-  },
-  {
-    id: "10",
-    name: "Consultation",
-  },
-  {
-    id: "11",
-    name: "labor for spraying",
-  },
-  {
-    id: "12",
-    name: "labor for planting",
-  },
-];
-
 const Activities = ({ navigation }) => {
   const dispatch = useDispatch();
   const { crops, loading, message, error, farms, farmActivities } =
     useSelector(farmSelector);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isDatePickerVisible2, setDatePickerVisibility2] = useState(false);
-  const [start_date, setStartDate] = useState("Select Start Date");
   const [end_date, setEndDate] = useState("Select End Date");
   const [crop, setCrop] = useState("Choose Crop");
   const [crop_id, setCropID] = useState("");
@@ -126,7 +74,7 @@ const Activities = ({ navigation }) => {
   }, [dispatch]);
 
   const createCropActivity = () => {
-    const data = { activity, crop_id, start_date, end_date, farm_id };
+    const data = { activity, crop_id, end_date, farm_id };
     dispatch(submitCropActivities(data));
   };
 
@@ -225,21 +173,22 @@ const Activities = ({ navigation }) => {
             </TouchableOpacity>
             {showActivityPicker && (
               <Animatable.View style={styles.sizePicker} animation="fadeIn">
-                {farmActivities && farmActivities.map((item) => {
-                  return (
-                    <TouchableOpacity
-                      activeOpacity={0.6}
-                      key={item.id}
-                      style={styles.size}
-                      onPress={() => {
-                        setActivity(item.activity);
-                        setShowActivity(false);
-                      }}
-                    >
-                      <Text>{item.activity}</Text>
-                    </TouchableOpacity>
-                  );
-                })}
+                {farmActivities &&
+                  farmActivities.map((item) => {
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={0.6}
+                        key={item.id}
+                        style={styles.size}
+                        onPress={() => {
+                          setActivity(item.activity);
+                          setShowActivity(false);
+                        }}
+                      >
+                        <Text>{item.activity}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
               </Animatable.View>
             )}
 
@@ -275,25 +224,6 @@ const Activities = ({ navigation }) => {
                 })}
               </Animatable.View>
             )}
-
-            {/* ========== Select Date ========= */}
-            <TouchableOpacity
-              activeOpacity={0.4}
-              style={styles.dateBtn}
-              onPress={showDatePicker}
-            >
-              <Image
-                source={require("../../assets/icons/calender-icon.png")}
-                style={styles.dateIcon}
-              />
-              <Text style={styles.dropTxt}>{start_date}</Text>
-            </TouchableOpacity>
-            <DateTimePickerModal
-              isVisible={isDatePickerVisible}
-              mode="date"
-              onConfirm={handleDate}
-              onCancel={hideDatePicker}
-            />
 
             {/* ========== Select Date 2 ========= */}
             <TouchableOpacity
@@ -332,7 +262,7 @@ const Activities = ({ navigation }) => {
                 {loading ? (
                   <ActivityIndicator color={COLORS.background} size="small" />
                 ) : (
-                  <Text style={styles.createTxt}>Create</Text>
+                  <Text style={styles.createTxt}>Log Activity</Text>
                 )}
               </TouchableOpacity>
             </View>

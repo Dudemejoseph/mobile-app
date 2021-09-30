@@ -62,6 +62,7 @@ const Home = ({ navigation }) => {
   const { navigate } = navigation;
   const dispatch = useDispatch();
   const { message, error, loading, dashboard } = useSelector(userSelector);
+  console.log("dashboard ios  ", dashboard);
 
   const getUser = async () => {
     try {

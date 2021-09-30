@@ -21,6 +21,7 @@ import {
   fetchCrops,
   fetchFarms,
   submitCropActivities,
+  fetchFarmActivitiesAction,
 } from "../../redux/features/farmSlice";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Toast from "react-native-toast-message";
@@ -128,7 +129,7 @@ const others = [
 
 const AddExpense = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { loading, message, error } = useSelector(farmSelector);
+  const { loading, message, error, farmActivities } = useSelector(farmSelector);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [start_date, setStartDate] = useState("Select Date");
   const [category, setCategory] = useState("Select Category");
@@ -143,6 +144,10 @@ const AddExpense = ({ navigation }) => {
   const [showMechanizationPicker, setShowMechanization] = useState(false);
   const [showActivityPicker, setShowActivity] = useState(false);
   const [showOthersPicker, setShowOthers] = useState(false);
+
+  useEffect(() => {
+    dispatch(fetchFarmActivitiesAction());
+  }, [dispatch]);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -218,18 +223,18 @@ const AddExpense = ({ navigation }) => {
             </TouchableOpacity>
             {showActivityPicker && (
               <Animatable.View style={styles.sizePicker} animation='fadeIn'>
-                {activities.map((item) => {
+                {farmActivities && farmActivities.map((item) => {
                   return (
                     <TouchableOpacity
                       activeOpacity={0.6}
                       key={item.id}
                       style={styles.size}
                       onPress={() => {
-                        setCategory(item.name);
+                        setCategory(item.activity);
                         setShowActivity(false);
                       }}
                     >
-                      <Text>{item.name}</Text>
+                      <Text>{item.activity}</Text>
                     </TouchableOpacity>
                   );
                 })}

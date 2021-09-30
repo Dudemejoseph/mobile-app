@@ -15,10 +15,14 @@ import * as Animatable from "react-native-animatable";
 import { createFarm } from "../redux/features/farmSlice";
 import { CREATE_FARMS_SCREEN } from "../constants/routeNames";
 import backIcon from "../assets/icons/back-arrow.png";
+import Geolocation from 'react-native-geolocation-service';
 
 const GeoFence = ({ navigation }) => {
-  const [lat, setLat] = useState(37.78825);
-  const [lng, setLng] = useState(-122.4324);
+  const [lat, setLat] = useState();
+  const [lng, setLng] = useState();
+  const LATITUDE_DELTA = 0.005;
+  const LONGITUDE_DELTA = 0.005;
+  let [mapRegion, setMapRegion] = useState(null);
   const [coordinates, setCoords] = useState([]);
   const [trackEnabled, setEnabled] = useState(false);
   const [distance, setDistance] = useState(0);
@@ -81,6 +85,26 @@ const GeoFence = ({ navigation }) => {
     } else return null;
   }, [trackEnabled]);
 
+  useEffect(() => {
+    const getCurrentPosition = () => {
+      Geolocation.getCurrentPosition(
+        position => {
+          setMapRegion({
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+            longitude: position.coords.longitude,
+            latitude: position.coords.latitude,
+          });
+        },
+        error => {
+          console.error('location error ', error);
+        },
+        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+      );
+    };
+    getCurrentPosition();
+  }, []);
+
   const sub = () => {
     setEnabled(true);
   };
@@ -103,14 +127,9 @@ const GeoFence = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <MapView
-        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+        provider={PROVIDER_GOOGLE}
         style={styles.map}
-        region={{
-          latitude: lat,
-          longitude: lng,
-          latitudeDelta: 0.015,
-          longitudeDelta: 0.0121,
-        }}
+        initialRegion={mapRegion}
         showsUserLocation
         zoomEnabled
         zoomControlEnabled={true}

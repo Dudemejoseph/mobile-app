@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import Wrapper from "../../components/Wrapper";
 import { ADD_INVENTORY_SCREEN } from "../../constants/routeNames";
 import { COLORS } from "../../constants/theme";
+import {
+  fetchInventory,
+  inventorySelector,
+} from "../../redux/features/inventorySlice";
 
 const inventories = [
   {
@@ -48,6 +53,18 @@ const inventories = [
 ];
 
 const Inventory = ({ navigation }) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchInventoryProcess = () => {
+      dispatch(fetchInventory());
+    };
+    fetchInventoryProcess();
+  }, []);
+
+  const { inventory } = useSelector(inventorySelector);
+  console.log("inventory  ==========> ", inventory);
+
   return (
     <Wrapper>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -86,7 +103,7 @@ const Inventory = ({ navigation }) => {
               <Text style={styles.headTxt}>Amount Checked Out</Text>
               <Text style={styles.headTxt}>Purpose</Text>
             </View>
-            {inventories.map((item) => {
+            {inventory && inventory.map((item) => {
               return (
                 <View style={styles.tableBody} key={item.id}>
                   <Text style={styles.bodyTxt1}>{item.date}</Text>

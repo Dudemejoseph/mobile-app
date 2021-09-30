@@ -1,73 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Text,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  Image,
-  TextInput,
   ActivityIndicator,
+  Image,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
+import * as Animatable from "react-native-animatable";
 import { ScaledSheet } from "react-native-size-matters";
+import Toast from "react-native-toast-message";
 import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../../components/Wrapper";
+import { PROFILE_SCREEN } from "../../constants/routeNames";
 import { COLORS } from "../../constants/theme";
-import * as Animatable from "react-native-animatable";
 import {
-  createFarmActivity,
   farmSelector,
-  fetchActivities,
-  fetchCropActivities,
-  fetchCrops,
-  fetchFarms,
-  submitCropActivities,
+  fetchFarmActivitiesAction,
 } from "../../redux/features/farmSlice";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import Toast from "react-native-toast-message";
 import {
   addFinance,
   transactionsSelector,
 } from "../../redux/features/transactionSlice";
-import { PROFILE_SCREEN } from "../../constants/routeNames";
-
-const activities = [
-  {
-    id: "1",
-    name: "NPK",
-  },
-  {
-    id: "2",
-    name: "Urea",
-  },
-  {
-    id: "3",
-    name: "Water",
-  },
-  {
-    id: "4",
-    name: "Pre emergence herbicide",
-  },
-  {
-    id: "5",
-    name: "Post emergence herbicide",
-  },
-  {
-    id: "6",
-    name: "insecticide",
-  },
-  {
-    id: "7",
-    name: "fungicide",
-  },
-  {
-    id: "8",
-    name: "Seeds",
-  },
-];
 
 const AddFinance = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { farms } = useSelector(farmSelector);
+  const { farms, farmActivities } = useSelector(farmSelector);
   const { error, message, loading } = useSelector(transactionsSelector);
 
   const [activity, setActivity] = useState("Select Activity");
@@ -100,6 +59,10 @@ const AddFinance = ({ navigation }) => {
       });
   }, [error]);
 
+  useEffect(() => {
+    dispatch(fetchFarmActivitiesAction());
+  }, []);
+
   const addToFinance = () => {
     const data = {
       farm_id,
@@ -108,7 +71,6 @@ const AddFinance = ({ navigation }) => {
       activity,
       type: "credit",
     };
-    console.log(data);
     dispatch(addFinance(data));
   };
   return (
@@ -155,7 +117,7 @@ const AddFinance = ({ navigation }) => {
               />
             </TouchableOpacity>
             {showFarmPicker && (
-              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
+              <Animatable.View style={styles.sizePicker} animation="fadeIn">
                 {farms.map((item) => {
                   return (
                     <TouchableOpacity
@@ -188,28 +150,29 @@ const AddFinance = ({ navigation }) => {
               />
             </TouchableOpacity>
             {showActivityPicker && (
-              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
-                {activities.map((item) => {
-                  return (
-                    <TouchableOpacity
-                      activeOpacity={0.6}
-                      key={item.id}
-                      style={styles.size}
-                      onPress={() => {
-                        setActivity(item.name);
-                        setShowActivity(false);
-                      }}
-                    >
-                      <Text>{item.name}</Text>
-                    </TouchableOpacity>
-                  );
-                })}
+              <Animatable.View style={styles.sizePicker} animation="fadeIn">
+                {farmActivities &&
+                  farmActivities.map((item) => {
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={0.6}
+                        key={item.id}
+                        style={styles.size}
+                        onPress={() => {
+                          setActivity(item.activity);
+                          setShowActivity(false);
+                        }}
+                      >
+                        <Text>{item.activity}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
               </Animatable.View>
             )}
 
             {/* ======== Amount ========== */}
             <TextInput
-              placeholder='Amount'
+              placeholder="Amount"
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
               onChangeText={(val) => setAmount(val)}
@@ -217,7 +180,7 @@ const AddFinance = ({ navigation }) => {
 
             {/* ======== Description ========== */}
             <TextInput
-              placeholder='Note...'
+              placeholder="Note..."
               style={styles.inputDesc}
               multiline
               placeholderTextColor={COLORS.text_grey}
@@ -232,7 +195,7 @@ const AddFinance = ({ navigation }) => {
                 onPress={addToFinance}
               >
                 {loading ? (
-                  <ActivityIndicator size='small' color={COLORS.background} />
+                  <ActivityIndicator size="small" color={COLORS.background} />
                 ) : (
                   <Text style={styles.createTxt}>Done</Text>
                 )}

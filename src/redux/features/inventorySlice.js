@@ -5,12 +5,11 @@ const initialState = {
   loading: false,
   error: null,
   message: null,
-  finances: null,
-  expenses: null,
+  inventory: null,
 };
 
-const transactionSlice = createSlice({
-  name: "transactions",
+const inventorySlice = createSlice({
+  name: "inventory",
   initialState,
   reducers: {
     fetch: (state) => {
@@ -24,13 +23,9 @@ const transactionSlice = createSlice({
     setMessage: (state, { payload }) => {
       (state.loading = false), (state.error = null), (state.message = payload);
     },
-    setFinance: (state, { payload }) => {
+    setInventory: (state, { payload }) => {
       state.loading = false;
-      state.finances = payload;
-    },
-    setExpenses: (state, { payload }) => {
-      state.loading = false;
-      state.expenses = payload;
+      state.inventory = payload;
     },
     clear: (state) => {
       state.loading = false;
@@ -40,18 +35,18 @@ const transactionSlice = createSlice({
   },
 });
 
-export const { fetch, setError, setMessage, setExpenses, setFinance, clear } =
-  transactionSlice.actions;
-export default transactionSlice.reducer;
-export const transactionsSelector = (state) => state.transactions;
+export const { fetch, setError, setMessage, setInventory } =
+  inventorySlice.actions;
+export default inventorySlice.reducer;
+export const inventorySelector = (state) => state.inventory;
 
-// ========== Create Finance ==========
-export const addFinance = (data) => {
+// ========== Create Inventory ==========
+export const addInventory = (data) => {
   return async (dispatch) => {
     dispatch(fetch());
     try {
-      const res = await axiosInstance.post("/transactions", data);
-      dispatch(setMessage("Finance recorded successfully"));
+      const res = await axiosInstance.post("/equipments", data);
+      dispatch(setMessage("Inventory recorded successfully"));
       dispatch(clear());
     } catch (error) {
       dispatch(setError(error.response.data.message));
@@ -59,15 +54,14 @@ export const addFinance = (data) => {
   };
 };
 
-export const fetchFinances = () => {
+export const fetchInventory = () => {
   return async (dispatch) => {
     dispatch(fetch());
     try {
-      const res = await axiosInstance.get("/transactions");
-      dispatch(setFinance(res?.data?.result));
+      const res = await axiosInstance.get("/equipments");
+      dispatch(setInventory(res?.data?.result?.data));
     } catch (error) {
       dispatch(setError(error.response.data.message));
-      console.log(error);
     }
   };
 };

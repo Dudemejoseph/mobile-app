@@ -1,35 +1,21 @@
 import React, { useEffect } from "react";
 import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../../components/Wrapper";
 import { ADD_EXPENSE_SCREEN } from "../../constants/routeNames";
 import { COLORS } from "../../constants/theme";
-import { fetchExpenses } from "../../redux/features/expenses";
-
-const data = [
-  {
-    id: "1",
-    activity: "weeding",
-    budget: "N700,000.00",
-    actual: "N8500,000.00",
-  },
-  {
-    id: "2",
-    activity: "Watering",
-    budget: "N700,000.00",
-    actual: "N8500,000.00",
-  },
-  {
-    id: "3",
-    activity: "Rigging",
-    budget: "N700,000.00",
-    actual: "N8500,000.00",
-  },
-];
+import { PROFILE_SCREEN } from "../../constants/routeNames";
+import { fetchExpenses } from "../../redux/features/expensesSlice";
 
 const TrackExpenses = ({ navigation }) => {
   const dispatch = useDispatch();
+  const { loading, error, expenses } = useSelector((state) => state.expenses);
+  console.log("Expenses are ", expenses);
+
+  useEffect(() => {
+    dispatch(fetchExpenses());
+  }, []);
 
   return (
     <Wrapper>
@@ -45,7 +31,11 @@ const TrackExpenses = ({ navigation }) => {
               style={styles.backIcon}
             />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate(PROFILE_SCREEN);
+            }}
+          >
             <Image
               source={require("../../assets/icons/user-profile.png")}
               style={styles.bellIcon}
@@ -59,15 +49,15 @@ const TrackExpenses = ({ navigation }) => {
         <View style={styles.tableView}>
           <View style={styles.tableHead}>
             <Text style={styles.headTxt}>Expense</Text>
-            <Text style={styles.headTxt}>Actual</Text>
+            <Text style={styles.headTxt}>Actual(&#8358;)</Text>
           </View>
 
           {/* ========= table Items ======= */}
-          {data.map((item) => {
+          {expenses && expenses.map((item) => {
             return (
               <View style={styles.tableRow} key={item.id}>
                 <Text style={styles.rowTxt}>{item.activity}</Text>
-                <Text style={styles.rowTxt}>{item.actual}</Text>
+                <Text style={styles.rowTxt}>{item.amount}</Text>
               </View>
             );
           })}

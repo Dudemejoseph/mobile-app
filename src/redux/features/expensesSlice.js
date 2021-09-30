@@ -39,10 +39,21 @@ export const fetchExpenses = () => {
     try {
       dispatch(fetch());
       const res = await axiosInstance.get("/transactions");
-      console.log("res ", res.data.result);
+      dispatch(setExpenses(res.data.result.data));
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
-      console.log(error);
+    }
+  };
+};
+
+export const createExpense = (data) => {
+  return async (dispatch) => {
+    try {
+      dispatch(fetch());
+      const res = await axiosInstance.post("/transactions", data);
+      console.log("expense ", expenses);
+    } catch (error) {
+      dispatch(fetchFail(error.response.data.message));
     }
   };
 };

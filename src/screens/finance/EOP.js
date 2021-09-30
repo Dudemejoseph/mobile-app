@@ -8,7 +8,7 @@ import {
   ADD_FINANCE_SCREEN,
 } from "../../constants/routeNames";
 import { COLORS } from "../../constants/theme";
-import { fetchExpenses } from "../../redux/features/expenses";
+import { fetchExpenses } from "../../redux/features/expensesSlice";
 import { userSelector } from "../../redux/features/userSlice";
 
 const data = [
