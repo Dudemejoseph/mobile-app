@@ -135,7 +135,7 @@ const Home = ({ navigation }) => {
           justifyContent: "center",
         }}
       >
-        <ActivityIndicator size='large' color={COLORS.primary} />
+        <ActivityIndicator size="large" color={COLORS.primary} />
       </View>
     );
   }
@@ -211,7 +211,7 @@ const Home = ({ navigation }) => {
               >
                 <ImageBackground
                   source={item.image}
-                  resizeMode='contain'
+                  resizeMode="contain"
                   style={styles.box}
                 >
                   <Text style={styles.boxTxt}>{item.name}</Text>

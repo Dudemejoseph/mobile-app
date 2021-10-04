@@ -64,6 +64,7 @@ export const fetchFinances = () => {
     dispatch(fetch());
     try {
       const res = await axiosInstance.get("/transactions");
+      console.log(res.data.result);
       dispatch(setFinance(res?.data?.result));
     } catch (error) {
       dispatch(setError(error.response.data.message));

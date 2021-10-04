@@ -1,12 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import {
-  Text,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  Image,
   ActivityIndicator,
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,28 +21,6 @@ import {
   fetchFinances,
   transactionsSelector,
 } from "../../redux/features/transactionSlice";
-import { userSelector } from "../../redux/features/userSlice";
-
-const data = [
-  {
-    id: "1",
-    activity: "weeding",
-    budget: "N700,000.00",
-    actual: "N8500,000.00",
-  },
-  {
-    id: "2",
-    activity: "Watering",
-    budget: "N700,000.00",
-    actual: "N8500,000.00",
-  },
-  {
-    id: "3",
-    activity: "Rigging",
-    budget: "N700,000.00",
-    actual: "N8500,000.00",
-  },
-];
 
 const Finance = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -90,7 +68,7 @@ const Finance = ({ navigation }) => {
           backgroundColor: COLORS.background,
         }}
       >
-        <ActivityIndicator size='large' color={COLORS.primary} />
+        <ActivityIndicator size="large" color={COLORS.primary} />
       </View>
     );
   }

@@ -11,7 +11,6 @@ import { fetchExpenses } from "../../redux/features/expensesSlice";
 const TrackExpenses = ({ navigation }) => {
   const dispatch = useDispatch();
   const { loading, error, expenses } = useSelector((state) => state.expenses);
-  console.log("Expenses are ", expenses);
 
   useEffect(() => {
     dispatch(fetchExpenses());

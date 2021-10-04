@@ -1,65 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Text,
-  View,
-  ScrollView,
-  TouchableOpacity,
   Image,
+  ScrollView,
+  Text,
   TextInput,
-  ActivityIndicator,
+  TouchableOpacity,
+  View,
+  ActivityIndicator
 } from "react-native";
+import * as Animatable from "react-native-animatable";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { ScaledSheet } from "react-native-size-matters";
+import Toast from "react-native-toast-message";
 import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../../components/Wrapper";
 import { COLORS } from "../../constants/theme";
-import * as Animatable from "react-native-animatable";
 import {
-  createFarmActivity,
   farmSelector,
-  fetchActivities,
-  fetchCropActivities,
-  fetchCrops,
-  fetchFarms,
-  submitCropActivities,
   fetchFarmActivitiesAction,
+  fetchFarms,
 } from "../../redux/features/farmSlice";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import Toast from "react-native-toast-message";
+import { createExpense } from "../../redux/features/expensesSlice";
 
-const activities = [
-  {
-    id: "1",
-    name: "NPK",
-  },
-  {
-    id: "2",
-    name: "Urea",
-  },
-  {
-    id: "3",
-    name: "Water",
-  },
-  {
-    id: "4",
-    name: "Pre emergence herbicide",
-  },
-  {
-    id: "5",
-    name: "Post emergence herbicide",
-  },
-  {
-    id: "6",
-    name: "insecticide",
-  },
-  {
-    id: "7",
-    name: "fungicide",
-  },
-  {
-    id: "8",
-    name: "Seeds",
-  },
-];
 const labors = [
   {
     id: "1",
@@ -129,7 +91,8 @@ const others = [
 
 const AddExpense = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { loading, message, error, farmActivities } = useSelector(farmSelector);
+  const { loading, message, error, farmActivities, farms } =
+    useSelector(farmSelector);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [start_date, setStartDate] = useState("Select Date");
   const [category, setCategory] = useState("Select Category");
@@ -144,9 +107,18 @@ const AddExpense = ({ navigation }) => {
   const [showMechanizationPicker, setShowMechanization] = useState(false);
   const [showActivityPicker, setShowActivity] = useState(false);
   const [showOthersPicker, setShowOthers] = useState(false);
+  const [brand, setBrand] = useState(null);
+  const [unit, setUnit] = useState(null);
+  const [quantity, setQuantity] = useState(null);
+  const [price, setPrice] = useState(null);
+  const [balanceToBePaid, setBalanceToBePaid] = useState(null);
+  const [showFarmPicker, setShowFarm] = useState(false);
+  const [farm, setFarm] = useState("Choose Farm");
+  const [farm_id, setFarmID] = useState("");
 
   useEffect(() => {
     dispatch(fetchFarmActivitiesAction());
+    dispatch(fetchFarms());
   }, [dispatch]);
 
   const showDatePicker = () => {
@@ -181,6 +153,34 @@ const AddExpense = ({ navigation }) => {
         topOffset: 40,
       });
   }, [error]);
+
+  const handleSubmit = () => {
+    let data = {
+      farm_id,
+      category,
+      brand,
+      unit,
+      quantity,
+      unit_price: price,
+      labour: labor,
+      labour_cost: 2000.0,
+      mechanization,
+      mechanization_cost: 2000.0,
+      logistics,
+      logistics_cost: 2000.0,
+      contigency: null,
+      contigency_cost: 0.0,
+      others: null,
+      others_cost: 0.00,
+      balance_to_be_paid: null,
+      date: start_date,
+      note: null,
+    };
+    dispatch(createExpense(data));
+    console.log('nawa');
+
+  };
+
   return (
     <Wrapper>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -209,6 +209,40 @@ const AddExpense = ({ navigation }) => {
         <View style={styles.formView}>
           <Text style={styles.headTxt}>Record Expense</Text>
           <View style={styles.form}>
+            {/* ========== Choose Farm ========= */}
+            <TouchableOpacity
+              activeOpacity={0.4}
+              style={styles.dropBtn}
+              onPress={() => setShowFarm(!showFarmPicker)}
+            >
+              <Text style={styles.dropTxt}>{farm}</Text>
+              <Image
+                source={require("../../assets/icons/drop-icon.png")}
+                style={styles.dropIcon}
+              />
+            </TouchableOpacity>
+            {showFarmPicker && (
+              <Animatable.View style={styles.sizePicker} animation="fadeIn">
+                {farms &&
+                  farms.map((item) => {
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={0.6}
+                        key={item.id}
+                        style={styles.size}
+                        onPress={() => {
+                          setFarm(item.name);
+                          setFarmID(item.id);
+                          setShowFarm(false);
+                        }}
+                      >
+                        <Text>{item.name}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+              </Animatable.View>
+            )}
+
             {/* ========== Category ========= */}
             <TouchableOpacity
               activeOpacity={0.4}
@@ -222,51 +256,60 @@ const AddExpense = ({ navigation }) => {
               />
             </TouchableOpacity>
             {showActivityPicker && (
-              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
-                {farmActivities && farmActivities.map((item) => {
-                  return (
-                    <TouchableOpacity
-                      activeOpacity={0.6}
-                      key={item.id}
-                      style={styles.size}
-                      onPress={() => {
-                        setCategory(item.activity);
-                        setShowActivity(false);
-                      }}
-                    >
-                      <Text>{item.activity}</Text>
-                    </TouchableOpacity>
-                  );
-                })}
+              <Animatable.View style={styles.sizePicker} animation="fadeIn">
+                {farmActivities &&
+                  farmActivities.map((item) => {
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={0.6}
+                        key={item.id}
+                        style={styles.size}
+                        onPress={() => {
+                          setCategory(item.activity);
+                          setShowActivity(false);
+                        }}
+                      >
+                        <Text>{item.activity}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
               </Animatable.View>
             )}
 
             {/* ======== Brand ========== */}
             <TextInput
-              placeholder='Brand'
+              placeholder="Brand"
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
+              value={brand}
+              onChangeText={(e) => setBrand(e)}
             />
 
             {/* ======== Unit ========== */}
             <TextInput
-              placeholder='Unit'
+              placeholder="Unit"
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
+              value={unit}
+              onChangeText={(e) => setUnit(e)}
             />
 
             {/* ======== Quantiy ========== */}
             <TextInput
-              placeholder='Quantity'
+              placeholder="Quantity"
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
+              value={quantity}
+              onChangeText={(e) => setQuantity(e)}
             />
 
             {/* ======== Price ========== */}
             <TextInput
-              placeholder='Price'
+              placeholder="Price"
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
+              value={price}
+              onChangeText={(e) => setPrice(e)}
             />
 
             {/* ========== Labor ========= */}
@@ -282,22 +325,23 @@ const AddExpense = ({ navigation }) => {
               />
             </TouchableOpacity>
             {showLaborPicker && (
-              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
-                {labors.map((item) => {
-                  return (
-                    <TouchableOpacity
-                      activeOpacity={0.6}
-                      key={item.id}
-                      style={styles.size}
-                      onPress={() => {
-                        setLabor(item.name);
-                        setShowLabor(false);
-                      }}
-                    >
-                      <Text>{item.name}</Text>
-                    </TouchableOpacity>
-                  );
-                })}
+              <Animatable.View style={styles.sizePicker} animation="fadeIn">
+                {labors &&
+                  labors.map((item) => {
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={0.6}
+                        key={item.id}
+                        style={styles.size}
+                        onPress={() => {
+                          setLabor(item.name);
+                          setShowLabor(false);
+                        }}
+                      >
+                        <Text>{item.name}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
               </Animatable.View>
             )}
 
@@ -314,22 +358,23 @@ const AddExpense = ({ navigation }) => {
               />
             </TouchableOpacity>
             {showMechanizationPicker && (
-              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
-                {mechanizations.map((item) => {
-                  return (
-                    <TouchableOpacity
-                      activeOpacity={0.6}
-                      key={item.id}
-                      style={styles.size}
-                      onPress={() => {
-                        setMechanization(item.name);
-                        setShowMechanization(false);
-                      }}
-                    >
-                      <Text>{item.name}</Text>
-                    </TouchableOpacity>
-                  );
-                })}
+              <Animatable.View style={styles.sizePicker} animation="fadeIn">
+                {mechanizations &&
+                  mechanizations.map((item) => {
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={0.6}
+                        key={item.id}
+                        style={styles.size}
+                        onPress={() => {
+                          setMechanization(item.name);
+                          setShowMechanization(false);
+                        }}
+                      >
+                        <Text>{item.name}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
               </Animatable.View>
             )}
 
@@ -346,22 +391,23 @@ const AddExpense = ({ navigation }) => {
               />
             </TouchableOpacity>
             {showLogisticsPicker && (
-              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
-                {logisticss.map((item) => {
-                  return (
-                    <TouchableOpacity
-                      activeOpacity={0.6}
-                      key={item.id}
-                      style={styles.size}
-                      onPress={() => {
-                        setLogistics(item.name);
-                        setShowLogistics(false);
-                      }}
-                    >
-                      <Text>{item.name}</Text>
-                    </TouchableOpacity>
-                  );
-                })}
+              <Animatable.View style={styles.sizePicker} animation="fadeIn">
+                {logisticss &&
+                  logisticss.map((item) => {
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={0.6}
+                        key={item.id}
+                        style={styles.size}
+                        onPress={() => {
+                          setLogistics(item.name);
+                          setShowLogistics(false);
+                        }}
+                      >
+                        <Text>{item.name}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
               </Animatable.View>
             )}
 
@@ -378,22 +424,23 @@ const AddExpense = ({ navigation }) => {
               />
             </TouchableOpacity>
             {showContigencyPicker && (
-              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
-                {contigencies.map((item) => {
-                  return (
-                    <TouchableOpacity
-                      activeOpacity={0.6}
-                      key={item.id}
-                      style={styles.size}
-                      onPress={() => {
-                        setContigency(item.name);
-                        setShowContigency(false);
-                      }}
-                    >
-                      <Text>{item.name}</Text>
-                    </TouchableOpacity>
-                  );
-                })}
+              <Animatable.View style={styles.sizePicker} animation="fadeIn">
+                {contigencies &&
+                  contigencies.map((item) => {
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={0.6}
+                        key={item.id}
+                        style={styles.size}
+                        onPress={() => {
+                          setContigency(item.name);
+                          setShowContigency(false);
+                        }}
+                      >
+                        <Text>{item.name}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
               </Animatable.View>
             )}
 
@@ -410,30 +457,35 @@ const AddExpense = ({ navigation }) => {
               />
             </TouchableOpacity>
             {showOthersPicker && (
-              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
-                {others.map((item) => {
-                  return (
-                    <TouchableOpacity
-                      activeOpacity={0.6}
-                      key={item.id}
-                      style={styles.size}
-                      onPress={() => {
-                        setOther(item.name);
-                        setShowOthers(false);
-                      }}
-                    >
-                      <Text>{item.name}</Text>
-                    </TouchableOpacity>
-                  );
-                })}
+              <Animatable.View style={styles.sizePicker} animation="fadeIn">
+                {others &&
+                  others.map((item) => {
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={0.6}
+                        key={item.id}
+                        style={styles.size}
+                        onPress={() => {
+                          setOther(item.name);
+                          setShowOthers(false);
+                        }}
+                      >
+                        <Text>{item.name}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
               </Animatable.View>
             )}
 
             {/* ======== Balance ========== */}
             <TextInput
-              placeholder='Balance to be paid'
+              placeholder="Balance to be paid"
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
+              value={balanceToBePaid}
+              onChangeText={(e) => {
+                setBalanceToBePaid(e);
+              }}
             />
 
             {/* ========== Select Date ========= */}
@@ -450,14 +502,14 @@ const AddExpense = ({ navigation }) => {
             </TouchableOpacity>
             <DateTimePickerModal
               isVisible={isDatePickerVisible}
-              mode='date'
+              mode="date"
               onConfirm={handleDate}
               onCancel={hideDatePicker}
             />
 
             {/* ======== Description ========== */}
             <TextInput
-              placeholder='Note...'
+              placeholder="Note..."
               style={styles.inputDesc}
               multiline
               placeholderTextColor={COLORS.text_grey}
@@ -465,8 +517,16 @@ const AddExpense = ({ navigation }) => {
 
             {/* ========= Buttons ======== */}
             <View style={styles.btnView}>
-              <TouchableOpacity activeOpacity={0.6} style={styles.createBtn}>
-                <Text style={styles.createTxt}>Done</Text>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                style={styles.createBtn}
+                onPress={handleSubmit}
+              >
+                 {loading ? (
+                  <ActivityIndicator size="small" color={COLORS.background} />
+                ) : (
+                  <Text style={styles.createTxt}>Done</Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>

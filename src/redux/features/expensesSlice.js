@@ -38,10 +38,12 @@ export const fetchExpenses = () => {
   return async (dispatch) => {
     try {
       dispatch(fetch());
-      const res = await axiosInstance.get("/transactions");
+      const res = await axiosInstance.get("/farmexpenses");
+      console.log('farm ex ', res.data.result);
       dispatch(setExpenses(res.data.result.data));
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
+      console.error(error)
     }
   };
 };
@@ -50,10 +52,12 @@ export const createExpense = (data) => {
   return async (dispatch) => {
     try {
       dispatch(fetch());
-      const res = await axiosInstance.post("/transactions", data);
-      console.log("expense ", expenses);
+      const res = await axiosInstance.post("/farmexpenses", data);
+      console.log("expense ", res.data.result);
+      dispatch(setExpenses(res.data.result.data));
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
+      console.error(error)
     }
   };
 };

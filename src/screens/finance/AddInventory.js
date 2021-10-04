@@ -6,18 +6,30 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../../components/Wrapper";
 import { COLORS } from "../../constants/theme";
 import { farmSelector, fetchActivities } from "../../redux/features/farmSlice";
+import {
+  addInventory,
+  inventorySelector,
+} from "../../redux/features/inventorySlice";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import Toast from "react-native-toast-message";
 
 const AddInventory = ({ navigation }) => {
   const dispatch = useDispatch();
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [selectedDate, setDate] = useState("Select Date");
+  const [product, setProduct] = useState(null);
+  const [type, setType] = useState(null);
+  const [purchase_quantity, setPurchaseQuantity] = useState(null);
+  const [size, setSize] = useState(null);
+  const [name, setName] = useState(null);
+  const { error, message, loading } = useSelector(inventorySelector);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -35,6 +47,43 @@ const AddInventory = ({ navigation }) => {
   useEffect(() => {
     dispatch(fetchActivities());
   }, [dispatch]);
+
+  useEffect(() => {
+    message &&
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: message,
+        topOffset: 40,
+      });
+
+    message && navigation.navigate("Finance");
+  }, [message]);
+
+  useEffect(() => {
+    error &&
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error,
+        topOffset: 40,
+      });
+  }, [error]);
+
+  const handleSubmit = () => {
+    let data = {
+      type,
+      name,
+      size,
+      purchase_quantity,
+      purchace_price: null,
+      purchase_date: null,
+      note: null,
+      product,
+    };
+    dispatch(addInventory(data));
+  };
+
   return (
     <Wrapper>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -77,70 +126,94 @@ const AddInventory = ({ navigation }) => {
             </TouchableOpacity>
             <DateTimePickerModal
               isVisible={isDatePickerVisible}
-              mode='date'
+              mode="date"
               onConfirm={handleDate}
               onCancel={hideDatePicker}
             />
 
             {/* ======== Product ========== */}
             <TextInput
-              placeholder='Product'
+              placeholder="Product"
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
+              value={product}
+              onChangeText={(e) => setProduct(e)}
             />
 
             {/* ======== Brand ========== */}
             <TextInput
-              placeholder='Brand'
+              placeholder="Brand"
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
+              value={type}
+              onChangeText={(e) => setType(e)}
+            />
+
+            {/* ======== Name ========== */}
+            <TextInput
+              placeholder="Name"
+              style={styles.input}
+              placeholderTextColor={COLORS.text_grey}
+              value={name}
+              onChangeText={(e) => setName(e)}
             />
 
             {/* ======== Starting Stock ========== */}
             <TextInput
-              placeholder='Starting Stock'
+              placeholder="Starting Stock"
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
             />
 
             {/* ======== Added Stock ========== */}
             <TextInput
-              placeholder='Added Stock'
+              placeholder="Added Stock"
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
+              value={purchase_quantity}
+              onChangeText={(e) => setPurchaseQuantity(e)}
             />
 
             {/* ======== Used Stock ========== */}
             <TextInput
-              placeholder='Used Stock'
+              placeholder="Used Stock"
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
             />
 
             {/* ======== Remaining Stock ========== */}
             <TextInput
-              placeholder='Remaining Stock'
+              placeholder="Remaining Stock"
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
             />
 
             {/* ======== Variance ========== */}
             <TextInput
-              placeholder='Variance'
+              placeholder="Variance"
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
             />
 
+            {/* ======== Size ========== */}
+            <TextInput
+              placeholder="Size"
+              style={styles.input}
+              placeholderTextColor={COLORS.text_grey}
+              value={size}
+              onChangeText={(e) => setSize(e)}
+            />
+
             {/* ======== Amount checked out ========== */}
             <TextInput
-              placeholder='Amount checked'
+              placeholder="Amount checked"
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
             />
 
             {/* ======== Description ========== */}
             <TextInput
-              placeholder='Purpose...'
+              placeholder="Purpose..."
               style={styles.inputDesc}
               multiline
               placeholderTextColor={COLORS.text_grey}
@@ -148,8 +221,16 @@ const AddInventory = ({ navigation }) => {
 
             {/* ========= Buttons ======== */}
             <View style={styles.btnView}>
-              <TouchableOpacity activeOpacity={0.6} style={styles.createBtn}>
-                <Text style={styles.createTxt}>Create</Text>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                style={styles.createBtn}
+                onPress={handleSubmit}
+              >
+                {loading ? (
+                  <ActivityIndicator size="small" color={COLORS.background} />
+                ) : (
+                  <Text style={styles.createTxt}>Create</Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>
