@@ -53,7 +53,10 @@ const ownerships = [
 ];
 
 const CreateFarms = ({ navigation, route }) => {
-  // const { hecres } = route.params;
+  let hecres = route?.params?.hecres ?? 0;
+  let coordinates = route?.params?.coordinates;
+  let distance = route?.params?.distance ?? 0;
+  console.log("dio ", distance);
   const dispatch = useDispatch();
   const { states, loading, message, error, crops } = useSelector(farmSelector);
   const [lgas, setLGAS] = useState([]);
@@ -66,11 +69,11 @@ const CreateFarms = ({ navigation, route }) => {
   const [showLGAPicker, setShowLGAPicker] = useState(false);
   const [name, setName] = useState("");
   const [crop, setCrop] = useState("Choose Crop");
-  const [size, setSize] = useState(0);
-  const [size_unit, setUnit] = useState("Size Unit");
+  const [size, setSize] = useState(hecres);
+  const [size_unit, setUnit] = useState("Select unit");
   const [location, setLocation] = useState("");
   const [ownership, setOwnership] = useState("Ownership");
-  const [coordinates, setCoordinates] = useState("");
+  // const [coordinates, setCoordinates] = useState("");
   const [country_id, setCountry] = useState(161);
   const [lga_id, setLGA] = useState("");
   const [state_id, setStateID] = useState("");
@@ -192,15 +195,6 @@ const CreateFarms = ({ navigation, route }) => {
               </Animatable.View>
             )}
 
-            {/* ======== Size ========== */}
-            <TextInput
-              placeholder='Size'
-              style={styles.input}
-              placeholderTextColor={COLORS.text_grey}
-              value={size}
-              onChangeText={(val) => setSize(val)}
-            />
-
             {/* ========== Size Unit ========= */}
             <View>
               <TouchableOpacity
@@ -216,7 +210,7 @@ const CreateFarms = ({ navigation, route }) => {
               </TouchableOpacity>
               {showSizePicker && (
                 <Animatable.View style={styles.sizePicker} animation='fadeIn'>
-                  {sizes.map((item) => {
+                  {sizes?.map((item) => {
                     return (
                       <TouchableOpacity
                         activeOpacity={0.6}
@@ -234,6 +228,16 @@ const CreateFarms = ({ navigation, route }) => {
                 </Animatable.View>
               )}
             </View>
+
+            {/* ======== Size ========== */}
+            <TextInput
+              placeholder='Size'
+              style={styles.input}
+              placeholderTextColor={COLORS.text_grey}
+              value={size_unit === "sqm (square meters)" ? ''+distance : size}
+              onChangeText={(val) => setSize(val)}
+            />
+
 
             {/* ========== Ownership ========= */}
             <TouchableOpacity

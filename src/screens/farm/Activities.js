@@ -28,6 +28,7 @@ const Activities = ({ navigation }) => {
   const dispatch = useDispatch();
   const { crops, loading, message, error, farms, farmActivities } =
     useSelector(farmSelector);
+    console.log("farm ", farms);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isDatePickerVisible2, setDatePickerVisibility2] = useState(false);
   const [end_date, setEndDate] = useState("Select End Date");
@@ -206,7 +207,7 @@ const Activities = ({ navigation }) => {
             </TouchableOpacity>
             {showCropPicker && (
               <Animatable.View style={styles.sizePicker} animation="fadeIn">
-                {crops.map((item) => {
+                {crops && crops.map((item) => {
                   return (
                     <TouchableOpacity
                       activeOpacity={0.6}

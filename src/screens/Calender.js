@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from "react-native";
-import { Agenda } from 'react-native-calendars';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+} from "react-native";
+import { Agenda } from "react-native-calendars";
 import { useDispatch, useSelector } from "react-redux";
 import { COLORS } from "../constants/theme";
 import { fetchFarmActivitiesAction } from "../redux/features/farmSlice";
-import Wrapper from '../components/Wrapper';
+import Wrapper from "../components/Wrapper";
 
 const timeToString = (time) => {
   const date = new Date(time);
@@ -15,37 +22,31 @@ const Calender = () => {
   const [items, setItems] = useState({});
   const [activityItems, setActivityItems] = useState({});
   const dispatch = useDispatch();
-  const { loading, farmActivities } = useSelector(state => state.farm);
-
-  console.log('item ', items);
+  const { loading, farmActivities } = useSelector((state) => state.farm);
 
   // Getting list of crop activities
   useEffect(() => {
-    const fetchFarmActivities = () => {
-      dispatch(fetchFarmActivitiesAction());
-    };
-    fetchFarmActivities();
+    dispatch(fetchFarmActivitiesAction());
   }, []);
 
   const loadActivityItems = (day) => {
     setTimeout(() => {
       farmActivities.map((item, index) => {
-        console.log('item ', item);
         const strTime = timeToString(item.start_date);
-        if(!items[strTime]){
+        if (!items[strTime]) {
           items[strTime] = [];
           items[strTime].push({
             name: item.activity,
             height: Math.max(50, Math.floor(Math.random() * 150)),
-          })
+          });
         }
-      })
+      });
       const newItems = {};
       Object.keys(items).forEach((key) => {
         newItems[key] = items[key];
       });
       setItems(newItems);
-    }, 1000)
+    }, 1000);
   };
 
   const loadItems = (day) => {
@@ -82,22 +83,23 @@ const Calender = () => {
             <Text style={styles.durationText}>1 hour</Text>
           </View>
           <View>
-            <Image source={require('../assets/icons/ellipsis-v1.png')} />
+            <Image source={require("../assets/icons/ellipsis-v1.png")} />
           </View>
         </View>
 
-        {firstItemInDay && <View style={styles.agendaItemContainer2}>
-          <View>
-            <Text style={[styles.agendaActivityText, { color: '#f2994a' }]}>
-              Next event in <Text style={{ color: '#4D6EFF' }}>30 min</Text>
-            </Text>
-            <Text style={styles.durationText}>1 hour</Text>
+        {firstItemInDay && (
+          <View style={styles.agendaItemContainer2}>
+            <View>
+              <Text style={[styles.agendaActivityText, { color: "#f2994a" }]}>
+                Next event in <Text style={{ color: "#4D6EFF" }}>30 min</Text>
+              </Text>
+              <Text style={styles.durationText}>1 hour</Text>
+            </View>
+            <View>
+              <Image source={require("../assets/icons/ellipsis-v1.png")} />
+            </View>
           </View>
-          <View>
-            <Image source={require('../assets/icons/ellipsis-v1.png')} />
-          </View>
-        </View>}
-
+        )}
       </TouchableOpacity>
     );
   };
@@ -112,7 +114,7 @@ const Calender = () => {
           justifyContent: "center",
         }}
       >
-        <ActivityIndicator size='large' color={COLORS.primary} />
+        <ActivityIndicator size="large" color={COLORS.primary} />
       </View>
     );
   }

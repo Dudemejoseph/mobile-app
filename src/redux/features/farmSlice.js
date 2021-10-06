@@ -11,6 +11,7 @@ const initialState = {
   crops: null,
   lga: null,
   farmActivities: null,
+  cropActivity: null,
 };
 
 const farmSlice = createSlice({
@@ -68,6 +69,10 @@ const farmSlice = createSlice({
       state.loading = false;
       state.farmActivities = payload;
     },
+    setCropActivity: (state, { payload }) => {
+      state.loading = false;
+      state.cropActivity = payload;
+    },
   },
 });
 
@@ -84,6 +89,7 @@ export const {
   createFarmActivity,
   setCropActivities,
   setCrops,
+  setCropActivity,
 } = farmSlice.actions;
 export default farmSlice.reducer;
 export const farmSelector = (state) => state.farm;
@@ -93,11 +99,13 @@ export const createFarm = (data) => {
   return async (dispatch) => {
     dispatch(fetch());
     try {
+      console.log("data ", data);
       await axiosInstance.post("/farms", data);
       dispatch(createFarmSuccess());
       dispatch(fetchFarms());
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
+      console.log("cer ", error);
     }
   };
 };
@@ -195,6 +203,20 @@ export const submitCropActivities = (data) => {
     try {
       const res = await axiosInstance.post("/farm-activities", data);
       dispatch(createFarmActivity());
+    } catch (error) {
+      dispatch(fetchFail(error?.response?.data?.message));
+    }
+  };
+};
+
+// fetch activity for a crop
+export const fetchActivityForCrop = (id) => {
+  return async (dispatch) => {
+    dispatch(fetch());
+    try {
+      const res = await axiosInstance.get(`/crop/activity/default/${id}`);
+      console.log("arct ", res.data);
+      dispatch(setCropActivity(res.data?.result));
     } catch (error) {
       dispatch(fetchFail(error?.response?.data?.message));
     }

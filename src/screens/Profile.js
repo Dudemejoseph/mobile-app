@@ -6,17 +6,22 @@ import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../components/Wrapper";
 import { EDIT_PROFILE_SCREEN } from "../constants/routeNames";
 import { COLORS } from "../constants/theme";
-import { logoutUser, userSelector } from "../redux/features/userSlice";
+import { logoutUser, userSelector, getUser } from "../redux/features/userSlice";
 
 const Profile = ({ navigation }) => {
   const dispatch = useDispatch();
-  const [user, setUser] = useState(null);
+  
+  const {
+    loading,
+    users,
+  } = useSelector(userSelector);
 
-  const getUser = async () => {
+  const getUserProcess = async () => {
     try {
       const res = await AsyncStorage.getItem("@userData");
       const serialized = JSON.parse(res);
-      setUser(serialized?.userData);
+      // setUser(serialized?.userData);
+      await dispatch(getUser(serialized?.userData.id));
     } catch (error) {
       console.log(error);
     }
@@ -27,7 +32,7 @@ const Profile = ({ navigation }) => {
 
     setTimeout(() => {
       if (!unmounted) {
-        getUser();
+        getUserProcess();
       }
     }, 3000);
 
@@ -40,7 +45,7 @@ const Profile = ({ navigation }) => {
     dispatch(logoutUser());
   };
 
-  console.log(user);
+  console.log(users);
   return (
     <Wrapper>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -66,30 +71,30 @@ const Profile = ({ navigation }) => {
             <TouchableOpacity
               style={styles.editBtn}
               activeOpacity={0.5}
-              onPress={() => navigation.navigate(EDIT_PROFILE_SCREEN, { user })}
+              onPress={() => navigation.navigate(EDIT_PROFILE_SCREEN)}
             >
               <Text style={styles.editTxt}>Edit Profile</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.col2}>
             <Text style={styles.name}>
-              {user?.firstname} {user?.lastname}
+              {users?.firstname} {users?.lastname}
             </Text>
             <View style={styles.col2Row}>
               <Text style={styles.txt1}>Email</Text>
-              <Text style={styles.txt2}>{user?.email}</Text>
+              <Text style={styles.txt2}>{users?.email}</Text>
             </View>
             <View style={styles.col2Row}>
               <Text style={styles.txt1}>Date Joined</Text>
-              <Text style={styles.txt2}>{user?.created_at.substr(0, 10)}</Text>
+              <Text style={styles.txt2}>{users?.updated_at.substr(0, 10)}</Text>
             </View>
             <View style={styles.col2Row}>
               <Text style={styles.txt1}>Phone Number</Text>
-              <Text style={styles.txt2}>{user?.phone || "-"}</Text>
+              <Text style={styles.txt2}>{users?.phone || "-"}</Text>
             </View>
             <View style={styles.col2Row}>
               <Text style={styles.txt1}>Address</Text>
-              <Text style={styles.txt2}>{user?.address || "-"}</Text>
+              <Text style={styles.txt2}>{users?.address || "-"}</Text>
             </View>
           </View>
         </View>

@@ -1,25 +1,24 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
+  Image,
+  ImageBackground,
   ScrollView,
   Text,
-  View,
-  Image,
   TouchableOpacity,
-  ImageBackground,
-  ActivityIndicator,
+  View,
 } from "react-native";
-import { ScaledSheet } from "react-native-size-matters";
 import { Modal, Portal } from "react-native-paper";
-import Toast from "react-native-toast-message";
-import Wrapper from "../components/Wrapper";
-import { COLORS } from "../constants/theme";
 import Pie from "react-native-pie";
+import { ScaledSheet } from "react-native-size-matters";
+import Toast from "react-native-toast-message";
+import { useDispatch, useSelector } from "react-redux";
 import box1 from "../assets/images/box1.png";
 import box2 from "../assets/images/box2.png";
 import box3 from "../assets/images/box3.png";
 import box4 from "../assets/images/box4.png";
-import { useSelector, useDispatch } from "react-redux";
-import { getDashboard, userSelector } from "../redux/features/userSlice";
+import Wrapper from "../components/Wrapper";
 import {
   ACTIVITIES_SCREEN,
   CREATE_FARMS_SCREEN,
@@ -29,8 +28,13 @@ import {
   PROFILE_SCREEN,
   TRACK_EXPENSES_SCREEN,
 } from "../constants/routeNames";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { fetchFarms } from "../redux/features/farmSlice";
+import { COLORS } from "../constants/theme";
+import {
+  farmSelector,
+  fetchCrops,
+  fetchFarms,
+} from "../redux/features/farmSlice";
+import { getDashboard, userSelector } from "../redux/features/userSlice";
 
 const actions = [
   {
@@ -62,7 +66,26 @@ const Home = ({ navigation }) => {
   const { navigate } = navigation;
   const dispatch = useDispatch();
   const { message, error, loading, dashboard } = useSelector(userSelector);
-  console.log("dashboard ios  ", dashboard);
+  const {
+    crops,
+    loading: farmLoading,
+    message: farmMessage,
+    error: farmError,
+    farms,
+    farmActivities,
+    cropActivity,
+  } = useSelector(farmSelector);
+  const [visible2, setVisible2] = useState(false);
+  const [visible3, setVisible3] = useState(false);
+  const [visible4, setVisible4] = useState(false);
+  const showDialog = () => setVisible2(true);
+  const hideDialog = () => setVisible2(false);
+  const [selectedCrop, setSelectedCrop] = useState("Select Crop");
+  const [selectedFarm, setSelectedFarm] = useState("Select Farm");
+  const [showCropPicker, setShowCrop] = useState(false);
+  const [showFarmPicker, setShowFarm] = useState(false);
+  const [crop_id, setCropID] = useState("");
+  const [farm_id, setFarmID] = useState("");
 
   const getUser = async () => {
     try {
@@ -89,21 +112,21 @@ const Home = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    message &&
+    (message ?? farmMessage) &&
       Toast.show({
         type: "success",
         text1: "Success",
-        text2: message,
+        text2: message ?? farmMessage,
         topOffset: 40,
       });
   }, [message]);
 
   useEffect(() => {
-    error &&
+    (error ?? farmError) &&
       Toast.show({
         type: "error",
         text1: "Error",
-        text2: error,
+        text2: error ?? farmError,
         topOffset: 40,
       });
   }, [error]);
@@ -112,6 +135,7 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     dispatch(getDashboard());
     dispatch(fetchFarms());
+    dispatch(fetchCrops());
   }, [dispatch]);
 
   const showModal = () => setVisible(true);
@@ -122,8 +146,6 @@ const Home = ({ navigation }) => {
     marginHorizontal: 20,
     borderRadius: 5,
   };
-
-  console.log(user);
 
   if (loading) {
     return (
@@ -139,6 +161,11 @@ const Home = ({ navigation }) => {
       </View>
     );
   }
+
+  const createCropActivity = () => {
+    const data = { activity, crop_id, end_date, farm_id };
+    dispatch(submitCropActivities(data));
+  };
 
   return (
     <Wrapper style={styles.container}>
@@ -196,29 +223,30 @@ const Home = ({ navigation }) => {
 
         {/* ========== */}
         <View style={styles.boxView}>
-          {actions.map((item) => {
-            return (
-              <TouchableOpacity
-                key={item.name}
-                activeOpacity={0.6}
-                onPress={() => {
-                  if (item.name === "Create Farms") {
-                    showModal();
-                  } else {
-                    navigate(item.route);
-                  }
-                }}
-              >
-                <ImageBackground
-                  source={item.image}
-                  resizeMode="contain"
-                  style={styles.box}
+          {actions &&
+            actions.map((item) => {
+              return (
+                <TouchableOpacity
+                  key={item.name}
+                  activeOpacity={0.6}
+                  onPress={() => {
+                    if (item.name === "Create Farms") {
+                      showModal();
+                    } else {
+                      navigate(item.route);
+                    }
+                  }}
                 >
-                  <Text style={styles.boxTxt}>{item.name}</Text>
-                </ImageBackground>
-              </TouchableOpacity>
-            );
-          })}
+                  <ImageBackground
+                    source={item.image}
+                    resizeMode="contain"
+                    style={styles.box}
+                  >
+                    <Text style={styles.boxTxt}>{item.name}</Text>
+                  </ImageBackground>
+                </TouchableOpacity>
+              );
+            })}
         </View>
 
         {/* ============= */}
@@ -318,6 +346,26 @@ const styles = ScaledSheet.create({
     borderColor: COLORS.border,
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  dropBtn: {
+    height: "40@vs",
+    width: "100%",
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 4,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: "10@ms",
+    marginTop: "15@vs",
+  },
+  dropIcon: {
+    width: "10@ms",
+    height: "10@ms",
+    resizeMode: "contain",
+  },
+  size: {
+    padding: "6@ms",
   },
   col1: {
     width: "48%",
@@ -455,6 +503,24 @@ const styles = ScaledSheet.create({
   enterTxt: {
     fontWeight: "500",
     fontSize: "14@ms",
+    fontFamily: "Poppins-Regular",
+  },
+  createTxt: {
+    fontWeight: "500",
+    fontFamily: "Poppins-Regular",
+    color: COLORS.background,
+  },
+  sizePicker: {
+    width: "100%",
+    backgroundColor: COLORS.background,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    marginTop: 5,
+    borderRadius: 4,
+    zIndex: 10000,
+  },
+  dropTxt: {
+    color: COLORS.text_grey,
     fontFamily: "Poppins-Regular",
   },
 });

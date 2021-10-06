@@ -12,23 +12,19 @@ import { ScaledSheet } from "react-native-size-matters";
 import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../components/Wrapper";
 import { COLORS } from "../constants/theme";
-import * as Animatable from "react-native-animatable";
-import {
-  createFarmActivity,
-  farmSelector,
-  fetchActivities,
-  fetchCropActivities,
-  fetchCrops,
-  fetchFarms,
-  submitCropActivities,
-} from "../redux/features/farmSlice";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { editUser, userSelector } from "../redux/features/userSlice";
 import Toast from "react-native-toast-message";
+import { PROFILE_SCREEN } from "../constants/routeNames";
 
 const EditProfile = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  const { user } = route.params;
-  const { loading, message, error } = useSelector(farmSelector);
+  const { loading, message, error, users } = useSelector(userSelector);
+  const [firstname, setFirstName] = useState(users?.firstname);
+  const [lastname, setLastName] = useState(users?.lastname);
+  const [email, setEmail] = useState(users?.email);
+  const [phone, setPhone] = useState(users?.phone);
+  const [address, setAddress] = useState(users?.address);
+  
 
   useEffect(() => {
     message &&
@@ -49,6 +45,18 @@ const EditProfile = ({ navigation, route }) => {
         topOffset: 40,
       });
   }, [error]);
+
+  const handleSubmit = async () => {
+    let data = {
+      firstname,
+      lastname,
+      email,
+      phone,
+    };
+    await dispatch(editUser(users?.id, data));
+    navigation.navigate(PROFILE_SCREEN);
+  };
+
   return (
     <Wrapper>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -73,48 +81,61 @@ const EditProfile = ({ navigation, route }) => {
           <View style={styles.form}>
             {/* ======== First Name ========== */}
             <TextInput
-              placeholder='First Name'
-              defaultValue={user?.firstname}
+              placeholder="First Name"
+              defaultValue={firstname}
+              onChangeText={(e) => setFirstName(e)}
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
             />
 
             {/* ======== Last Name ========== */}
             <TextInput
-              placeholder='Last Name'
-              defaultValue={user?.lastname}
+              placeholder="Last Name"
+              defaultValue={lastname}
+              onChangeText={(e) => setLastName(e)}
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
             />
 
             {/* ======== Email ========== */}
             <TextInput
-              placeholder='Email'
-              defaultValue={user?.email}
+              placeholder="Email"
+              defaultValue={email}
+              onChangeText={(e) => setEmail(e)}
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
             />
 
             {/* ======== Phone ========== */}
             <TextInput
-              placeholder='Phone'
-              defaultValue={user?.phone}
+              placeholder="Phone"
+              defaultValue={phone}
+              onChangeText={(e) => setPhone(e)}
               style={styles.input}
               placeholderTextColor={COLORS.text_grey}
             />
 
             {/* ======== address ========== */}
             <TextInput
-              placeholder='Address'
+              placeholder="Address"
               style={styles.input}
-              defaultValue={user?.address}
+              defaultValue={address}
+              onChangeText={(e) => setAddress(e)}
               placeholderTextColor={COLORS.text_grey}
             />
 
             {/* ========= Buttons ======== */}
             <View style={styles.btnView}>
-              <TouchableOpacity activeOpacity={0.6} style={styles.createBtn}>
-                <Text style={styles.createTxt}>Save</Text>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                style={styles.createBtn}
+                onPress={() => handleSubmit()}
+              >
+                {loading ? (
+                  <ActivityIndicator size="small" color={COLORS.background} />
+                ) : (
+                  <Text style={styles.createTxt}>Save</Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>

@@ -121,6 +121,8 @@ const AddExpense = ({ navigation }) => {
     dispatch(fetchFarms());
   }, [dispatch]);
 
+  console.log("farm ", farmActivities, farm_id);
+
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -154,7 +156,7 @@ const AddExpense = ({ navigation }) => {
       });
   }, [error]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let data = {
       farm_id,
       category,
@@ -176,9 +178,7 @@ const AddExpense = ({ navigation }) => {
       date: start_date,
       note: null,
     };
-    dispatch(createExpense(data));
-    console.log('nawa');
-
+    await dispatch(createExpense(data));
   };
 
   return (
@@ -258,7 +258,7 @@ const AddExpense = ({ navigation }) => {
             {showActivityPicker && (
               <Animatable.View style={styles.sizePicker} animation="fadeIn">
                 {farmActivities &&
-                  farmActivities.map((item) => {
+                  farmActivities.filter(item => item.farm_id === farm_id).map((item) => {
                     return (
                       <TouchableOpacity
                         activeOpacity={0.6}

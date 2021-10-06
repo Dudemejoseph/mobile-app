@@ -15,7 +15,7 @@ import * as Animatable from "react-native-animatable";
 import { createFarm } from "../redux/features/farmSlice";
 import { CREATE_FARMS_SCREEN } from "../constants/routeNames";
 import backIcon from "../assets/icons/back-arrow.png";
-import Geolocation from 'react-native-geolocation-service';
+import Geolocation from "react-native-geolocation-service";
 
 const GeoFence = ({ navigation }) => {
   const [lat, setLat] = useState();
@@ -29,6 +29,8 @@ const GeoFence = ({ navigation }) => {
   const [area, setArea] = useState(0);
   const [hecres, setHecres] = useState(0);
   const [showActionBox, setShowActionBox] = useState(false);
+
+  console.log("distance ", distance);
 
   let polyPoints = coordinates.map(function (obj) {
     return Object.keys(obj)
@@ -74,6 +76,7 @@ const GeoFence = ({ navigation }) => {
   useEffect(() => {
     if (trackEnabled) {
       RNLocation.subscribeToLocationUpdates((location) => {
+        console.log("warris this ", location);
         const coords = location[0];
         setLat(coords.latitude);
         setLng(coords.longitude);
@@ -88,7 +91,7 @@ const GeoFence = ({ navigation }) => {
   useEffect(() => {
     const getCurrentPosition = () => {
       Geolocation.getCurrentPosition(
-        position => {
+        (position) => {
           setMapRegion({
             latitudeDelta: LATITUDE_DELTA,
             longitudeDelta: LONGITUDE_DELTA,
@@ -96,10 +99,10 @@ const GeoFence = ({ navigation }) => {
             latitude: position.coords.latitude,
           });
         },
-        error => {
-          console.error('location error ', error);
+        (error) => {
+          console.error("location error ", error);
         },
-        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
       );
     };
     getCurrentPosition();
@@ -107,6 +110,7 @@ const GeoFence = ({ navigation }) => {
 
   const sub = () => {
     setEnabled(true);
+    console.log("yooo");
   };
 
   const unsub = () => {
@@ -154,23 +158,33 @@ const GeoFence = ({ navigation }) => {
       </View>
       {showActionBox && (
         <Animatable.View
-          animation='fadeInUp'
+          animation="fadeInUp"
           duration={300}
           style={styles.actionBox}
         >
-          <TouchableOpacity
-            activeOpacity={0.6}
-            style={styles.boxItem}
-            onPress={sub}
-          >
-            <Text>Start Geo Fencing</Text>
-          </TouchableOpacity>
+          {!trackEnabled ? (
+            <TouchableOpacity
+              activeOpacity={0.6}
+              style={styles.boxItem}
+              onPress={sub}
+            >
+              <Text>Start Geo Fencing</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              activeOpacity={0.6}
+              style={styles.boxItem}
+              onPress={unsub}
+            >
+              <Text>Stop Geo Fencing</Text>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
             activeOpacity={0.6}
             style={styles.boxItem}
             onPress={() => {
               unsub();
-              navigation.navigate(CREATE_FARMS_SCREEN, { hecres });
+              navigation.navigate(CREATE_FARMS_SCREEN, { hecres, coordinates, distance });
             }}
           >
             <Text>Create Farm</Text>

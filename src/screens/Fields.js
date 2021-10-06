@@ -23,6 +23,7 @@ import { farmSelector, fetchFarms } from "../redux/features/farmSlice";
 const Fields = ({ navigation }) => {
   const dispatch = useDispatch();
   const { loading, farms } = useSelector(farmSelector);
+  console.log('farms ', farms);
 
   useEffect(() => {
     dispatch(fetchFarms());

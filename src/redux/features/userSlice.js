@@ -52,6 +52,7 @@ const userSlice = createSlice({
     setUsers: (state, { payload }) => {
       state.loading = false;
       state.users = payload;
+      state.message = "Profile updated successfully";
     },
     loggedOut: (state) => {
       state.loading = false;
@@ -214,6 +215,32 @@ export const fetchUsers = () => {
       dispatch(fetchFail(error.response.data.message));
       dispatch(loggedOut());
       AsyncStorage.clear();
+    }
+  };
+};
+
+export const getUser = (id) => {
+  return async (dispatch) => {
+    dispatch(fetch());
+    try {
+      const res = await axiosInstance.get(`/users/${id}`);
+      dispatch(setUsers(res.data.user));
+    } catch (error) {
+      dispatch(fetchFail(error.response.data.message));
+    }
+  };
+};
+
+export const editUser = (id, data) => {
+  return async (dispatch) => {
+    dispatch(fetch());
+    try {
+      const res = await axiosInstance.put(`/users/${id}`, data);
+      dispatch(setUsers(res.data.user));
+    } catch (error) {
+      dispatch(fetchFail(error.response.data.message));
+      // dispatch(loggedOut());
+      // AsyncStorage.clear();
     }
   };
 };

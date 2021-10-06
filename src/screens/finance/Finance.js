@@ -21,12 +21,14 @@ import {
   fetchFinances,
   transactionsSelector,
 } from "../../redux/features/transactionSlice";
+import {userSelector} from "../../redux/features/userSlice";
 
 const Finance = ({ navigation }) => {
   const dispatch = useDispatch();
   const { finances, loading } = useSelector(transactionsSelector);
 
   const [user, setUser] = useState(null);
+  const {users} = useSelector(userSelector);
 
   const getUser = async () => {
     try {
@@ -98,7 +100,7 @@ const Finance = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        {user?.role[0] === "admin" && (
+        {users?.role[0] === "admin" && (
           <View style={styles.eopView}>
             <Text style={styles.headerTxt}>Report</Text>
             <TouchableOpacity

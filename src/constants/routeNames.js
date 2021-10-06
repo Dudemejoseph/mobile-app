@@ -19,3 +19,4 @@ export const ADD_INVENTORY_SCREEN = "AddInventory";
 export const EOP_SCREEN = "EOP";
 export const PROFILE_SCREEN = "Profile";
 export const EDIT_PROFILE_SCREEN = "EditProfile";
+export const CALENDAR_SCREEN = "Calender";
