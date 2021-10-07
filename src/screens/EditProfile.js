@@ -14,7 +14,7 @@ import Wrapper from "../components/Wrapper";
 import { COLORS } from "../constants/theme";
 import { editUser, userSelector } from "../redux/features/userSlice";
 import Toast from "react-native-toast-message";
-import { PROFILE_SCREEN } from "../constants/routeNames";
+import { PROFILE_SCREEN } from "../constants/route_names";
 
 const EditProfile = ({ navigation, route }) => {
   const dispatch = useDispatch();

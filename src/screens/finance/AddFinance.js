@@ -13,7 +13,7 @@ import { ScaledSheet } from "react-native-size-matters";
 import Toast from "react-native-toast-message";
 import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../../components/Wrapper";
-import { PROFILE_SCREEN } from "../../constants/routeNames";
+import { PROFILE_SCREEN } from "../../constants/route_names";
 import { COLORS } from "../../constants/theme";
 import {
   farmSelector,

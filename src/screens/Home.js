@@ -27,7 +27,7 @@ import {
   INVENTORY_SCREEN,
   PROFILE_SCREEN,
   TRACK_EXPENSES_SCREEN,
-} from "../constants/routeNames";
+} from "../constants/route_names";
 import { COLORS } from "../constants/theme";
 import {
   farmSelector,

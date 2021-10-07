@@ -6,7 +6,7 @@ import Wrapper from "../../components/Wrapper";
 import {
   ADD_EXPENSE_SCREEN,
   ADD_FINANCE_SCREEN,
-} from "../../constants/routeNames";
+} from "../../constants/route_names";
 import { COLORS } from "../../constants/theme";
 import { fetchExpenses } from "../../redux/features/expensesSlice";
 import { userSelector } from "../../redux/features/userSlice";

@@ -16,7 +16,7 @@ import {
   GEO_FENCING_SCREEN,
   PROFILE_SCREEN,
   SELECT_CROP_SCREEN,
-} from "../constants/routeNames";
+} from "../constants/route_names";
 import { COLORS } from "../constants/theme";
 import { farmSelector, fetchFarms } from "../redux/features/farmSlice";
 

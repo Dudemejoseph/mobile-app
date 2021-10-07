@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createSlice } from "@reduxjs/toolkit";
-import axiosInstance from "../../helpers/api";
+import axiosInstance from "../../config/axios_config";
 
 const initialState = {
   loading: false,
@@ -96,7 +96,7 @@ export const loginUser = (data) => {
     } catch (error) {
       if (error.message === "Request failed with status code 422") {
         dispatch(fetchFail("Invalid credentials"));
-        return;
+        return error;
       }
       dispatch(fetchFail(error.message));
     }

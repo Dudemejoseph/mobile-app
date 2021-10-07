@@ -4,7 +4,7 @@ import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../components/Wrapper";
-import { EDIT_PROFILE_SCREEN } from "../constants/routeNames";
+import { EDIT_PROFILE_SCREEN } from "../constants/route_names";
 import { COLORS } from "../constants/theme";
 import { logoutUser, userSelector, getUser } from "../redux/features/userSlice";
 

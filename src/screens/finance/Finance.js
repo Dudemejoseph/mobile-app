@@ -15,7 +15,7 @@ import {
   ADD_FINANCE_SCREEN,
   EOP_SCREEN,
   PROFILE_SCREEN,
-} from "../../constants/routeNames";
+} from "../../constants/route_names";
 import { COLORS } from "../../constants/theme";
 import {
   fetchFinances,

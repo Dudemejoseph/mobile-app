@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import Wrapper from "../../components/Wrapper";
-import { ADD_INVENTORY_SCREEN } from "../../constants/routeNames";
+import { ADD_INVENTORY_SCREEN } from "../../constants/route_names";
 import { COLORS } from "../../constants/theme";
 import {
   fetchInventory,

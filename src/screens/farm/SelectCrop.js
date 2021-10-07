@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import Wrapper from "../../components/Wrapper";
-import { SELECT_CROP_SCREEN } from "../../constants/routeNames";
+import { SELECT_CROP_SCREEN } from "../../constants/route_names";
 import { COLORS } from "../../constants/theme";
 
 const farms = [

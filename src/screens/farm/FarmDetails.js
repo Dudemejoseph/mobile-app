@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import Wrapper from "../../components/Wrapper";
-import { ACTIVITIES_SCREEN, CALENDAR_SCREEN } from "../../constants/routeNames";
+import { ACTIVITIES_SCREEN, CALENDAR_SCREEN } from "../../constants/route_names";
 import { COLORS } from "../../constants/theme";
 import Toast from "react-native-toast-message";
 import { Modal, Portal, Dialog, Paragraph, Button } from "react-native-paper";

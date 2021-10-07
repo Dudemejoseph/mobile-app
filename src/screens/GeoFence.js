@@ -13,7 +13,7 @@ import RNLocation from "react-native-location";
 import { COLORS } from "../constants/theme";
 import * as Animatable from "react-native-animatable";
 import { createFarm } from "../redux/features/farmSlice";
-import { CREATE_FARMS_SCREEN } from "../constants/routeNames";
+import { CREATE_FARMS_SCREEN } from "../constants/route_names";
 import backIcon from "../assets/icons/back-arrow.png";
 import Geolocation from "react-native-geolocation-service";
 

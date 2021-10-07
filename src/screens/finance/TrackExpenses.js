@@ -3,9 +3,9 @@ import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../../components/Wrapper";
-import { ADD_EXPENSE_SCREEN } from "../../constants/routeNames";
+import { ADD_EXPENSE_SCREEN } from "../../constants/route_names";
 import { COLORS } from "../../constants/theme";
-import { PROFILE_SCREEN } from "../../constants/routeNames";
+import { PROFILE_SCREEN } from "../../constants/route_names";
 import { fetchExpenses } from "../../redux/features/expensesSlice";
 
 const TrackExpenses = ({ navigation }) => {
