@@ -1,6 +1,6 @@
 import { useTheme } from "@react-navigation/native";
 import { Formik } from "formik";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -8,9 +8,16 @@ import {
   useColorScheme,
   View,
 } from "react-native";
-import { Button, Caption, Snackbar, Text, TextInput } from "react-native-paper";
+import {
+  Button,
+  Caption,
+  HelperText,
+  Text,
+  TextInput,
+} from "react-native-paper";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { useDispatch, useSelector } from "react-redux";
+import ErrorSnackbar from "../../../components/Shared/Snackbar/ErrorSnackbar";
 import {
   combinedDarkTheme,
   combinedDefaultTheme,
@@ -43,36 +50,6 @@ const LoginScreen = () => {
     }
   }, [error]);
 
-  const ErrorSnackbar = () => {
-    return (
-      <Snackbar
-        theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-        style={{
-          backgroundColor: dark
-            ? combinedDarkTheme.colors.error
-            : combinedDefaultTheme.colors.error,
-        }}
-        visible={errorSnackbarVisible}
-        onDismiss={() => setErrorSnackbarVisible(false)}
-        action={{
-          label: error?.includes("Invalid credentials")
-            ? ""
-            : error?.includes("Network")
-            ? "Retry"
-            : "",
-          onPress: () => {
-            // Do something
-            if (error?.includes("Network Error")) {
-              dispatch(loginUser(tempValues));
-            }
-          },
-        }}
-      >
-        {error}
-      </Snackbar>
-    );
-  };
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -104,19 +81,12 @@ const LoginScreen = () => {
                 />
 
                 {errors?.email && (
-                  <Text
-                    style={[
-                      styles.errorText,
-                      {
-                        color:
-                          scheme === "dark"
-                            ? combinedDarkTheme.colors.error
-                            : combinedDefaultTheme.colors.error,
-                      },
-                    ]}
+                  <HelperText
+                    type="error"
+                    visible={errors?.email ? true : false}
                   >
                     {errors?.email}
-                  </Text>
+                  </HelperText>
                 )}
               </View>
 
@@ -148,19 +118,12 @@ const LoginScreen = () => {
                 />
 
                 {errors?.password && (
-                  <Text
-                    style={[
-                      styles.errorText,
-                      {
-                        color:
-                          scheme === "dark"
-                            ? combinedDarkTheme.colors.error
-                            : combinedDefaultTheme.colors.error,
-                      },
-                    ]}
+                  <HelperText
+                    type="error"
+                    visible={errors?.password ? true : false}
                   >
                     {errors?.password}
-                  </Text>
+                  </HelperText>
                 )}
               </View>
 
@@ -200,7 +163,13 @@ const LoginScreen = () => {
           )}
         </Formik>
       </ScrollView>
-      {error && ErrorSnackbar()}
+      {error &&
+        ErrorSnackbar(
+          errorSnackbarVisible,
+          setErrorSnackbarVisible,
+          error,
+          () => submitForm(tempValues)
+        )}
     </KeyboardAvoidingView>
   );
 };

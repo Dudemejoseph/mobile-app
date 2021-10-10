@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { add, compareAsc } from "date-fns";
 import axiosInstance from "../../../config/axios_config";
-import { AuthLoginInput, AuthToken, User } from "../../../interfaces/user";
+import { AuthLoginInput, User } from "../../../interfaces/user";
 import { AppDispatch } from "./../../store";
 import {
   authFail,
@@ -8,6 +9,7 @@ import {
   checkedOnboardingFalse,
   checkedOnboardingTrue,
   fetchUser,
+  loggedOut,
   loginSuccess,
   setUser,
   userFetchFail,
@@ -18,63 +20,79 @@ export const loginUser = (data: AuthLoginInput) => {
     try {
       dispatch(authRequest());
       const res = await axiosInstance.post("/auth/login", data);
-      dispatch(loginSuccess(res?.data?.user));
-      saveUserTokenToStorage(res?.data?.user?.token, res?.data?.user?.id);
-      return res?.data;
+      dispatch(
+        loginSuccess({ data: res?.data?.user, message: "Login successful" })
+      );
+      saveUserTokenToStorage(res?.data?.user, res.data.token);
     } catch (error: any) {
       if (error.message === "Request failed with status code 422") {
-        dispatch(authFail("Invalid credentials"));
-      }
-      if (error.message === "timeout of 15000ms exceeded") {
-        dispatch(authFail("Network error, check your connection"));
+        dispatch(authFail({ error: "Invalid credentials" }));
+      } else if (error.message === "timeout of 15000ms exceeded") {
+        dispatch(authFail({ error: "Network error, check your connection" }));
+      } else {
+        dispatch(authFail({ error: "Something went wrong, please try again" }));
       }
     }
   };
 };
 
-// Save user token to device via AsyncStorage
-const saveUserTokenToStorage = (authToken: string, userId: number) => {
+// Save user data to device via AsyncStorage
+const saveUserTokenToStorage = (userData: User, authToken: string) => {
   AsyncStorage.setItem(
-    "@authToken",
+    "@authData",
     JSON.stringify({
+      userData,
       authToken,
-      savedOn: Date.now(),
-      userId,
+      dateAssigned: Date.now(),
     })
   );
 };
 
 // Checking for Onboarding
-export const checkOnboarding = () => {
-  return async (dispatch: AppDispatch) => {
-    try {
-      const value = await AsyncStorage.getItem("@viewedOnBoarding");
-      if (value !== null) {
-        const res = await checkUserAuthStatus();
-        if (res) {
-          dispatch(loginSuccess(res));
+export const checkOnboarding = () => async (dispatch: AppDispatch) => {
+  try {
+    const value = await AsyncStorage.getItem("@viewedOnBoarding");
+    if (value !== null) {
+      const res = await checkUserAuthStatus();
+      if (res) {
+        const dateRes = add(res?.dateAssigned, { days: 4 });
+        const dateRes2 = compareAsc(Date.now(), dateRes);
+        if (dateRes2 === -1) {
+          dispatch(
+            loginSuccess({
+              data: res?.userData,
+              message: "Welcome back, we missed you",
+            })
+          );
+        } else {
+          dispatch(
+            dispatch(
+              authFail({
+                error: "Session expired, please login again",
+              })
+            )
+          );
         }
-        dispatch(checkedOnboardingTrue());
-      } else {
-        dispatch(checkedOnboardingFalse());
       }
-    } catch (error) {
-      throw error;
+      dispatch(checkedOnboardingTrue());
+    } else {
+      dispatch(checkedOnboardingFalse());
     }
-  };
+  } catch (error) {
+    throw error;
+  }
 };
 
 // Checking user authentication status
 export const checkUserAuthStatus = async () => {
   try {
-    let authToken = [] as any;
-    authToken = await AsyncStorage.getItem("@authToken");
-    if (!authToken) {
+    let authData = [] as any;
+    authData = await AsyncStorage.getItem("@authData");
+    if (!authData) {
       return null;
     } else {
-      const transformedData = JSON.parse(authToken) as AuthToken;
-      const res = getUser(transformedData.userId) as unknown as User;
-      return res;
+      const transformedData = JSON.parse(authData);
+      return transformedData;
     }
   } catch (error) {}
 };
@@ -94,6 +112,8 @@ export const setOnboarding = () => {
 // Fetching user current details and making sure user data hasn't expired
 export const getUser = (id: number | any) => {
   return async (dispatch: AppDispatch) => {
+    console.log("ok ");
+
     dispatch(fetchUser());
     if (!id) {
       return false;
@@ -106,5 +126,13 @@ export const getUser = (id: number | any) => {
       dispatch(userFetchFail(error?.response?.data?.message));
       return false;
     }
+  };
+};
+
+// Logout user
+export const userLogout = () => {
+  return async (dispatch: AppDispatch) => {
+    AsyncStorage.removeItem("@userData");
+    dispatch(loggedOut());
   };
 };

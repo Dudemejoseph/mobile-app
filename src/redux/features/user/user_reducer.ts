@@ -1,10 +1,10 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserState, User } from "../../../interfaces/user";
+import { createSlice } from "@reduxjs/toolkit";
+import { User, UserState } from "../../../interfaces/user";
 import { RootState } from "../../store";
+import { PayloadType } from "./../../../interfaces/shared_components";
 
 const initialState: UserState = {
   authLoading: false,
-  fetchingUser: false,
   isAuthenticated: false,
   user: null,
   isCheckingUser: true,
@@ -22,24 +22,19 @@ export const userSlice = createSlice({
       state.message = null;
       state.error = null;
     },
-    fetchUser: (state) => {
-      state.fetchingUser = true;
-      state.message = null;
-      state.error = null;
-    },
-    loginSuccess: (state, { payload }: PayloadAction<User>) => {
+    loginSuccess: (state, { payload }: PayloadType) => {
       state.authLoading = false;
       state.isAuthenticated = true;
-      state.user = payload;
-      state.message = "Logged in Successfully";
+      state.user = payload.data as unknown as User;
+      state.message = payload.message;
     },
     registerSuccess: (state) => {
       state.authLoading = false;
       state.message = "Registered successfully";
     },
-    authFail: (state, { payload }) => {
+    authFail: (state, { payload }: PayloadType) => {
       state.authLoading = false;
-      state.error = payload;
+      state.error = payload.error;
     },
     checkedOnboardingTrue: (state) => {
       state.isCheckingUser = false;
@@ -48,18 +43,6 @@ export const userSlice = createSlice({
     checkedOnboardingFalse: (state) => {
       state.isCheckingUser = false;
       state.viewedOnboarding = false;
-    },
-    setUser: (state, { payload }: PayloadAction<User>) => {
-      state.fetchingUser = false;
-      state.user = payload;
-      state.message = "Your latest profile data has been fetched";
-      state.error = null;
-    },
-    userFetchFail: (state, { payload }) => {
-      state.fetchingUser = false;
-      state.user = null;
-      state.message = null;
-      state.error = payload;
     },
     loggedOut: (state) => {
       state.authLoading = false;
@@ -77,10 +60,6 @@ export const {
   registerSuccess,
   checkedOnboardingFalse,
   checkedOnboardingTrue,
-  setUser,
-  userFetchFail,
-  fetchUser,
 } = userSlice.actions;
-
 export const userSelector = (state: RootState) => state.user;
 export default userSlice.reducer;

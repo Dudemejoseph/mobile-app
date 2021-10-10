@@ -1,23 +1,26 @@
+import dashboardSlice from "./features/dashboard/dashboard_reducer";
 import { configureStore } from "@reduxjs/toolkit";
-import farmSlice from "./features/farmSlice";
-import transactionSlice from "./features/transactionSlice";
-import expensesSlice from "./features/expensesSlice";
+// import expensesSlice from "./features/expensesSlice";
+// import inventorySlice from "./features/inventorySlice";
+// import transactionSlice from "./features/transactionSlice";
 import userSlice from "./features/user/user_reducer";
-import inventorySlice from "./features/inventorySlice";
-import logger from "redux-logger";
+import farmSlice from "./features/farms/farm_reducer";
+import cropSlice from "./features/crop/crop_reducer";
 
 export const store = configureStore({
   reducer: {
     user: userSlice,
     farm: farmSlice,
-    transactions: transactionSlice,
-    expenses: expensesSlice,
-    inventory: inventorySlice,
+    dashboard: dashboardSlice,
+    crop: cropSlice,
+    // transactions: transactionSlice,
+    // expenses: expensesSlice,
+    // inventory: inventorySlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
-    }).concat(logger),
+    }),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

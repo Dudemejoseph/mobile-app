@@ -14,10 +14,9 @@ import SplashStack from "./SplashStack";
 const AppNavContainer = () => {
   const dispatch = useDispatch();
   const scheme = useColorScheme();
-  const { isCheckingUser, viewedOnboarding, isAuthenticated, user } =
-    useSelector(userSelector) as UserState;
-
-  console.log("user is ", user);
+  const { isCheckingUser, viewedOnboarding, isAuthenticated } = useSelector(
+    userSelector
+  ) as UserState;
 
   useEffect(() => {
     dispatch(checkOnboarding());

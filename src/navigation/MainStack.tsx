@@ -2,8 +2,15 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import { useTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
+import Entypo from "react-native-vector-icons/Entypo";
+import Feather from "react-native-vector-icons/Feather";
+import CalendarIcon from "../assets/svgs/calendar.svg";
+import FieldIcon from "../assets/svgs/field.svg";
+import FinanceIcon from "../assets/svgs/finance.svg";
+import MemberIcon from "../assets/svgs/members.svg";
 import {
   CALENDAR_TAB,
+  CAMERA_TAB,
   DASHBOARD_SCREEN,
   DASHBOARD_TAB,
   DASHBOARD_TAB_SCREEN,
@@ -13,13 +20,10 @@ import {
 } from "../constants/route_names";
 import { combinedDarkTheme, combinedDefaultTheme } from "../constants/theme";
 import Dashboard from "../screens/Dashboard";
-import FieldIcon from "../assets/svgs/field.svg";
-import MemberIcon from "../assets/svgs/members.svg";
-import CalendarIcon from "../assets/svgs/calendar.svg";
-import FinanceIcon from "../assets/svgs/finance.svg";
+import FieldsStack from "./FieldsStack";
 
-import Entypo from "react-native-vector-icons/Entypo";
 Entypo.loadFont();
+Feather.loadFont();
 
 const MainStack = () => {
   const Stack = createNativeStackNavigator();
@@ -56,14 +60,24 @@ const MainStack = () => {
           name={DASHBOARD_TAB}
           component={DashboardStack}
           options={{
-            tabBarIcon: ({ color }) => (
-              <Entypo name="home" size={26} color={color} />
+            tabBarIcon: ({ focused }) => (
+              <Entypo
+                name="home"
+                size={26}
+                color={
+                  focused
+                    ? dark
+                      ? combinedDarkTheme.colors.primary
+                      : combinedDefaultTheme.colors.primary
+                    : "grey"
+                }
+              />
             ),
           }}
         />
         <BottomTab.Screen
           name={FIELDS_TAB}
-          component={DashboardStack}
+          component={FieldsStack}
           options={{
             tabBarIcon: ({ color, focused }) => (
               <FieldIcon stroke={color} strokeWidth={focused ? 0.4 : 0} />
@@ -76,6 +90,25 @@ const MainStack = () => {
           options={{
             tabBarIcon: ({ color, focused }) => (
               <MemberIcon stroke={color} strokeWidth={focused ? 0.4 : 0} />
+            ),
+          }}
+        />
+        <BottomTab.Screen
+          name={CAMERA_TAB}
+          component={DashboardStack}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <Feather
+                name="camera"
+                size={22}
+                color={
+                  focused
+                    ? dark
+                      ? combinedDarkTheme.colors.primary
+                      : combinedDefaultTheme.colors.primary
+                    : "grey"
+                }
+              />
             ),
           }}
         />

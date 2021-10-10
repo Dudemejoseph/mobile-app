@@ -5,8 +5,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     height: 42,
-    // paddingHorizontal: 15,
-    // marginHorizontal: 25,
     borderRadius: 1.71,
     borderWidth: 1,
   },

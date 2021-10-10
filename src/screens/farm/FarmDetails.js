@@ -10,7 +10,10 @@ import {
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import Wrapper from "../../components/Wrapper";
-import { ACTIVITIES_SCREEN, CALENDAR_SCREEN } from "../../constants/route_names";
+import {
+  ACTIVITIES_SCREEN,
+  CALENDAR_SCREEN,
+} from "../../constants/route_names";
 import { COLORS } from "../../constants/theme";
 import Toast from "react-native-toast-message";
 import { Modal, Portal, Dialog, Paragraph, Button } from "react-native-paper";
@@ -74,7 +77,7 @@ const FarmDetails = ({ navigation, route }) => {
   //   dispatch(fetchCrops());
   // }, [dispatch]);
 
-  const submitDefaultCropActivities = async() => {
+  const submitDefaultCropActivities = async () => {
     let data = [];
     cropActivity.forEach((element) => {
       data.push({
@@ -313,7 +316,9 @@ const FarmDetails = ({ navigation, route }) => {
                 <ActivityIndicator color={COLORS.background} size="small" />
               ) : (
                 <Button
-                  disabled={!cropActivity &&  (cropActivity &&cropActivity.length < 1)}
+                  disabled={
+                    !cropActivity && cropActivity && cropActivity.length < 1
+                  }
                   onPress={() => {
                     // console.log(cropActivity);
                     submitDefaultCropActivities();

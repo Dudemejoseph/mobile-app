@@ -1,3 +1,4 @@
+import { PaginationData } from "./farm";
 import { RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ReactNode } from "react";
@@ -35,4 +36,44 @@ export interface CustomTextInputProps extends RNTextInputProps {
   icon?: string;
   touched?: boolean;
   error?: string;
+}
+
+export interface AppbarType {
+  title?: string;
+  subtitle?: string;
+  backButton?: boolean;
+  search?: boolean;
+  otherRightIcon?: boolean;
+}
+
+export interface PayloadType {
+  payload: {
+    data?: [];
+    message?: string | any;
+    error?: any;
+    paginationData?: PaginationData;
+  };
+}
+
+export interface CarouselDataType {
+  id: number;
+  title: string;
+  percentage: number;
+  percent: number;
+  color?: string;
+  size?: number;
+  crop?: string;
+}
+
+export interface HomeDIrectoryProps {
+  id?: number;
+  title: string;
+  color: string;
+  onAction: Function;
+}
+
+export interface ErrorComponentProps {
+  error: string;
+  action: Function;
+  loading: boolean;
 }

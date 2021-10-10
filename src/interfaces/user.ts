@@ -4,9 +4,14 @@ export interface UserState {
   user: User | null;
   isCheckingUser: boolean;
   viewedOnboarding: boolean;
-  error: string | any | null;
-  message: string | null;
-  fetchingUser: boolean;
+  error: string | any;
+  message: string | any;
+}
+
+export interface DashboardState {
+  fetching: boolean;
+  error: string | any;
+  dashboardData: [] | any;
 }
 
 export type AuthLoginInput = {
@@ -38,10 +43,4 @@ export interface User {
   enabled: boolean;
   deleted_at: null;
   token: string;
-}
-
-export interface AuthToken {
-  userId?: number;
-  authToken?: string;
-  savedOn?: Date;
 }
