@@ -13,11 +13,8 @@ export const GEO_FENCING_SCREEN = "Geo-Fencing";
 export const SELECT_CROP_SCREEN = "Select-Crop";
 export const ADD_EXPENSE_SCREEN = "Add-Expense";
 export const ADD_FINANCE_SCREEN = "Add-Finance";
-export const CAMERA_SCREEN = "Camera";
 export const ADD_INVENTORY_SCREEN = "AddInventory";
 export const EOP_SCREEN = "EOP";
-export const PROFILE_SCREEN = "Profile";
-export const EDIT_PROFILE_SCREEN = "EditProfile";
 export const CALENDAR_SCREEN = "Calender";
 export const SPLASH_SCREEN = "Splash";
 export const DASHBOARD_SCREEN = "Dashboard";
@@ -29,9 +26,18 @@ export const DASHBOARD_TAB_SCREEN = "Home tab";
 export const FIELDS_SCREEN = "Fields screen";
 export const FARM_DETAILS_SCREEN = "Farm-Details";
 
+// Profile Screen
+export const PROFILE_STACK = "Profile stack";
+export const PROFILE_SCREEN = "Profile";
+export const EDIT_PROFILE_SCREEN = "EditProfile";
+
+// Camera Stack
+export const CAMERA_STACK = "Camera stack";
+export const CAMERA_SCREEN = "Camera Screen";
+
 // TABS
 export const DASHBOARD_TAB = "Home";
-export const FIELDS_TAB = "Fields";
+export const FIELDS_TAB = "Farms";
 export const MEMBERS_TAB = "Members";
 export const CAMERA_TAB = "Camera";
 export const CALENDAR_TAB = "Calendar";

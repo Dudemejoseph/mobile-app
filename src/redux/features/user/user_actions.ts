@@ -1,18 +1,23 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { add, compareAsc } from "date-fns";
 import axiosInstance from "../../../config/axios_config";
-import { AuthLoginInput, User } from "../../../interfaces/user";
+import {
+  AuthLoginInput,
+  EditProfileInput,
+  User,
+} from "../../../interfaces/user";
+import { fetchDashboardFail } from "../dashboard/dashboard_reducer";
 import { AppDispatch } from "./../../store";
 import {
   authFail,
   authRequest,
   checkedOnboardingFalse,
   checkedOnboardingTrue,
-  fetchUser,
+  editingUser,
   loggedOut,
   loginSuccess,
   setUser,
-  userFetchFail,
+  setUserFail,
 } from "./user_reducer";
 
 export const loginUser = (data: AuthLoginInput) => {
@@ -27,7 +32,10 @@ export const loginUser = (data: AuthLoginInput) => {
     } catch (error: any) {
       if (error.message === "Request failed with status code 422") {
         dispatch(authFail({ error: "Invalid credentials" }));
-      } else if (error.message === "timeout of 15000ms exceeded") {
+      } else if (
+        error.message === "timeout of 15000ms exceeded" ||
+        error?.message === "Network Error"
+      ) {
         dispatch(authFail({ error: "Network error, check your connection" }));
       } else {
         dispatch(authFail({ error: "Something went wrong, please try again" }));
@@ -109,30 +117,66 @@ export const setOnboarding = () => {
   };
 };
 
-// Fetching user current details and making sure user data hasn't expired
-export const getUser = (id: number | any) => {
+// Logout user
+export const userLogout = () => {
   return async (dispatch: AppDispatch) => {
-    console.log("ok ");
+    AsyncStorage.removeItem("@authData");
+    dispatch(loggedOut());
+  };
+};
 
-    dispatch(fetchUser());
-    if (!id) {
-      return false;
-    }
+export const editUser = (id: number, data: EditProfileInput) => {
+  return async (dispatch: AppDispatch) => {
+    dispatch(editingUser());
     try {
-      const res = await axiosInstance.get(`/users/${id}`);
-      dispatch(setUser(res.data.user));
-      return true;
+      const res = await axiosInstance.put(`/users/${id}`, data);
+      dispatch(
+        setUser({
+          data: res.data.user,
+          message: "Profile updated successfully",
+        })
+      );
     } catch (error: any) {
-      dispatch(userFetchFail(error?.response?.data?.message));
-      return false;
+      if (error.message === "Request failed with status code 422") {
+        dispatch(
+          setUserFail({ error: "Oops: something is worng with your form" })
+        );
+      } else if (
+        error.message === "timeout of 15000ms exceeded" ||
+        error?.message === "Network Error"
+      ) {
+        dispatch(
+          setUserFail({ error: "Network error, check your connection" })
+        );
+      } else {
+        dispatch(
+          setUserFail({ error: "Something went wrong, please try again" })
+        );
+      }
     }
   };
 };
 
-// Logout user
-export const userLogout = () => {
+export const getUser = (id: number) => {
   return async (dispatch: AppDispatch) => {
-    AsyncStorage.removeItem("@userData");
-    dispatch(loggedOut());
+    try {
+      const res = await axiosInstance.get(`/users/${id}`);
+      dispatch(setUser({ data: res.data.user }));
+    } catch (error: any) {
+      if (error?.message === "Network Error") {
+        dispatch(
+          fetchDashboardFail({
+            error:
+              "Oops!, Network error, please check your internet connection",
+          })
+        );
+      } else {
+        dispatch(
+          fetchDashboardFail({
+            error: "Oops!, something went wrong while fetching latest data",
+          })
+        );
+      }
+    }
   };
 };

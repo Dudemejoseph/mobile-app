@@ -1,3 +1,4 @@
+import dialogSlice from "./features/dialogs/dialogs_reducer";
 import dashboardSlice from "./features/dashboard/dashboard_reducer";
 import { configureStore } from "@reduxjs/toolkit";
 // import expensesSlice from "./features/expensesSlice";
@@ -13,6 +14,7 @@ export const store = configureStore({
     farm: farmSlice,
     dashboard: dashboardSlice,
     crop: cropSlice,
+    dialog: dialogSlice,
     // transactions: transactionSlice,
     // expenses: expensesSlice,
     // inventory: inventorySlice,

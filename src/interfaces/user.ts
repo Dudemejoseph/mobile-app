@@ -6,6 +6,10 @@ export interface UserState {
   viewedOnboarding: boolean;
   error: string | any;
   message: string | any;
+  loggedOut: boolean | any;
+  editing: boolean;
+  editingError: string | any;
+  editingMessage: string | any;
 }
 
 export interface DashboardState {
@@ -27,6 +31,14 @@ export type AuthRegisterInput = {
   password_confirmation: string;
 };
 
+export type EditProfileInput = {
+  firstname: string;
+  lastname: string;
+  email: string;
+  phone: string;
+  address: string;
+};
+
 export interface User {
   id: number;
   account_id: number;
@@ -41,6 +53,8 @@ export interface User {
   state_id: number;
   country_id: number;
   enabled: boolean;
-  deleted_at: null;
+  created_at: Date | any;
+  deleted_at: Date | any;
   token: string;
+  role: ["member" | "admin" | "system"];
 }

@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonLabel: { fontSize: 14, fontFamily: "Poppins-Medium", lineHeight: 20 },
+  buttonLabelStyle: { fontSize: 12, fontFamily: "Poppins-Regular" },
 });
 
 export default styles;

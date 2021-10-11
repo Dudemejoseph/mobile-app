@@ -18,6 +18,7 @@ import {
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { useDispatch, useSelector } from "react-redux";
 import ErrorSnackbar from "../../../components/Shared/Snackbar/ErrorSnackbar";
+import InfoSnackbar from "../../../components/Shared/Snackbar/InfoSnackbar";
 import {
   combinedDarkTheme,
   combinedDefaultTheme,
@@ -37,7 +38,11 @@ const LoginScreen = () => {
   const [tempValues, setTempValues] = useState<AuthLoginInput | any>(null);
   const [errorSnackbarVisible, setErrorSnackbarVisible] =
     useState<boolean>(false);
-  const { authLoading, error } = useSelector(userSelector) as UserState;
+  const [infoSnackbarVisible, setInfoSnackbarVisible] =
+    useState<boolean>(false);
+  const { authLoading, error, loggedOut } = useSelector(
+    userSelector
+  ) as UserState;
 
   const submitForm = async (values: AuthLoginInput) => {
     setTempValues(values);
@@ -48,7 +53,11 @@ const LoginScreen = () => {
     if (error) {
       setErrorSnackbarVisible(true);
     }
-  }, [error]);
+
+    if (loggedOut) {
+      setInfoSnackbarVisible(true);
+    }
+  }, [error, loggedOut]);
 
   return (
     <KeyboardAvoidingView
@@ -169,6 +178,12 @@ const LoginScreen = () => {
           setErrorSnackbarVisible,
           error,
           () => submitForm(tempValues)
+        )}
+      {loggedOut &&
+        InfoSnackbar(
+          infoSnackbarVisible,
+          setInfoSnackbarVisible,
+          "You have been logged out, hope to see you again soon"
         )}
     </KeyboardAvoidingView>
   );

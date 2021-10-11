@@ -12,11 +12,6 @@ const InfoSnackbar = (visible: boolean, setVisible: Function, info: string) => {
   return (
     <Snackbar
       theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-      style={{
-        backgroundColor: dark
-          ? combinedDarkTheme.colors.primary
-          : combinedDefaultTheme.colors.primary,
-      }}
       visible={visible}
       onDismiss={() => setVisible(false)}
     >

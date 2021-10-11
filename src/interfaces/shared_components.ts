@@ -44,6 +44,7 @@ export interface AppbarType {
   backButton?: boolean;
   search?: boolean;
   otherRightIcon?: boolean;
+  profileIcon?: boolean;
 }
 
 export interface PayloadType {
@@ -52,6 +53,7 @@ export interface PayloadType {
     message?: string | any;
     error?: any;
     paginationData?: PaginationData;
+    action?: Function;
   };
 }
 

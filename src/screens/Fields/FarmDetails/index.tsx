@@ -24,9 +24,8 @@ const FarmDetails: React.FC<DefaultScreenProps> = ({ route }) => {
   const { dark } = useTheme();
   const [visible, setVisible] = useState(false);
   const [visible2, setVisible2] = useState(false);
-  const [visible3, setVisible3] = useState(false);
-  const { fetchingDefaultCropActivities, cropActivity } =
-    useSelector(cropSelector);
+  const [setVisible3] = useState(false);
+  const { fetchingDefaultCropActivities } = useSelector(cropSelector);
 
   return (
     <Wrapper>

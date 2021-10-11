@@ -13,8 +13,6 @@ const SuccessSnackbar = (
 ) => {
   const { dark } = useTheme();
 
-  console.log("vid ", visible);
-
   return (
     <Snackbar
       theme={dark ? combinedDarkTheme : combinedDefaultTheme}

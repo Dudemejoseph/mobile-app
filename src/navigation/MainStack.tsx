@@ -7,7 +7,6 @@ import Feather from "react-native-vector-icons/Feather";
 import CalendarIcon from "../assets/svgs/calendar.svg";
 import FieldIcon from "../assets/svgs/field.svg";
 import FinanceIcon from "../assets/svgs/finance.svg";
-import MemberIcon from "../assets/svgs/members.svg";
 import {
   CALENDAR_TAB,
   CAMERA_TAB,
@@ -16,11 +15,13 @@ import {
   DASHBOARD_TAB_SCREEN,
   FIELDS_TAB,
   FINANCE_TAB,
-  MEMBERS_TAB,
+  PROFILE_STACK,
 } from "../constants/route_names";
 import { combinedDarkTheme, combinedDefaultTheme } from "../constants/theme";
 import Dashboard from "../screens/Dashboard";
+import CameraStack from "./CameraStack";
 import FieldsStack from "./FieldsStack";
+import ProfileStack from "./ProfileStack";
 
 Entypo.loadFont();
 Feather.loadFont();
@@ -85,17 +86,8 @@ const MainStack = () => {
           }}
         />
         <BottomTab.Screen
-          name={MEMBERS_TAB}
-          component={DashboardStack}
-          options={{
-            tabBarIcon: ({ color, focused }) => (
-              <MemberIcon stroke={color} strokeWidth={focused ? 0.4 : 0} />
-            ),
-          }}
-        />
-        <BottomTab.Screen
           name={CAMERA_TAB}
-          component={DashboardStack}
+          component={CameraStack}
           options={{
             tabBarIcon: ({ focused }) => (
               <Feather
@@ -140,6 +132,7 @@ const MainStack = () => {
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name={DASHBOARD_TAB_SCREEN} component={BottomTabs} />
+      <Stack.Screen name={PROFILE_STACK} component={ProfileStack} />
     </Stack.Navigator>
   );
 };

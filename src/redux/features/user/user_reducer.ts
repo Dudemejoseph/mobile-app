@@ -11,6 +11,10 @@ const initialState: UserState = {
   viewedOnboarding: false,
   error: null,
   message: null,
+  loggedOut: null,
+  editing: false,
+  editingError: null,
+  editingMessage: null,
 };
 
 export const userSlice = createSlice({
@@ -27,6 +31,7 @@ export const userSlice = createSlice({
       state.isAuthenticated = true;
       state.user = payload.data as unknown as User;
       state.message = payload.message;
+      state.loggedOut = false;
     },
     registerSuccess: (state) => {
       state.authLoading = false;
@@ -48,6 +53,23 @@ export const userSlice = createSlice({
       state.authLoading = false;
       state.isAuthenticated = false;
       state.user = null;
+      state.loggedOut = true;
+    },
+    editingUser: (state) => {
+      state.editing = true;
+      state.editingError = null;
+      state.editingMessage = null;
+    },
+    setUser: (state, { payload }: PayloadType) => {
+      state.user = payload.data as unknown as User;
+      state.editing = false;
+      state.editingMessage = payload.message;
+      state.editingError = null;
+    },
+    setUserFail: (state, { payload }: PayloadType) => {
+      state.editing = false;
+      state.editingMessage = null;
+      state.editingError = payload.error;
     },
   },
 });
@@ -60,6 +82,9 @@ export const {
   registerSuccess,
   checkedOnboardingFalse,
   checkedOnboardingTrue,
+  editingUser,
+  setUser,
+  setUserFail,
 } = userSlice.actions;
 export const userSelector = (state: RootState) => state.user;
 export default userSlice.reducer;

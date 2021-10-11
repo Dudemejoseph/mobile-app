@@ -19,7 +19,6 @@ export const getDashboard = () => {
       });
       dispatch(fetchDashboardSuccess({ data }));
     } catch (error: any) {
-      console.error("err ", error);
       if (error?.message === "Network Error") {
         dispatch(
           fetchDashboardFail({
