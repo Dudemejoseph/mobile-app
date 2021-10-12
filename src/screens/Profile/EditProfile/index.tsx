@@ -213,6 +213,7 @@ const EditProfile = () => {
 
                 <View style={styles.buttonView}>
                   <Button
+                    uppercase={false}
                     onPress={handleSubmit}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
                     mode={scheme === "dark" ? "contained" : "contained"}

@@ -85,7 +85,9 @@ const GeoFence = ({ navigation }) => {
           { latitude: coords.latitude, longitude: coords.longitude },
         ]);
       });
-    } else return null;
+    } else {
+      return null;
+    }
   }, [trackEnabled]);
 
   useEffect(() => {
@@ -184,7 +186,11 @@ const GeoFence = ({ navigation }) => {
             style={styles.boxItem}
             onPress={() => {
               unsub();
-              navigation.navigate(CREATE_FARMS_SCREEN, { hecres, coordinates, distance });
+              navigation.navigate(CREATE_FARMS_SCREEN, {
+                hecres,
+                coordinates,
+                distance,
+              });
             }}
           >
             <Text>Create Farm</Text>

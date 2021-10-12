@@ -1,53 +1,60 @@
 import { useTheme } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
-import { Button, DataTable, Divider, Headline, Menu } from "react-native-paper";
+import { Button, DataTable, Divider, Menu } from "react-native-paper";
 import Entypo from "react-native-vector-icons/Entypo";
 import { useDispatch, useSelector } from "react-redux";
 import AppbarComponent from "../../components/Shared/Appbar";
-import EmptyList from "../../components/Shared/EmptyListComponent";
 import ErrorComponent from "../../components/Shared/ErrorComponent";
 import LoadingComponent from "../../components/Shared/LoadingComponent";
 import Wrapper from "../../components/Shared/Wrapper";
-import { FARM_DETAILS_SCREEN } from "../../constants/route_names";
+import { ADD_FINANCE_SCREEN, FINANCE_STACK } from "../../constants/route_names";
 import { combinedDarkTheme, combinedDefaultTheme } from "../../constants/theme";
-import { Farm, FarmState } from "../../interfaces/farm";
 import { DefaultScreenProps } from "../../interfaces/shared_components";
-import { getFarms } from "../../redux/features/farms/farm_actions";
-import { farmSelector } from "../../redux/features/farmSlice";
+import { Transaction, TransactionsState } from "../../interfaces/transactions";
+import { UserState } from "../../interfaces/user";
+import { fetchFinancesAction } from "../../redux/features/transactions/transactions_actions";
+import { transactionsSelector } from "../../redux/features/transactions/transactions_reducer";
+import { userSelector } from "../../redux/features/user/user_reducer";
 import styles from "./styles";
 Entypo.loadFont();
 
 const numberOfItemsPerPageList = [2, 3, 4];
 
-const Fields: React.FC<DefaultScreenProps> = ({ navigation }) => {
+const Finance: React.FC<DefaultScreenProps> = ({ navigation }) => {
   const dispatch = useDispatch();
   const { dark } = useTheme();
-  const { error, fetching, farmData } = useSelector(farmSelector) as FarmState;
+  const { user } = useSelector(userSelector) as UserState;
+  const { fetching, financesData, error } = useSelector(
+    transactionsSelector
+  ) as TransactionsState;
   const [pageState, setPageState] = useState<number>(0);
   const [numberOfItemsPerPage, onItemsPerPageChange] = useState<number>(
     numberOfItemsPerPageList[0]
   );
   const from = pageState * numberOfItemsPerPage;
-  const to = Math.min((pageState + 1) * numberOfItemsPerPage, farmData?.length);
+  const to = Math.min(
+    (pageState + 1) * numberOfItemsPerPage,
+    financesData?.length
+  );
   const [visible, setVisible] = useState<number | any>(null);
 
   const openMenu = (itemId: number) => setVisible(itemId);
   const closeMenu = () => setVisible(null);
 
   useEffect(() => {
-    const fetchFarms = async () => {
-      dispatch(getFarms());
-    };
-    fetchFarms();
-  }, [dispatch]);
-
-  useEffect(() => {
     setPageState(0);
   }, [numberOfItemsPerPage]);
 
+  useEffect(() => {
+    const getFinances = async () => {
+      dispatch(fetchFinancesAction());
+    };
+    getFinances();
+  }, [dispatch]);
+
   const retry = async () => {
-    dispatch(getFarms());
+    dispatch(fetchFinancesAction());
   };
 
   if (fetching) {
@@ -69,23 +76,35 @@ const Fields: React.FC<DefaultScreenProps> = ({ navigation }) => {
   return (
     <Wrapper>
       <ScrollView contentContainerStyle={styles.wrapper}>
-        <AppbarComponent backButton={true} title="Farm Overview" />
-        <Headline style={styles.welcomeText}>List of Farms</Headline>
-        {farmData?.length > 0 && (
+        <AppbarComponent
+          title="Finance Overview"
+          backButton={true}
+          search={false}
+        />
+        {user?.role.includes("admin") && (
+          <Button
+            uppercase={false}
+            theme={dark ? combinedDarkTheme : combinedDefaultTheme}
+            mode="outlined"
+            style={styles.eopButton}
+            labelStyle={styles.eopText}
+          >
+            View EOP
+          </Button>
+        )}
+        {financesData?.length > 0 && (
           <DataTable>
             <DataTable.Header>
-              <DataTable.Title>Farms</DataTable.Title>
-              <DataTable.Title>Location</DataTable.Title>
-              <DataTable.Title numeric>Size (Hec)</DataTable.Title>
+              <DataTable.Title>Activity</DataTable.Title>
+              <DataTable.Title numeric>Amount (&#8358;)</DataTable.Title>
               <DataTable.Title numeric>Action</DataTable.Title>
             </DataTable.Header>
 
-            {farmData?.map((item: Farm, index: number) => {
+            {financesData?.map((item: Transaction, index: number) => {
               return (
                 <DataTable.Row key={index}>
-                  <DataTable.Cell>{item.name}</DataTable.Cell>
-                  <DataTable.Cell>{item.location}</DataTable.Cell>
-                  <DataTable.Cell numeric>{item.size}</DataTable.Cell>
+                  <DataTable.Cell>{item.activity}</DataTable.Cell>
+                  <DataTable.Cell numeric>{item.amount}</DataTable.Cell>
                   <DataTable.Cell numeric>
                     <Menu
                       visible={visible === index ? true : false}
@@ -106,7 +125,7 @@ const Fields: React.FC<DefaultScreenProps> = ({ navigation }) => {
                         icon="subdirectory-arrow-right"
                         onPress={() => {
                           closeMenu();
-                          navigation.push(FARM_DETAILS_SCREEN, { item });
+                          // navigation.push(FARM_DETAILS_SCREEN, { item });
                         }}
                         title="View"
                       />
@@ -133,9 +152,11 @@ const Fields: React.FC<DefaultScreenProps> = ({ navigation }) => {
             })}
             <DataTable.Pagination
               page={pageState}
-              numberOfPages={Math.ceil(farmData?.length / numberOfItemsPerPage)}
+              numberOfPages={Math.ceil(
+                financesData?.length / numberOfItemsPerPage
+              )}
               onPageChange={(number) => setPageState(number)}
-              label={`${from + 1}-${to} of ${farmData?.length}`}
+              label={`${from + 1}-${to} of ${financesData?.length}`}
               showFastPaginationControls
               numberOfItemsPerPageList={numberOfItemsPerPageList}
               theme={dark ? combinedDarkTheme : combinedDefaultTheme}
@@ -145,10 +166,22 @@ const Fields: React.FC<DefaultScreenProps> = ({ navigation }) => {
             />
           </DataTable>
         )}
-        {farmData?.length < 1 && EmptyList("Farm")}
+
+        <Button
+          uppercase={false}
+          theme={dark ? combinedDarkTheme : combinedDefaultTheme}
+          mode="contained"
+          style={styles.eopButton}
+          labelStyle={styles.eopText}
+          onPress={() =>
+            navigation.push(FINANCE_STACK, { screen: ADD_FINANCE_SCREEN })
+          }
+        >
+          Add Cost
+        </Button>
       </ScrollView>
     </Wrapper>
   );
 };
 
-export default Fields;
+export default Finance;

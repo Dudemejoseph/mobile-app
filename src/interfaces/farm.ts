@@ -8,8 +8,28 @@ export interface PaginationData {
 export interface FarmState {
   fetching: boolean;
   error: string | any;
+  farmActivitiesError: string | any;
   farmData: [] | any;
+  farmActivities: [] | any;
   paginationData: PaginationData | any;
+  fetchingFarmActivities: boolean;
+  creatingFarm: boolean;
+  creatingFarmError: string | any;
+  creatingFarmMessage: string | any;
+}
+
+export interface CreateFarmInput {
+  name: string;
+  size: string | any;
+  size_unit: string;
+  location: string;
+  location_type: string;
+  ownership: "owned" | "rented";
+  coordinates: [] | any;
+  country_id: number;
+  state_id: number;
+  lga_id: number;
+  crop_id: number;
 }
 
 export interface Crop {

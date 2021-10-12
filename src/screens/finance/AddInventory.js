@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Text,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  Image,
-  TextInput,
   ActivityIndicator,
+  Image,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { ScaledSheet } from "react-native-size-matters";
+import Toast from "react-native-toast-message";
 import { useDispatch, useSelector } from "react-redux";
-import Wrapper from "../../components/Wrapper";
+import Wrapper from "../../components/Shared/Wrapper";
 import { COLORS } from "../../constants/theme";
-import { farmSelector, fetchActivities } from "../../redux/features/farmSlice";
+import { fetchActivities } from "../../redux/features/farmSlice";
 import {
   addInventory,
   inventorySelector,
 } from "../../redux/features/inventorySlice";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import Toast from "react-native-toast-message";
 
 const AddInventory = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -58,7 +58,7 @@ const AddInventory = ({ navigation }) => {
       });
 
     message && navigation.navigate("Finance");
-  }, [message]);
+  }, [message, navigation]);
 
   useEffect(() => {
     error &&
@@ -85,7 +85,7 @@ const AddInventory = ({ navigation }) => {
   };
 
   return (
-    <Wrapper>
+    <Wrapper customStyle={{ flex: 1, backgroundColor: "white", padding: 10 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* ========= Header View ========= */}
         <View style={styles.headerView}>

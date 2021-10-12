@@ -8,19 +8,27 @@ import CalendarIcon from "../assets/svgs/calendar.svg";
 import FieldIcon from "../assets/svgs/field.svg";
 import FinanceIcon from "../assets/svgs/finance.svg";
 import {
+  ACTIVITIES_STACK,
   CALENDAR_TAB,
   CAMERA_TAB,
   DASHBOARD_SCREEN,
   DASHBOARD_TAB,
   DASHBOARD_TAB_SCREEN,
+  FIELDS_STACK,
   FIELDS_TAB,
+  FINANCE_STACK,
   FINANCE_TAB,
+  INVENTORY_STACK,
   PROFILE_STACK,
 } from "../constants/route_names";
 import { combinedDarkTheme, combinedDefaultTheme } from "../constants/theme";
+import Calender from "../screens/Calendar";
 import Dashboard from "../screens/Dashboard";
+import ActivitiesStack from "./ActivitiesStack";
 import CameraStack from "./CameraStack";
 import FieldsStack from "./FieldsStack";
+import FinancesStack from "./FinancesStack";
+import InventoryStack from "./InventoryStack";
 import ProfileStack from "./ProfileStack";
 
 Entypo.loadFont();
@@ -106,7 +114,7 @@ const MainStack = () => {
         />
         <BottomTab.Screen
           name={CALENDAR_TAB}
-          component={DashboardStack}
+          component={Calender}
           options={{
             tabBarIcon: ({ color, focused }) => (
               <CalendarIcon stroke={color} strokeWidth={focused ? 0.4 : 0} />
@@ -115,7 +123,7 @@ const MainStack = () => {
         />
         <BottomTab.Screen
           name={FINANCE_TAB}
-          component={DashboardStack}
+          component={FinancesStack}
           options={{
             tabBarIcon: ({ color, focused }) => (
               <FinanceIcon stroke={color} strokeWidth={focused ? 0.4 : 0} />
@@ -133,6 +141,10 @@ const MainStack = () => {
     >
       <Stack.Screen name={DASHBOARD_TAB_SCREEN} component={BottomTabs} />
       <Stack.Screen name={PROFILE_STACK} component={ProfileStack} />
+      <Stack.Screen name={FINANCE_STACK} component={FinancesStack} />
+      <Stack.Screen name={FIELDS_STACK} component={FieldsStack} />
+      <Stack.Screen name={ACTIVITIES_STACK} component={ActivitiesStack} />
+      <Stack.Screen name={INVENTORY_STACK} component={InventoryStack} />
     </Stack.Navigator>
   );
 };

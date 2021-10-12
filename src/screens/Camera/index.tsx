@@ -37,7 +37,7 @@ const Camera = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.wrapper}
       >
-        <AppbarComponent search={false} />
+        <AppbarComponent backButton={true} title="Camera" search={false} />
         <RNCamera
           ref={cameraRef}
           style={styles.preview}

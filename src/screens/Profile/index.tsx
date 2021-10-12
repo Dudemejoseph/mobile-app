@@ -275,7 +275,7 @@ const Profile: React.FC<DefaultScreenProps> = ({ navigation }) => {
             theme={dark ? combinedDarkTheme : combinedDefaultTheme}
             labelStyle={{
               color: dark
-                ? combinedDarkTheme.colors.primary
+                ? combinedDarkTheme.colors.background
                 : combinedDefaultTheme.colors.background,
             }}
           >

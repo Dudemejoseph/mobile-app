@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import Wrapper from "../../components/Wrapper";
+import Wrapper from "../../components/Shared/Wrapper";
 import { ADD_INVENTORY_SCREEN } from "../../constants/route_names";
 import { COLORS } from "../../constants/theme";
 import {
@@ -60,13 +60,13 @@ const Inventory = ({ navigation }) => {
       dispatch(fetchInventory());
     };
     fetchInventoryProcess();
-  }, []);
+  }, [dispatch]);
 
   const { inventory } = useSelector(inventorySelector);
   console.log("inventory  ==========> ", inventory);
 
   return (
-    <Wrapper>
+    <Wrapper customStyle={{ backgroundColor: "white", flex: 1, padding: 20 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* ========= Header View ========= */}
         <View style={styles.headerView}>
@@ -103,19 +103,21 @@ const Inventory = ({ navigation }) => {
               <Text style={styles.headTxt}>Amount Checked Out</Text>
               <Text style={styles.headTxt}>Purpose</Text>
             </View>
-            {inventory && inventory.map((item) => {
+            {inventory?.map((item) => {
               return (
                 <View style={styles.tableBody} key={item.id}>
-                  <Text style={styles.bodyTxt1}>{item.date}</Text>
-                  <Text style={styles.bodyTxt}>{item.product}</Text>
-                  <Text style={styles.bodyTxt}>{item.brand}</Text>
-                  <Text style={styles.bodyTxt}>{item.startingStock}</Text>
-                  <Text style={styles.bodyTxt}>{item.addedStock}</Text>
-                  <Text style={styles.bodyTxt}>{item.usedStock}</Text>
-                  <Text style={styles.bodyTxt}>{item.RemainingStock}</Text>
-                  <Text style={styles.bodyTxt}>{item.variance}</Text>
-                  <Text style={styles.bodyTxt}>{item.amountChecked}</Text>
-                  <Text style={styles.bodyTxt}>{item.purpose}</Text>
+                  <Text style={styles.bodyTxt1}>
+                    {item.purchase_date ?? "N/A"}
+                  </Text>
+                  <Text style={styles.bodyTxt}>{item.name}</Text>
+                  <Text style={styles.bodyTxt}>{item.type}</Text>
+                  <Text style={styles.bodyTxt}>{item.purchase_quantity}</Text>
+                  <Text style={styles.bodyTxt}>10</Text>
+                  <Text style={styles.bodyTxt}>20</Text>
+                  <Text style={styles.bodyTxt}>200</Text>
+                  <Text style={styles.bodyTxt}>300</Text>
+                  <Text style={styles.bodyTxt}>200</Text>
+                  <Text style={styles.bodyTxt}>{item.note ?? "N/A"}</Text>
                 </View>
               );
             })}

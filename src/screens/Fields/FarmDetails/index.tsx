@@ -2,7 +2,15 @@ import { useTheme } from "@react-navigation/native";
 import React, { useState } from "react";
 import { ScrollView, View } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
-import { Button, Dialog, Portal, Subheading, Text } from "react-native-paper";
+import {
+  Button,
+  Dialog,
+  Paragraph,
+  Portal,
+  ProgressBar,
+  Subheading,
+  Text,
+} from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import AppbarComponent from "../../../components/Shared/Appbar";
 import Wrapper from "../../../components/Shared/Wrapper";
@@ -24,8 +32,13 @@ const FarmDetails: React.FC<DefaultScreenProps> = ({ route }) => {
   const { dark } = useTheme();
   const [visible, setVisible] = useState(false);
   const [visible2, setVisible2] = useState(false);
-  const [setVisible3] = useState(false);
-  const { fetchingDefaultCropActivities } = useSelector(cropSelector);
+  const [visible3, setVisible3] = useState(false);
+  const { fetchingDefaultCropActivities, cropActivity } =
+    useSelector(cropSelector);
+
+  const getDefaultCropActivities = (id: number) => {
+    dispatch(fetchActivityForCrop(id));
+  };
 
   return (
     <Wrapper>
@@ -107,6 +120,7 @@ const FarmDetails: React.FC<DefaultScreenProps> = ({ route }) => {
                 mode="text"
                 contentStyle={styles.dialogButton}
                 onPress={() => {
+                  getDefaultCropActivities(farmItem?.crops[0]?.crop?.id);
                   setVisible2(true);
                 }}
               >
@@ -145,15 +159,24 @@ const FarmDetails: React.FC<DefaultScreenProps> = ({ route }) => {
             <Dialog.Title
               theme={dark ? combinedDarkTheme : combinedDefaultTheme}
             >
-              Start New Activity
+              Default Activities for {farmItem?.crops[0]?.crop?.name}
             </Dialog.Title>
             <Dialog.Content>
-              <View style={styles.row2}>
-                <Subheading style={styles.leftText2}>Crop:</Subheading>
-                <Text style={styles.rightText}>
-                  {farmItem?.crops ? farmItem?.crops[0]?.crop?.name : "N/A"}
-                </Text>
-              </View>
+              {fetchingDefaultCropActivities && (
+                <ProgressBar
+                  indeterminate={true}
+                  color={
+                    dark
+                      ? combinedDarkTheme.colors.primary
+                      : combinedDefaultTheme.colors.primary
+                  }
+                />
+              )}
+              {cropActivity && cropActivity.length < 1 && (
+                <Paragraph>
+                  No Default activities for {farmItem?.crops[0]?.crop?.name}
+                </Paragraph>
+              )}
             </Dialog.Content>
             <Dialog.Actions>
               <Button
@@ -167,21 +190,23 @@ const FarmDetails: React.FC<DefaultScreenProps> = ({ route }) => {
               >
                 Cancel
               </Button>
-              <Button
-                onPress={async () => {
-                  await dispatch(
-                    fetchActivityForCrop(farmItem?.crops[0]?.crop?.id)
-                  );
-                  // setVisible2(false);
-                  setVisible3(true);
-                }}
-                mode="contained"
-                uppercase={false}
-                loading={fetchingDefaultCropActivities}
-                theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-              >
-                Proceed
-              </Button>
+              {cropActivity.length > 0 && (
+                <Button
+                  onPress={async () => {
+                    await dispatch(
+                      fetchActivityForCrop(farmItem?.crops[0]?.crop?.id)
+                    );
+                    // setVisible2(false);
+                    setVisible3(true);
+                  }}
+                  mode="contained"
+                  uppercase={false}
+                  loading={fetchingDefaultCropActivities}
+                  theme={dark ? combinedDarkTheme : combinedDefaultTheme}
+                >
+                  Proceed
+                </Button>
+              )}
             </Dialog.Actions>
           </Dialog>
         </Portal>

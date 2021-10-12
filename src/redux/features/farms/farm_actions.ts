@@ -1,8 +1,19 @@
+import { CreateFarmInput } from "./../../../interfaces/farm";
 import axiosInstance from "../../../config/axios_config";
 import { AppDispatch } from "../../store";
-import { fetch, fetchFarmFail, fetchFarmSuccess } from "./farm_reducer";
+import {
+  creatingFarm,
+  creatingFarmFail,
+  creatingFarmSuccess,
+  fetch,
+  fetchFarmFail,
+  fetchFarmSuccess,
+  fetchingFarmActivities,
+  fetchingFarmActivitiesFail,
+  fetchingFarmActivitiesSuccess,
+} from "./farm_reducer";
 
-// Fetching listy of farms
+// Fetching list of farms
 export const getFarms = () => {
   return async (dispatch: AppDispatch) => {
     dispatch(fetch());
@@ -20,7 +31,6 @@ export const getFarms = () => {
         })
       );
     } catch (error: any) {
-      console.error("err ", error);
       if (error?.message === "Network Error") {
         dispatch(
           fetchFarmFail({
@@ -31,6 +41,68 @@ export const getFarms = () => {
       } else {
         dispatch(
           fetchFarmFail({
+            error: "Oops!, something went wrong.",
+          })
+        );
+      }
+    }
+  };
+};
+
+// Fetch farm activities for calendar
+export const fetchFarmActivitiesAction = () => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      dispatch(fetchingFarmActivities());
+      const res = await axiosInstance.get("/farm-activities");
+      dispatch(
+        fetchingFarmActivitiesSuccess({
+          data: res.data.result?.farm_activities,
+        })
+      );
+    } catch (error: any) {
+      if (error?.message === "Network Error") {
+        dispatch(
+          fetchingFarmActivitiesFail({
+            error:
+              "Oops!, Network error, please check your internet connection",
+          })
+        );
+      } else {
+        dispatch(
+          fetchingFarmActivitiesFail({
+            error: "Oops!, something went wrong.",
+          })
+        );
+      }
+    }
+  };
+};
+
+// Creating  a farm
+export const createFarm = (data: CreateFarmInput) => {
+  return async (dispatch: AppDispatch) => {
+    dispatch(creatingFarm());
+    try {
+      const res = await axiosInstance.post("/farms", data);      
+      dispatch(
+        creatingFarmSuccess({
+          data: res?.data?.farm,
+          message: `Created ${data.name} farm  successfully`,
+        })
+      );
+    } catch (error: any) {
+      console.error("err ", error);
+      if (error?.message === "Network Error") {
+        dispatch(
+          creatingFarmFail({
+            error:
+              "Oops!, Network error, please check your internet connection",
+          })
+        );
+      } else {
+        dispatch(
+          creatingFarmFail({
             error: "Oops!, something went wrong.",
           })
         );

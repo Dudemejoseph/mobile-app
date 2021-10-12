@@ -25,7 +25,7 @@ import Emergency from "../screens/Emergency";
 import GeoFence from "../screens/GeoFence";
 import SelectCrop from "../screens/farm/SelectCrop";
 import AddExpense from "../screens/finance/AddExpense";
-import AddFinance from "../screens/finance/AddFinance";
+import AddFinance from "../screens/finance/AddFinance2";
 import FarmDetails from "../screens/farm/FarmDetails";
 import AddInventory from "../screens/finance/AddInventory";
 import Eop from "../screens/finance/EOP";

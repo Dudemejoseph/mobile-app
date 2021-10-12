@@ -37,6 +37,40 @@ const styles = StyleSheet.create({
   },
   buttonLabel: { fontSize: 14, fontFamily: "Poppins-Medium", lineHeight: 20 },
   buttonLabelStyle: { fontSize: 12, fontFamily: "Poppins-Regular" },
+  enter1: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 12,
+    borderBottomWidth: 1,
+  },
+  containerStyle: {
+    paddingVertical: 20,
+    marginHorizontal: 20,
+    borderRadius: 5,
+  },
+  enter: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 12,
+  },
+  enterIcon: {
+    width: 12,
+    height: 12,
+    resizeMode: "contain",
+  },
+  enterTxt: {
+    fontWeight: "500",
+    fontSize: 14,
+    fontFamily: "Poppins-Regular",
+  },
+  createTxt: {
+    fontWeight: "500",
+    fontFamily: "Poppins-Regular",
+  },
 });
 
 export default styles;

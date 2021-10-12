@@ -1,24 +1,55 @@
 import React, { useEffect } from "react";
-import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { useDispatch, useSelector } from "react-redux";
-import Wrapper from "../../components/Wrapper";
-import { ADD_EXPENSE_SCREEN } from "../../constants/route_names";
+import ErrorComponent from "../../components/Shared/ErrorComponent";
+import LoadingComponent from "../../components/Shared/LoadingComponent";
+import Wrapper from "../../components/Shared/Wrapper";
+import {
+  ADD_EXPENSE_SCREEN,
+  PROFILE_SCREEN,
+} from "../../constants/route_names";
 import { COLORS } from "../../constants/theme";
-import { PROFILE_SCREEN } from "../../constants/route_names";
-import { fetchExpenses } from "../../redux/features/expensesSlice";
+import { DefaultScreenProps } from "../../interfaces/shared_components";
+import { TransactionsState } from "../../interfaces/transactions";
+import { fetchExpenses } from "../../redux/features/transactions/transactions_actions";
+import { transactionsSelector } from "../../redux/features/transactions/transactions_reducer";
 
-const TrackExpenses = ({ navigation }) => {
+const TrackExpenses: React.FC<DefaultScreenProps> = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { loading, error, expenses } = useSelector((state) => state.expenses);
+  const { expensesData, fetchingFarmExpenses, fetchFarmExpensesError } =
+    useSelector(transactionsSelector) as TransactionsState;
 
   useEffect(() => {
     dispatch(fetchExpenses());
-  }, []);
+  }, [dispatch]);
+
+  const retry = async () => {
+    dispatch(fetchExpenses());
+  };
+
+  if (fetchingFarmExpenses) {
+    return <LoadingComponent />;
+  }
+
+  if (fetchFarmExpensesError) {
+    return (
+      <ErrorComponent
+        error={fetchFarmExpensesError}
+        loading={fetchingFarmExpenses}
+        action={() => {
+          retry();
+        }}
+      />
+    );
+  }
 
   return (
     <Wrapper>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={[styles.container, { padding: 10 }]}
+        showsVerticalScrollIndicator={false}
+      >
         {/* ========= Header View ========= */}
         <View style={styles.headerView}>
           <TouchableOpacity
@@ -52,7 +83,7 @@ const TrackExpenses = ({ navigation }) => {
           </View>
 
           {/* ========= table Items ======= */}
-          {expenses && expenses.map((item) => {
+          {expensesData?.map((item: any) => {
             return (
               <View style={styles.tableRow} key={item.id}>
                 <Text style={styles.rowTxt}>{item.activity}</Text>
