@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -173,7 +173,7 @@ const AddExpense = ({ navigation }) => {
       contigency: null,
       contigency_cost: 0.0,
       others: null,
-      others_cost: 0.00,
+      others_cost: 0.0,
       balance_to_be_paid: null,
       date: start_date,
       note: null,
@@ -258,21 +258,23 @@ const AddExpense = ({ navigation }) => {
             {showActivityPicker && (
               <Animatable.View style={styles.sizePicker} animation="fadeIn">
                 {farmActivities &&
-                  farmActivities.filter(item => item.farm_id === farm_id).map((item) => {
-                    return (
-                      <TouchableOpacity
-                        activeOpacity={0.6}
-                        key={item.id}
-                        style={styles.size}
-                        onPress={() => {
-                          setCategory(item.activity);
-                          setShowActivity(false);
-                        }}
-                      >
-                        <Text>{item.activity}</Text>
-                      </TouchableOpacity>
-                    );
-                  })}
+                  farmActivities
+                    .filter((item) => item.farm_id === farm_id)
+                    .map((item) => {
+                      return (
+                        <TouchableOpacity
+                          activeOpacity={0.6}
+                          key={item.id}
+                          style={styles.size}
+                          onPress={() => {
+                            setCategory(item.activity);
+                            setShowActivity(false);
+                          }}
+                        >
+                          <Text>{item.activity}</Text>
+                        </TouchableOpacity>
+                      );
+                    })}
               </Animatable.View>
             )}
 
@@ -522,7 +524,7 @@ const AddExpense = ({ navigation }) => {
                 style={styles.createBtn}
                 onPress={handleSubmit}
               >
-                 {loading ? (
+                {loading ? (
                   <ActivityIndicator size="small" color={COLORS.background} />
                 ) : (
                   <Text style={styles.createTxt}>Done</Text>
@@ -600,17 +602,17 @@ const styles = ScaledSheet.create({
     width: "100%",
     padding: "14@ms",
   },
-  input: {
-    width: "100%",
-    height: "40@vs",
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 4,
-    color: COLORS.text_dark,
-    paddingHorizontal: "10@ms",
-    fontFamily: "Poppins-Regular",
-    marginTop: "15@vs",
-  },
+  // input: {
+  //   width: "100%",
+  //   height: "40@vs",
+  //   borderWidth: 1,
+  //   borderColor: COLORS.border,
+  //   borderRadius: 4,
+  //   color: COLORS.text_dark,
+  //   paddingHorizontal: "10@ms",
+  //   fontFamily: "Poppins-Regular",
+  //   marginTop: "15@vs",
+  // },
   inputDesc: {
     width: "100%",
     height: "80@vs",

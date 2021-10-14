@@ -1,5 +1,5 @@
 import { useTheme } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import {
@@ -13,32 +13,79 @@ import {
 } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import AppbarComponent from "../../../components/Shared/Appbar";
+import ErrorSnackbar from "../../../components/Shared/Snackbar/ErrorSnackbar";
+import InfoSnackbar from "../../../components/Shared/Snackbar/InfoSnackbar";
 import Wrapper from "../../../components/Shared/Wrapper";
+import {
+  CALENDAR_TAB,
+  DASHBOARD_TAB_SCREEN,
+} from "../../../constants/route_names";
 import {
   combinedDarkTheme,
   combinedDefaultTheme,
 } from "../../../constants/theme";
 import { Farm } from "../../../interfaces/farm";
 import { DefaultScreenProps } from "../../../interfaces/shared_components";
-import { fetchActivityForCrop } from "../../../redux/features/crop/crop_actions";
+import {
+  fetchActivityForCrop,
+  submitCropActivities,
+} from "../../../redux/features/crop/crop_actions";
 import { cropSelector } from "../../../redux/features/crop/crop_reducer";
 import { darkModeMapStyles } from "../../../seeder/mapStyles";
 import styles from "./styles";
 
-const FarmDetails: React.FC<DefaultScreenProps> = ({ route }) => {
+const FarmDetails: React.FC<DefaultScreenProps> = ({ route, navigation }) => {
   const item: any = route?.params;
   const farmItem: Farm | any = item?.item;
   const dispatch = useDispatch();
   const { dark } = useTheme();
   const [visible, setVisible] = useState(false);
   const [visible2, setVisible2] = useState(false);
-  const [visible3, setVisible3] = useState(false);
-  const { fetchingDefaultCropActivities, cropActivity } =
-    useSelector(cropSelector);
+  const {
+    fetchingDefaultCropActivities,
+    cropActivity,
+    submitDefaultCropActivitiesError,
+    submitDefaultCropActivitiesMessage,
+    submitingDefaultCropActivities,
+  } = useSelector(cropSelector);
+  const [errorSnackbarVisible, setErrorSnackbarVisible] =
+    useState<boolean>(false);
+  const [infoSnackbarVisible, setInfoSnackbarVisible] =
+    useState<boolean>(false);
 
   const getDefaultCropActivities = (id: number) => {
     dispatch(fetchActivityForCrop(id));
   };
+
+  const submitDefaultCropActivities = () => {
+    let data: any = [];
+    cropActivity.forEach((element: any) => {
+      data.push({
+        crop_activity_id: element.crop_activity_id,
+        farm_id: farmItem.id,
+        crop_id: farmItem?.crops[0]?.crop?.id,
+        start_date: element.start_date,
+        end_date: element.end_date,
+        note: "",
+      });
+    });
+    dispatch(submitCropActivities(data));
+  };
+
+  useEffect(() => {
+    if (submitDefaultCropActivitiesError) {
+      setErrorSnackbarVisible(true);
+    }
+
+    const setSuccessSnackbar = async () => {
+      await setInfoSnackbarVisible(true);
+      setVisible2(false);
+      setVisible(false);
+    };
+    if (submitDefaultCropActivitiesMessage) {
+      setSuccessSnackbar();
+    }
+  }, [submitDefaultCropActivitiesError, submitDefaultCropActivitiesMessage]);
 
   return (
     <Wrapper>
@@ -93,6 +140,11 @@ const FarmDetails: React.FC<DefaultScreenProps> = ({ route }) => {
             <Button
               uppercase={false}
               mode="contained"
+              labelStyle={{
+                color: dark
+                  ? combinedDarkTheme.colors.text
+                  : combinedDefaultTheme.colors.background,
+              }}
               theme={dark ? combinedDarkTheme : combinedDefaultTheme}
               onPress={() => setVisible(true)}
             >
@@ -172,11 +224,27 @@ const FarmDetails: React.FC<DefaultScreenProps> = ({ route }) => {
                   }
                 />
               )}
-              {cropActivity && cropActivity.length < 1 && (
+              {cropActivity?.length < 1 && !fetchingDefaultCropActivities && (
                 <Paragraph>
                   No Default activities for {farmItem?.crops[0]?.crop?.name}
                 </Paragraph>
               )}
+
+              {cropActivity?.length > 0 &&
+                !fetchingDefaultCropActivities &&
+                cropActivity.map((item: any, index: number) => {
+                  return (
+                    <View key={index} style={styles.row3}>
+                      <Paragraph style={{ color: "grey", width: "50%" }}>
+                        {item.activity_type}
+                      </Paragraph>
+                      <Paragraph style={{ marginRight: 20 }}>
+                        {item.start_date}
+                      </Paragraph>
+                      <Paragraph style={{}}>{item.end_date}</Paragraph>
+                    </View>
+                  );
+                })}
             </Dialog.Content>
             <Dialog.Actions>
               <Button
@@ -190,18 +258,23 @@ const FarmDetails: React.FC<DefaultScreenProps> = ({ route }) => {
               >
                 Cancel
               </Button>
-              {cropActivity.length > 0 && (
+              {cropActivity?.length > 0 && (
                 <Button
                   onPress={async () => {
-                    await dispatch(
-                      fetchActivityForCrop(farmItem?.crops[0]?.crop?.id)
-                    );
+                    submitDefaultCropActivities();
+                    // navigation.navigate(DASHBOARD_TAB_SCREEN, {
+                    //   screen: CALENDAR_TAB,
+                    // });
                     // setVisible2(false);
-                    setVisible3(true);
+                  }}
+                  labelStyle={{
+                    color: dark
+                      ? combinedDarkTheme.colors.text
+                      : combinedDefaultTheme.colors.background,
                   }}
                   mode="contained"
                   uppercase={false}
-                  loading={fetchingDefaultCropActivities}
+                  loading={submitingDefaultCropActivities}
                   theme={dark ? combinedDarkTheme : combinedDefaultTheme}
                 >
                   Proceed
@@ -210,6 +283,19 @@ const FarmDetails: React.FC<DefaultScreenProps> = ({ route }) => {
             </Dialog.Actions>
           </Dialog>
         </Portal>
+        {submitDefaultCropActivitiesError &&
+          ErrorSnackbar(
+            errorSnackbarVisible,
+            setErrorSnackbarVisible,
+            submitDefaultCropActivitiesError,
+            () => submitDefaultCropActivities()
+          )}
+        {submitDefaultCropActivitiesMessage &&
+          InfoSnackbar(
+            infoSnackbarVisible,
+            setInfoSnackbarVisible,
+            submitDefaultCropActivitiesMessage
+          )}
       </ScrollView>
     </Wrapper>
   );

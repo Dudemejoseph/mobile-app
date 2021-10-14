@@ -11,4 +11,7 @@ export interface UtilitiesState {
   fetchingLGAS: boolean;
   fetchingLGASError: string | any;
   LGAS: [] | any;
+  fetchingCategories: boolean;
+  categoriesData: [] | any;
+  categoriesError: string | any;
 }

@@ -1,7 +1,13 @@
 import axiosInstance from "../../../config/axios_config";
-import { AddFinanceInput } from "./../../../interfaces/transactions";
+import {
+  AddFarmExpenseInput,
+  AddFinanceInput,
+} from "./../../../interfaces/transactions";
 import { AppDispatch } from "./../../store";
 import {
+  addFarmExpenseFail,
+  addFarmExpenseSuccess,
+  addingFarmExpense,
   addingFinance,
   addingFinanceFail,
   addingFinanceSuccess,
@@ -74,9 +80,10 @@ export const fetchExpenses = () => {
     try {
       dispatch(fetchingFarmExpenses());
       const res = await axiosInstance.get("/farmexpenses");
-      dispatch(fetchingFarmExpensesSuccess(res.data.result.data));
+      dispatch(
+        fetchingFarmExpensesSuccess({ data: res.data.result.expense.data })
+      );
     } catch (error: any) {
-      console.error("erro ", error);
       if (error?.message === "Network Error") {
         dispatch(
           fetchingFarmExpensesFail({
@@ -87,6 +94,41 @@ export const fetchExpenses = () => {
       } else {
         dispatch(
           fetchingFarmExpensesFail({
+            error: "Oops!, something went wrong.",
+          })
+        );
+      }
+    }
+  };
+};
+
+// Adding expense for a farm activity
+export const addFarmExpenseAction = (data: AddFarmExpenseInput) => {
+  return async (dispatch: AppDispatch) => {
+    dispatch(addingFarmExpense());
+    try {
+      const res = await axiosInstance.post("/farmexpenses", data);
+      console.log("res ", res.data);
+
+      dispatch(
+        addFarmExpenseSuccess({
+          data: res?.data?.activity,
+          message: "Added new farm expense successfully",
+        })
+      );
+    } catch (error: any) {
+      console.log("err ", error);
+
+      if (error?.message === "Network Error") {
+        dispatch(
+          addFarmExpenseFail({
+            error:
+              "Oops!, Network error, please check your internet connection",
+          })
+        );
+      } else {
+        dispatch(
+          addFarmExpenseFail({
             error: "Oops!, something went wrong.",
           })
         );

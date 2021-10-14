@@ -1,6 +1,8 @@
 import axiosInstance from "../../../config/axios_config";
 import { AppDispatch } from "../../store";
 import {
+  fetchCategoriesFail,
+  fetchCategoriesSuccess,
   fetchCountriesFail,
   fetchCountriesSuccess,
   fetchCropsFail,
@@ -82,6 +84,32 @@ export const fetchCrops = () => {
       } else {
         dispatch(
           fetchCropsFail({
+            error: "Oops!, something went wrong.",
+          })
+        );
+      }
+    }
+  };
+};
+
+// Fetching Categories
+export const fetchCategoriesAction = () => {
+  return async (dispatch: AppDispatch) => {
+    dispatch(fetchingCrops());
+    try {
+      const res = await axiosInstance.get("/categories");
+      dispatch(fetchCategoriesSuccess({ data: res?.data?.categories }));
+    } catch (error: any) {
+      if (error?.message === "Network Error") {
+        dispatch(
+          fetchCategoriesFail({
+            error:
+              "Oops!, Network error, please check your internet connection",
+          })
+        );
+      } else {
+        dispatch(
+          fetchCategoriesFail({
             error: "Oops!, something went wrong.",
           })
         );

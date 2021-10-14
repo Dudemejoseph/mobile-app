@@ -12,3 +12,18 @@ export const AddFinanceSchema = Yup.object().shape({
     .max(50, "Too Long! Max of 250 characters")
     .required("Please provide a brief description about this transaction"),
 });
+
+export const AddFarmExpenseSchema = Yup.object().shape({
+  farm_id: Yup.number()
+    .integer("Pleaase select a farm o")
+    .required("Please select a farm"),
+  farm_activity_id: Yup.number().required("Please select an activity"),
+  quantity: Yup.number().integer("Invalid quantity").nullable(),
+  unit_price: Yup.number().integer("Invalid price").nullable(),
+  balance_to_be_paid: Yup.number()
+    .integer("Invalid price")
+    .required("Balance to be padi is required"),
+  date: Yup.string().required("Please select date"),
+  brand: Yup.string().required("Please enter brand"),
+  category_id: Yup.number().nullable(),
+});

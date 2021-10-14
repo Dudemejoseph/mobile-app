@@ -16,6 +16,9 @@ const initialState: UtilitiesState = {
   fetchingLGASError: null,
   fetchingStatesError: null,
   statesData: null,
+  categoriesData: null,
+  categoriesError: null,
+  fetchingCategories: true,
 };
 
 const utilitiesSlice = createSlice({
@@ -74,6 +77,19 @@ const utilitiesSlice = createSlice({
       state.fetchingLGAS = false;
       state.fetchingLGASError = payload.error;
     },
+    fetchingCategories: (state) => {
+      state.fetchingCategories = true;
+      state.categoriesError = null;
+    },
+    fetchCategoriesSuccess: (state, { payload }: PayloadType) => {
+      state.fetchingCategories = false;
+      state.categoriesData = payload.data;
+      state.categoriesError = null;
+    },
+    fetchCategoriesFail: (state, { payload }: PayloadType) => {
+      state.fetchingCategories = false;
+      state.categoriesError = payload.error;
+    },
   },
 });
 
@@ -90,6 +106,9 @@ export const {
   fetchingCrops,
   fetchingLGAS,
   fetchingStates,
+  fetchCategoriesFail,
+  fetchCategoriesSuccess,
+  fetchingCategories,
 } = utilitiesSlice.actions;
 export default utilitiesSlice.reducer;
 export const utlitiesSelector = (state: RootState) => state.utilities;

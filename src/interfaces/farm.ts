@@ -16,6 +16,12 @@ export interface FarmState {
   creatingFarm: boolean;
   creatingFarmError: string | any;
   creatingFarmMessage: string | any;
+  fetchingCategoryActivities: boolean;
+  categoryActivities: {} | any;
+  categoryActivitiesError: string | any;
+  recordingActivity: boolean;
+  recordActivityError: string | any;
+  recordActivityMessage: string | any;
 }
 
 export interface CreateFarmInput {
@@ -30,6 +36,19 @@ export interface CreateFarmInput {
   state_id: number;
   lga_id: number;
   crop_id: number;
+}
+
+export interface RecordActivityInput {
+  farm_id: number;
+  farm_activity_id: number;
+  category_id: number;
+  crop_id: number;
+  start_date: string | any;
+  end_date: string | any;
+  type?: string;
+  activity?: string;
+  amount?: number;
+  note?: string;
 }
 
 export interface Crop {

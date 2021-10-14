@@ -8,7 +8,6 @@ import {
   Paragraph,
   Subheading,
   Surface,
-  Text,
   TextInput,
   useTheme,
 } from "react-native-paper";
@@ -76,7 +75,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
   const [size_unit, setUnit] = useState<string | any>("Select unit");
   const [location, setLocation] = useState<string>("");
   const [ownership, setOwnership] = useState<string>("Ownership");
-  const [size, setSize] = useState(hecres);
+  const [size] = useState(hecres);
 
   useEffect(() => {
     const getCountries = async () => {
@@ -113,8 +112,6 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
   };
 
   const submitForm = async () => {
-    console.log("nawaw");
-
     const data = {
       name,
       size: Number(size),
@@ -128,8 +125,6 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
       lga_id,
       crop_id,
     };
-    console.log("data ", data);
-
     dispatch(createFarm(data as CreateFarmInput));
   };
 

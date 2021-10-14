@@ -20,6 +20,8 @@ const TrackExpenses: React.FC<DefaultScreenProps> = ({ navigation }) => {
   const { expensesData, fetchingFarmExpenses, fetchFarmExpensesError } =
     useSelector(transactionsSelector) as TransactionsState;
 
+  console.log("farm ", fetchFarmExpensesError, fetchingFarmExpenses);
+
   useEffect(() => {
     dispatch(fetchExpenses());
   }, [dispatch]);
@@ -45,7 +47,7 @@ const TrackExpenses: React.FC<DefaultScreenProps> = ({ navigation }) => {
   }
 
   return (
-    <Wrapper>
+    <Wrapper customStyle={{ flex: 1, backgroundColor: "white", padding: 20 }}>
       <ScrollView
         contentContainerStyle={[styles.container, { padding: 10 }]}
         showsVerticalScrollIndicator={false}

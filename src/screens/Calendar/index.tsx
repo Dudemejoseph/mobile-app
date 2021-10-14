@@ -25,7 +25,7 @@ const Calendar = () => {
   const { fetchingFarmActivities, farmActivities, farmActivitiesError } =
     useSelector(farmSelector) as FarmState;
   const [items, setItems] = useState<{} | any>({});
-  console.log("items ", items, farmActivities);
+  console.log("items ", farmActivities);
 
   // Getting list of famr activities for calendar
   useEffect(() => {
@@ -33,7 +33,7 @@ const Calendar = () => {
       dispatch(fetchFarmActivitiesAction());
     };
     getFarmActivities();
-  }, [dispatch]);
+  }, []);
 
   const retry = async () => {
     dispatch(fetchFarmActivitiesAction());

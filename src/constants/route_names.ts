@@ -8,7 +8,6 @@ export const EMERGENCY_SCREEN = "Emergency";
 export const GENERATE_REPORT_SCREEN = "Generate-Report";
 export const GEO_FENCING_SCREEN = "Geo-Fencing";
 export const SELECT_CROP_SCREEN = "Select-Crop";
-export const EOP_SCREEN = "EOP";
 export const CALENDAR_SCREEN = "Calender";
 export const SPLASH_SCREEN = "Splash";
 export const DASHBOARD_SCREEN = "Dashboard";
@@ -36,9 +35,13 @@ export const FINANCE_STACK = "Finance Stack";
 export const FINANCE_SCREEN = "Finance Screen";
 export const ADD_EXPENSE_SCREEN = "Add-Expense";
 export const ADD_FINANCE_SCREEN = "Add-Finance";
+export const EOP_SCREEN = "EOP screen";
+
+// Track expenses stack
+export const TRACK_EXPENSES_STACK = "Track Expenses Stack";
 
 // Activities stack
-export const ACTIVITIES_STACK = "Activities stack";
+export const ACTIVITIES_STACK = "Activities Stack";
 export const ACTIVITIES_SCREEN = "Activities screen";
 
 // Inventory Stack

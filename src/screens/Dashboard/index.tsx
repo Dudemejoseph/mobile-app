@@ -33,12 +33,12 @@ import {
   CREATE_FARMS_SCREEN,
   EDIT_PROFILE_SCREEN,
   FIELDS_STACK,
-  FINANCE_STACK,
   GEO_FENCING_SCREEN,
   INVENTORY_SCREEN,
   INVENTORY_STACK,
   PROFILE_STACK,
   TRACK_EXPENSES_SCREEN,
+  TRACK_EXPENSES_STACK,
 } from "../../constants/route_names";
 import { combinedDarkTheme, combinedDefaultTheme } from "../../constants/theme";
 import { CropState } from "../../interfaces/crop";
@@ -204,7 +204,7 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
               title="Activities"
               color={red}
               onAction={() => {
-                navigation.push(ACTIVITIES_STACK, {
+                navigation.navigate(ACTIVITIES_STACK, {
                   screen: ACTIVITIES_SCREEN,
                 });
               }}
@@ -215,7 +215,7 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
               title="Track Expenses"
               color={grey}
               onAction={() =>
-                navigation.push(FINANCE_STACK, {
+                navigation.navigate(TRACK_EXPENSES_STACK, {
                   screen: TRACK_EXPENSES_SCREEN,
                 })
               }
@@ -224,7 +224,9 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
               title="Inventory"
               color={orange}
               onAction={() => {
-                navigation.push(INVENTORY_STACK, { screen: INVENTORY_SCREEN });
+                navigation.navigate(INVENTORY_STACK, {
+                  screen: INVENTORY_SCREEN,
+                });
               }}
             />
           </View>

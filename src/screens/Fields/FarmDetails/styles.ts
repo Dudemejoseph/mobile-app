@@ -17,6 +17,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 10,
   },
+  row3: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginVertical: 10,
+    alignItems: "center",
+    maxWidth: "80%",
+  },
   leftText: {
     fontFamily: "Poppins-Bold",
     fontSize: 14,

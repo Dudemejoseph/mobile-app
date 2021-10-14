@@ -14,6 +14,12 @@ const initialState: FarmState = {
   creatingFarm: false,
   creatingFarmError: null,
   creatingFarmMessage: null,
+  categoryActivities: null,
+  fetchingCategoryActivities: false,
+  categoryActivitiesError: null,
+  recordActivityError: null,
+  recordActivityMessage: null,
+  recordingActivity: false,
 };
 
 export const farmSlice = createSlice({
@@ -64,6 +70,34 @@ export const farmSlice = createSlice({
       state.creatingFarmError = payload.error;
       state.creatingFarmMessage = null;
     },
+    fetchingCategoryActivities: (state) => {
+      state.fetchingCategoryActivities = true;
+      state.categoryActivitiesError = null;
+    },
+    fetchCategoryActivitiesSuccess: (state, { payload }: PayloadType) => {
+      state.fetchingCategoryActivities = false;
+      state.categoryActivities = payload.data;
+      state.categoryActivitiesError = null;
+    },
+    fetchCategoryActivitiesFail: (state, { payload }: PayloadType) => {
+      state.fetchingCategoryActivities = false;
+      state.categoryActivitiesError = payload.error;
+    },
+    recordingActivity: (state) => {
+      state.recordingActivity = true;
+      state.recordActivityError = null;
+      state.recordActivityMessage = null;
+    },
+    recordActivitySuccess: (state, { payload }: PayloadType) => {
+      state.recordingActivity = false;
+      state.recordActivityError = null;
+      state.recordActivityMessage = payload.message;
+    },
+    recordActivityFail: (state, { payload }: PayloadType) => {
+      state.recordingActivity = false;
+      state.recordActivityError = payload.error;
+      state.recordActivityMessage = null;
+    },
   },
 });
 
@@ -77,6 +111,12 @@ export const {
   creatingFarm,
   creatingFarmSuccess,
   creatingFarmFail,
+  fetchCategoryActivitiesFail,
+  fetchCategoryActivitiesSuccess,
+  fetchingCategoryActivities,
+  recordActivityFail,
+  recordActivitySuccess,
+  recordingActivity,
 } = farmSlice.actions;
 export const farmSelector = (state: RootState) => state.farm;
 export default farmSlice.reducer;

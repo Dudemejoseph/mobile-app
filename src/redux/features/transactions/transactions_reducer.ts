@@ -15,6 +15,9 @@ const initialState: TransactionsState = {
   fetchFarmExpensesError: null,
   fetchFarmExpensesMessage: null,
   fetchingFarmExpenses: true,
+  addFarmExpenseError: null,
+  addFarmExpenseMessage: null,
+  addingFarmExpense: false,
 };
 
 const transactionSlice = createSlice({
@@ -58,14 +61,30 @@ const transactionSlice = createSlice({
       state.fetchFarmExpensesMessage = null;
     },
     fetchingFarmExpensesSuccess: (state, { payload }: PayloadType) => {
-      state.fetchingFarmExpenses = true;
+      state.fetchingFarmExpenses = false;
       state.fetchFarmExpensesError = null;
-      state.fetchFarmExpensesMessage = payload.data;
+      state.expensesData = payload.data;
     },
     fetchingFarmExpensesFail: (state, { payload }: PayloadType) => {
-      state.fetchingFarmExpenses = true;
+      state.fetchingFarmExpenses = false;
       state.fetchFarmExpensesError = payload.error;
       state.fetchFarmExpensesMessage = null;
+    },
+    addingFarmExpense: (state) => {
+      state.addingFarmExpense = true;
+      state.addFarmExpenseError = null;
+      state.addFarmExpenseMessage = null;
+    },
+    addFarmExpenseSuccess: (state, { payload }: PayloadType) => {
+      state.addingFarmExpense = false;
+      state.addFarmExpenseError = null;
+      state.addFarmExpenseMessage = payload.message;
+      state.expensesData = [...state.expensesData, payload.data];
+    },
+    addFarmExpenseFail: (state, { payload }: PayloadType) => {
+      state.addingFarmExpense = false;
+      state.addFarmExpenseError = payload.error;
+      state.addFarmExpenseMessage = null;
     },
   },
 });
@@ -80,6 +99,9 @@ export const {
   fetchingFarmExpenses,
   fetchingFarmExpensesFail,
   fetchingFarmExpensesSuccess,
+  addFarmExpenseSuccess,
+  addingFarmExpense,
+  addFarmExpenseFail,
 } = transactionSlice.actions;
 export default transactionSlice.reducer;
 export const transactionsSelector = (state: RootState) => state.transactions;

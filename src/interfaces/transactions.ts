@@ -10,6 +10,9 @@ export interface TransactionsState {
   fetchingFarmExpenses: boolean;
   fetchFarmExpensesMessage: [] | any;
   fetchFarmExpensesError: string | any;
+  addingFarmExpense: boolean;
+  addFarmExpenseMessage: string | any;
+  addFarmExpenseError: string | any;
 }
 
 export interface Transaction {
@@ -32,4 +35,18 @@ export interface AddFinanceInput {
   farm_id: number | any;
   amount: number | string;
   note: string;
+}
+
+export interface AddFarmExpenseInput {
+  farm_id: number | any;
+  farm_activity_id: number | any;
+  brand: string;
+  unit_price?: number | any;
+  balance_to_be_paid: number | any;
+  date: string;
+  amount?: number | any;
+  quantity: number | any;
+  note: string;
+  category_id?: number;
+  technicalities?: string;
 }

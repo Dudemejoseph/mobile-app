@@ -7,6 +7,9 @@ import {
   fetchDefaultCropActivities,
   fetchDefaultCropActivitiesFailure,
   fetchDefaultCropActivitiesSuccess,
+  submitDefaultCropActivitiesFail,
+  submitDefaultCropActivitiesSuccess,
+  submitingDefaultCropActivities,
 } from "./crop_reducer";
 
 // Fetching crops data
@@ -44,7 +47,6 @@ export const fetchActivityForCrop = (id: number) => {
       console.log("arct ", res.data);
       dispatch(fetchDefaultCropActivitiesSuccess({ data: res.data?.result }));
     } catch (error: any) {
-      console.error("errpor is ", error);
       if (error?.message === "Network Error") {
         dispatch(
           fetchDefaultCropActivitiesFailure({
@@ -55,6 +57,37 @@ export const fetchActivityForCrop = (id: number) => {
       } else {
         dispatch(
           fetchDefaultCropActivitiesFailure({
+            error: error?.response?.data?.message,
+          })
+        );
+      }
+    }
+  };
+};
+
+// ========= Post Crop Activities ======
+export const submitCropActivities = (data: any) => {
+  return async (dispatch: AppDispatch) => {
+    dispatch(submitingDefaultCropActivities());
+    try {
+      await axiosInstance.post("/farm-activities", data);
+      dispatch(
+        submitDefaultCropActivitiesSuccess({
+          message: "Successfully created farm activity",
+        })
+      );
+    } catch (error: any) {
+      console.error("ee ", error)
+      if (error?.message === "Network Error") {
+        dispatch(
+          submitDefaultCropActivitiesFail({
+            error:
+              "Oops!, Network error, please check your internet connection",
+          })
+        );
+      } else {
+        dispatch(
+          submitDefaultCropActivitiesFail({
             error: error?.response?.data?.message,
           })
         );

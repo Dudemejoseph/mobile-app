@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { useDispatch, useSelector } from "react-redux";
-import Wrapper from "../../components/Wrapper";
+import Wrapper from "../../components/Shared/Wrapper";
 import {
   ADD_EXPENSE_SCREEN,
   ADD_FINANCE_SCREEN,
@@ -49,10 +49,10 @@ const Eop = ({ navigation }) => {
       dispatch(fetchExpenses());
     };
     fetchExpensesProcess();
-  }, []);
+  }, [dispatch]);
 
   return (
-    <Wrapper>
+    <Wrapper customStyle={{ flex: 1, padding: 20, backgroundColor: "white" }}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* ========= Header View ========= */}
         <View style={styles.headerView}>
@@ -165,7 +165,6 @@ const styles = ScaledSheet.create({
     padding: "10@ms",
     fontSize: "12@ms",
     borderColor: COLORS.border,
-    fontSize: "10@ms",
   },
   btnView: {
     width: "100%",

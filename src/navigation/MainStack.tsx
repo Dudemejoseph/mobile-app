@@ -20,6 +20,7 @@ import {
   FINANCE_TAB,
   INVENTORY_STACK,
   PROFILE_STACK,
+  TRACK_EXPENSES_STACK,
 } from "../constants/route_names";
 import { combinedDarkTheme, combinedDefaultTheme } from "../constants/theme";
 import Calender from "../screens/Calendar";
@@ -30,6 +31,7 @@ import FieldsStack from "./FieldsStack";
 import FinancesStack from "./FinancesStack";
 import InventoryStack from "./InventoryStack";
 import ProfileStack from "./ProfileStack";
+import TrackExpensesStack from "./TrackExpensesStack";
 
 Entypo.loadFont();
 Feather.loadFont();
@@ -142,6 +144,10 @@ const MainStack = () => {
       <Stack.Screen name={DASHBOARD_TAB_SCREEN} component={BottomTabs} />
       <Stack.Screen name={PROFILE_STACK} component={ProfileStack} />
       <Stack.Screen name={FINANCE_STACK} component={FinancesStack} />
+      <Stack.Screen
+        name={TRACK_EXPENSES_STACK}
+        component={TrackExpensesStack}
+      />
       <Stack.Screen name={FIELDS_STACK} component={FieldsStack} />
       <Stack.Screen name={ACTIVITIES_STACK} component={ActivitiesStack} />
       <Stack.Screen name={INVENTORY_STACK} component={InventoryStack} />

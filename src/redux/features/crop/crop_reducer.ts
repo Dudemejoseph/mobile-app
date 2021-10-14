@@ -9,6 +9,9 @@ const initialState: CropState = {
   fetching: true,
   cropActivity: null,
   fetchingDefaultCropActivities: false,
+  submitDefaultCropActivitiesError: null,
+  submitDefaultCropActivitiesMessage: null,
+  submitingDefaultCropActivities: false,
 };
 
 export const cropSlice = createSlice({
@@ -40,6 +43,21 @@ export const cropSlice = createSlice({
       state.cropActivity = null;
       state.error = payload.error;
     },
+    submitingDefaultCropActivities: (state) => {
+      state.submitingDefaultCropActivities = true;
+      state.submitDefaultCropActivitiesError = null;
+      state.submitDefaultCropActivitiesMessage = null;
+    },
+    submitDefaultCropActivitiesSuccess: (state, { payload }: PayloadType) => {
+      state.submitingDefaultCropActivities = false;
+      state.submitDefaultCropActivitiesError = null;
+      state.submitDefaultCropActivitiesMessage = payload.message;
+    },
+    submitDefaultCropActivitiesFail: (state, { payload }: PayloadType) => {
+      state.submitingDefaultCropActivities = false;
+      state.submitDefaultCropActivitiesError = payload.error;
+      state.submitDefaultCropActivitiesMessage = null;
+    },
   },
 });
 
@@ -50,6 +68,9 @@ export const {
   fetchDefaultCropActivities,
   fetchDefaultCropActivitiesFailure,
   fetchDefaultCropActivitiesSuccess,
+  submitDefaultCropActivitiesFail,
+  submitDefaultCropActivitiesSuccess,
+  submitingDefaultCropActivities,
 } = cropSlice.actions;
 export const cropSelector = (state: RootState) => state.crop;
 export default cropSlice.reducer;

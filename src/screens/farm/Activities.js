@@ -13,7 +13,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { ScaledSheet } from "react-native-size-matters";
 import Toast from "react-native-toast-message";
 import { useDispatch, useSelector } from "react-redux";
-import Wrapper from "../../components/Wrapper";
+import Wrapper from "../../components/Shared/Wrapper";
 import { COLORS } from "../../constants/theme";
 import {
   farmSelector,
@@ -28,7 +28,7 @@ const Activities = ({ navigation }) => {
   const dispatch = useDispatch();
   const { crops, loading, message, error, farms, farmActivities } =
     useSelector(farmSelector);
-    console.log("farm ", farms);
+  console.log("farm ", farms);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isDatePickerVisible2, setDatePickerVisibility2] = useState(false);
   const [end_date, setEndDate] = useState("Select End Date");
@@ -47,11 +47,6 @@ const Activities = ({ navigation }) => {
 
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
-  };
-
-  const handleDate = (date) => {
-    setStartDate(date.toString().substr(0, 16));
-    hideDatePicker();
   };
 
   const showDatePicker2 = () => {
@@ -88,7 +83,7 @@ const Activities = ({ navigation }) => {
         topOffset: 40,
       });
     message && navigation.navigate("Home");
-  }, [message]);
+  }, [message, navigation]);
 
   useEffect(() => {
     error &&
@@ -100,7 +95,7 @@ const Activities = ({ navigation }) => {
       });
   }, [error]);
   return (
-    <Wrapper>
+    <Wrapper customStyle={{ backgroundColor: "white", flex: 1, padding: 10 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* ========= Header View ========= */}
         <View style={styles.headerView}>
@@ -207,22 +202,23 @@ const Activities = ({ navigation }) => {
             </TouchableOpacity>
             {showCropPicker && (
               <Animatable.View style={styles.sizePicker} animation="fadeIn">
-                {crops && crops.map((item) => {
-                  return (
-                    <TouchableOpacity
-                      activeOpacity={0.6}
-                      key={item.id}
-                      style={styles.size}
-                      onPress={() => {
-                        setCrop(item.name);
-                        setCropID(item.id);
-                        setShowCrop(false);
-                      }}
-                    >
-                      <Text>{item.name}</Text>
-                    </TouchableOpacity>
-                  );
-                })}
+                {crops &&
+                  crops.map((item) => {
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={0.6}
+                        key={item.id}
+                        style={styles.size}
+                        onPress={() => {
+                          setCrop(item.name);
+                          setCropID(item.id);
+                          setShowCrop(false);
+                        }}
+                      >
+                        <Text>{item.name}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
               </Animatable.View>
             )}
 
@@ -263,7 +259,7 @@ const Activities = ({ navigation }) => {
                 {loading ? (
                   <ActivityIndicator color={COLORS.background} size="small" />
                 ) : (
-                  <Text style={styles.createTxt}>Log Activity</Text>
+                  <Text style={styles.createTxt}>Save</Text>
                 )}
               </TouchableOpacity>
             </View>

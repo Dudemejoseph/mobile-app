@@ -1,16 +1,25 @@
-import { CreateFarmInput } from "./../../../interfaces/farm";
 import axiosInstance from "../../../config/axios_config";
 import { AppDispatch } from "../../store";
+import {
+  CreateFarmInput,
+  RecordActivityInput,
+} from "./../../../interfaces/farm";
 import {
   creatingFarm,
   creatingFarmFail,
   creatingFarmSuccess,
   fetch,
+  fetchCategoryActivitiesFail,
+  fetchCategoryActivitiesSuccess,
   fetchFarmFail,
   fetchFarmSuccess,
+  fetchingCategoryActivities,
   fetchingFarmActivities,
   fetchingFarmActivitiesFail,
   fetchingFarmActivitiesSuccess,
+  recordActivityFail,
+  recordActivitySuccess,
+  recordingActivity,
 } from "./farm_reducer";
 
 // Fetching list of farms
@@ -84,7 +93,7 @@ export const createFarm = (data: CreateFarmInput) => {
   return async (dispatch: AppDispatch) => {
     dispatch(creatingFarm());
     try {
-      const res = await axiosInstance.post("/farms", data);      
+      const res = await axiosInstance.post("/farms", data);
       dispatch(
         creatingFarmSuccess({
           data: res?.data?.farm,
@@ -92,7 +101,6 @@ export const createFarm = (data: CreateFarmInput) => {
         })
       );
     } catch (error: any) {
-      console.error("err ", error);
       if (error?.message === "Network Error") {
         dispatch(
           creatingFarmFail({
@@ -103,6 +111,65 @@ export const createFarm = (data: CreateFarmInput) => {
       } else {
         dispatch(
           creatingFarmFail({
+            error: "Oops!, something went wrong.",
+          })
+        );
+      }
+    }
+  };
+};
+
+// Fetching activities for categories of a farm
+export const fetchCategoryActivitesAction = (id: number) => {
+  return async (dispatch: AppDispatch) => {
+    dispatch(fetchingCategoryActivities());
+    try {
+      const res = await axiosInstance.get(`/farm-activities/activities/${id}`);
+      dispatch(fetchCategoryActivitiesSuccess({ data: res?.data?.categories }));
+    } catch (error: any) {
+      if (error?.message === "Network Error") {
+        dispatch(
+          fetchCategoryActivitiesFail({
+            error:
+              "Oops!, Network error, please check your internet connection",
+          })
+        );
+      } else {
+        dispatch(
+          fetchCategoryActivitiesFail({
+            error: "Oops!, something went wrong.",
+          })
+        );
+      }
+    }
+  };
+};
+
+// Recording an activity
+export const recordActivityAction = (data: RecordActivityInput) => {
+  console.log("data. ", data.category_id, data);
+
+  return async (dispatch: AppDispatch) => {
+    dispatch(recordingActivity());
+    try {
+      await axiosInstance.put(`/farm-activites/done/${data.category_id}`, data);
+      dispatch(
+        recordActivitySuccess({
+          message: `Recorded data ${data.activity} successfully`,
+        })
+      );
+    } catch (error: any) {
+      console.error("error ", error);
+      if (error?.message === "Network Error") {
+        dispatch(
+          recordActivityFail({
+            error:
+              "Oops!, Network error, please check your internet connection",
+          })
+        );
+      } else {
+        dispatch(
+          recordActivityFail({
             error: "Oops!, something went wrong.",
           })
         );
