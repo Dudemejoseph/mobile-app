@@ -28,7 +28,6 @@ const TrackExpenses: React.FC<DefaultScreenProps> = ({ navigation }) => {
   const [visible, setVisible] = useState<number | any>(null);
   const { fetchingFarmExpenses, fetchFarmExpensesError, expensesData } =
     useSelector(transactionsSelector) as TransactionsState;
-
   const openMenu = (itemId: number) => setVisible(itemId);
   const closeMenu = () => setVisible(null);
 
@@ -84,7 +83,7 @@ const TrackExpenses: React.FC<DefaultScreenProps> = ({ navigation }) => {
             {expensesData?.map((item: any, index: number) => {
               return (
                 <DataTable.Row key={index}>
-                  <DataTable.Cell>Expense</DataTable.Cell>
+                  <DataTable.Cell>{item.activity_type}</DataTable.Cell>
                   <DataTable.Cell numeric>{item.amount}</DataTable.Cell>
                   <DataTable.Cell numeric>
                     <Menu

@@ -80,9 +80,7 @@ export const fetchExpenses = () => {
     try {
       dispatch(fetchingFarmExpenses());
       const res = await axiosInstance.get("/farmexpenses");
-      dispatch(
-        fetchingFarmExpensesSuccess({ data: res.data.result.expense.data })
-      );
+      dispatch(fetchingFarmExpensesSuccess({ data: res.data.result.expense }));
     } catch (error: any) {
       if (error?.message === "Network Error") {
         dispatch(

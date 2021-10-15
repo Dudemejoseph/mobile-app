@@ -192,9 +192,17 @@ const Activities = () => {
     );
   }
 
-  const submitForm = (values: RecordActivityInput) => {
-    setTempValues(values);
-    dispatch(recordActivityAction(values));
+  const submitForm = () => {
+    let data = {
+      farm_id,
+      crop_id,
+      farm_activity_id,
+      start_date,
+      end_date,
+      category_id,
+    };
+    setTempValues(data);
+    dispatch(recordActivityAction(data));
   };
 
   return (
@@ -216,7 +224,7 @@ const Activities = () => {
           }
           onSubmit={() => {}}
         >
-          {({ errors, setFieldValue, values }) => (
+          {({ errors, setFieldValue, values, handleChange }) => (
             <Surface style={styles.surface}>
               <View
                 style={[
@@ -465,8 +473,11 @@ const Activities = () => {
                       selectedValue={selectedActivity}
                       onValueChange={(itemValue: any) => {
                         setSelectedActivity(itemValue);
-                        setFarmActivtyId(itemValue.id);
-                        setFieldValue("farm_activity_id", itemValue?.id);
+                        setFarmActivtyId(itemValue.farm_activity_id);
+                        setFieldValue(
+                          "farm_activity_id",
+                          itemValue?.farm_activity_id
+                        );
                       }}
                       itemStyle={[
                         styles.pickerView,
@@ -596,10 +607,10 @@ const Activities = () => {
                 )}
               </View>
 
-              {/* Note */}
+              {/* Lessons learnt */}
               <View style={styles.inputView}>
                 <TextInput
-                  label="Note"
+                  label="Lessons Learnt"
                   multiline={true}
                   numberOfLines={8}
                   // value={values.note}
@@ -627,10 +638,41 @@ const Activities = () => {
                 )}
               </View>
 
+              {/* Note */}
+              <View style={styles.inputView}>
+                <TextInput
+                  label="Note"
+                  multiline={true}
+                  numberOfLines={8}
+                  value={values.note}
+                  onChangeText={handleChange("note")}
+                  mode="outlined"
+                  // onBlur={handleBlur("note")}
+                  error={errors?.note ? true : false}
+                  selectionColor={colors.text}
+                  theme={dark ? combinedDarkTheme : combinedDefaultTheme}
+                  outlineColor={
+                    dark
+                      ? combinedDarkTheme.colors.border
+                      : combinedDefaultTheme.colors.backdrop
+                  }
+                  style={styles.buttonLabel}
+                />
+
+                {errors?.note && (
+                  <HelperText
+                    type="error"
+                    visible={errors?.note ? true : false}
+                  >
+                    {errors?.note}
+                  </HelperText>
+                )}
+              </View>
+
               {/* Submit button */}
               <Button
                 onPress={() => {
-                  submitForm(values);
+                  submitForm();
                 }}
                 uppercase={false}
                 theme={dark ? combinedDarkTheme : combinedDefaultTheme}
@@ -667,20 +709,20 @@ const Activities = () => {
             </Surface>
           )}
         </Formik>
-        {recordActivityError &&
-          ErrorSnackbar(
-            errorSnackbarVisible,
-            setErrorSnackbarVisible,
-            recordActivityError,
-            () => submitForm(tempValues)
-          )}
-        {recordActivityMessage &&
-          InfoSnackbar(
-            infoSnackbarVisible,
-            setInfoSnackbarVisible,
-            recordActivityMessage
-          )}
       </ScrollView>
+      {recordActivityError &&
+        ErrorSnackbar(
+          errorSnackbarVisible,
+          setErrorSnackbarVisible,
+          recordActivityError,
+          () => submitForm()
+        )}
+      {recordActivityMessage &&
+        InfoSnackbar(
+          infoSnackbarVisible,
+          setInfoSnackbarVisible,
+          recordActivityMessage
+        )}
     </Wrapper>
   );
 };

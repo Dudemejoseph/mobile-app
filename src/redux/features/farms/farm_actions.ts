@@ -147,15 +147,13 @@ export const fetchCategoryActivitesAction = (id: number) => {
 
 // Recording an activity
 export const recordActivityAction = (data: RecordActivityInput) => {
-  console.log("data. ", data.category_id, data);
-
   return async (dispatch: AppDispatch) => {
     dispatch(recordingActivity());
     try {
-      await axiosInstance.put(`/farm-activites/done/${data.category_id}`, data);
+      await axiosInstance.post("/farm-activities/done", data);
       dispatch(
         recordActivitySuccess({
-          message: `Recorded data ${data.activity} successfully`,
+          message: "Recorded activity successfully",
         })
       );
     } catch (error: any) {

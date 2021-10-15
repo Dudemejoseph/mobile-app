@@ -757,6 +757,37 @@ const AddFarmExpense = () => {
                   )}
                 </View>
 
+                {/* Lessons lesrtn */}
+                <View style={styles.inputView}>
+                  <TextInput
+                    label="Lessons learnt"
+                    multiline={true}
+                    numberOfLines={8}
+                    // value={values.note}
+                    // onChangeText={handleChange("note")}
+                    mode="outlined"
+                    onBlur={handleBlur("lessons_learnt")}
+                    error={errors?.note ? true : false}
+                    selectionColor={colors.text}
+                    theme={dark ? combinedDarkTheme : combinedDefaultTheme}
+                    outlineColor={
+                      dark
+                        ? combinedDarkTheme.colors.border
+                        : combinedDefaultTheme.colors.backdrop
+                    }
+                    style={styles.buttonLabel}
+                  />
+
+                  {errors?.note && (
+                    <HelperText
+                      type="error"
+                      visible={errors?.note ? true : false}
+                    >
+                      {errors?.note}
+                    </HelperText>
+                  )}
+                </View>
+
                 <View style={styles.inputView}>
                   <TextInput
                     label="Note"
