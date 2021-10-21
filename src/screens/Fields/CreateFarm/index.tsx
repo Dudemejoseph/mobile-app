@@ -71,11 +71,10 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
   const [selectedState, setSelectedState] = useState<string>("State");
   const [name, setName] = useState("");
   const [crop, setCrop] = useState("Choose Crop");
-  // const [size, setSize] = useState(hecres);
+  const [size, setSize] = useState(hecres);
   const [size_unit, setUnit] = useState<string | any>("Select unit");
   const [location, setLocation] = useState<string>("");
   const [ownership, setOwnership] = useState<string>("Ownership");
-  const [size] = useState(hecres);
 
   useEffect(() => {
     const getCountries = async () => {
@@ -373,17 +372,20 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                 <View style={styles.inputView}>
                   <Paragraph>Farm Size</Paragraph>
                   <TextInput
-                    disabled={true}
+                    // disabled={true}
                     label=""
                     value={
                       size_unit?.name === "sqm (square meters)"
                         ? "" + distance.toString()
-                        : hecres.toString()
+                        : size.toString()
                     }
-                    onChangeText={handleChange("size")}
+                    onChangeText={(e) => {
+                      handleChange("size");
+                      setSize(e);
+                    }}
                     mode="outlined"
                     onBlur={handleBlur("size")}
-                    error={errors?.size ? true : false}
+                    // error={errors?.size ? true : false}
                     selectionColor={colors.text}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
                     outlineColor={

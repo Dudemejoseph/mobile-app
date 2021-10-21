@@ -23,6 +23,7 @@ import InfoSnackbar from "../../components/Shared/Snackbar/InfoSnackbar";
 import Wrapper from "../../components/Shared/Wrapper";
 import { combinedDarkTheme, combinedDefaultTheme } from "../../constants/theme";
 import { Farm, FarmState, RecordActivityInput } from "../../interfaces/farm";
+import { DefaultScreenProps } from "../../interfaces/shared_components";
 import { UtilitiesState } from "../../interfaces/utilities";
 import {
   fetchCategoryActivitesAction,
@@ -33,7 +34,7 @@ import { farmSelector } from "../../redux/features/farms/farm_reducer";
 import { utlitiesSelector } from "../../redux/features/utilities/utilties_reducer";
 import styles from "./styles";
 
-const Activities = () => {
+const Activities: React.FC<DefaultScreenProps> = ({ navigation }) => {
   const dispatch = useDispatch();
   const { colors, dark } = useTheme();
   const {
@@ -203,6 +204,9 @@ const Activities = () => {
     };
     setTempValues(data);
     dispatch(recordActivityAction(data));
+    setTimeout(() => {
+      navigation.popToTop();
+    }, 1000);
   };
 
   return (

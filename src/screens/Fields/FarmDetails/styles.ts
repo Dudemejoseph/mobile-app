@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     maxWidth: "60%",
   },
   rightText: { fontSize: 14, fontFamily: "Poppins-Regular", maxWidth: "60%" },
-  mapView: { marginVertical: 10 },
+  mapView: { marginTop: 0 },
   map: { height: 400 },
   dialogContent: { alignItems: "flex-start" },
   dialogButton: { flexDirection: "row" },

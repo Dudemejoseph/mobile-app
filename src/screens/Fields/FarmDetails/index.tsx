@@ -17,10 +17,6 @@ import ErrorSnackbar from "../../../components/Shared/Snackbar/ErrorSnackbar";
 import InfoSnackbar from "../../../components/Shared/Snackbar/InfoSnackbar";
 import Wrapper from "../../../components/Shared/Wrapper";
 import {
-  CALENDAR_TAB,
-  DASHBOARD_TAB_SCREEN,
-} from "../../../constants/route_names";
-import {
   combinedDarkTheme,
   combinedDefaultTheme,
 } from "../../../constants/theme";
@@ -34,7 +30,7 @@ import { cropSelector } from "../../../redux/features/crop/crop_reducer";
 import { darkModeMapStyles } from "../../../seeder/mapStyles";
 import styles from "./styles";
 
-const FarmDetails: React.FC<DefaultScreenProps> = ({ route, navigation }) => {
+const FarmDetails: React.FC<DefaultScreenProps> = ({ route }) => {
   const item: any = route?.params;
   const farmItem: Farm | any = item?.item;
   const dispatch = useDispatch();
@@ -48,6 +44,7 @@ const FarmDetails: React.FC<DefaultScreenProps> = ({ route, navigation }) => {
     submitDefaultCropActivitiesMessage,
     submitingDefaultCropActivities,
   } = useSelector(cropSelector);
+
   const [errorSnackbarVisible, setErrorSnackbarVisible] =
     useState<boolean>(false);
   const [infoSnackbarVisible, setInfoSnackbarVisible] =
@@ -91,6 +88,23 @@ const FarmDetails: React.FC<DefaultScreenProps> = ({ route, navigation }) => {
     <Wrapper>
       <ScrollView contentContainerStyle={styles.container}>
         <AppbarComponent backButton={true} title={`${farmItem.name} details`} />
+        <View style={styles.mapView}>
+          <MapView
+            style={styles.map}
+            customMapStyle={dark ? darkModeMapStyles : []}
+            provider={PROVIDER_GOOGLE}
+            initialRegion={{
+              latitude: 37.78825,
+              longitude: -122.4324,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+            showsUserLocation
+            zoomEnabled
+            zoomControlEnabled={true}
+            maxZoomLevel={50}
+          />
+        </View>
         <View>
           <View style={styles.row}>
             <Subheading style={styles.leftText}>Farm Name:</Subheading>
@@ -111,23 +125,6 @@ const FarmDetails: React.FC<DefaultScreenProps> = ({ route, navigation }) => {
             <Text style={styles.rightText}>
               {farmItem?.crops ? farmItem?.crops[0]?.crop?.name : "N/A"}
             </Text>
-          </View>
-          <View style={styles.mapView}>
-            <MapView
-              style={styles.map}
-              customMapStyle={dark ? darkModeMapStyles : []}
-              provider={PROVIDER_GOOGLE}
-              initialRegion={{
-                latitude: 37.78825,
-                longitude: -122.4324,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}
-              showsUserLocation
-              zoomEnabled
-              zoomControlEnabled={true}
-              maxZoomLevel={50}
-            />
           </View>
           <View style={styles.row}>
             <Button

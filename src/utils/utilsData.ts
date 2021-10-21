@@ -5,15 +5,7 @@ export const sizes = [
   },
   {
     id: "2",
-    name: "sqkm (square kilometers)",
-  },
-  {
-    id: "3",
     name: "ha (hectares)",
-  },
-  {
-    id: "4",
-    name: "sqft (square feet)",
   },
 ];
 

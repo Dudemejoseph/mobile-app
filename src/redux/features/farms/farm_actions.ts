@@ -101,6 +101,7 @@ export const createFarm = (data: CreateFarmInput) => {
         })
       );
     } catch (error: any) {
+      console.error("farmc reate error ios ", error);
       if (error?.message === "Network Error") {
         dispatch(
           creatingFarmFail({

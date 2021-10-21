@@ -136,6 +136,12 @@ export const editUser = (id: number, data: EditProfileInput) => {
           message: "Profile updated successfully",
         })
       );
+      let authData = [] as any;
+      authData = await AsyncStorage.getItem("@authData");
+      if (authData) {
+        const transformedData = JSON.parse(authData);
+        saveUserTokenToStorage(res?.data?.user, transformedData.authToken);
+      }
     } catch (error: any) {
       if (error.message === "Request failed with status code 422") {
         dispatch(
