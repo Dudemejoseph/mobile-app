@@ -187,8 +187,7 @@ const AddFarmExpense = () => {
     <Wrapper>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.wrapper}
-      >
+        style={styles.wrapper}>
         <ScrollView>
           <AppbarComponent
             title="Add Farm Expense"
@@ -199,11 +198,11 @@ const AddFarmExpense = () => {
             validationSchema={AddFarmExpenseSchema}
             initialValues={
               {
-                farm_id: farm_id,
-                farm_activity_id: farm_activity_id,
+                farm_id,
+                farm_activity_id,
                 balance_to_be_paid: 0.0,
                 brand: "",
-                date: date,
+                date,
                 note: "",
                 technicalities: "",
                 quantity: 0.0,
@@ -211,8 +210,7 @@ const AddFarmExpense = () => {
                 unit_price: 0.0,
               } as unknown as AddFarmExpenseInput
             }
-            onSubmit={() => {}}
-          >
+            onSubmit={() => {}}>
             {({ handleChange, handleBlur, values, errors, setFieldValue }) => (
               <Surface style={styles.surface}>
                 <View
@@ -226,8 +224,7 @@ const AddFarmExpense = () => {
                         ? combinedDarkTheme.colors.placeholder
                         : combinedDefaultTheme.colors.border,
                     },
-                  ]}
-                >
+                  ]}>
                   <Subheading
                     style={[
                       styles.headingText,
@@ -236,8 +233,7 @@ const AddFarmExpense = () => {
                           ? combinedDarkTheme.colors.text
                           : combinedDefaultTheme.colors.text,
                       },
-                    ]}
-                  >
+                    ]}>
                     Record Finance
                   </Subheading>
                 </View>
@@ -254,8 +250,7 @@ const AddFarmExpense = () => {
                           ? combinedDarkTheme.colors.background
                           : combinedDefaultTheme.colors.surface,
                       },
-                    ]}
-                  >
+                    ]}>
                     <Picker
                       mode="dropdown"
                       selectedValue={selectedFarm}
@@ -274,8 +269,7 @@ const AddFarmExpense = () => {
                             ? combinedDarkTheme.colors.primary
                             : combinedDefaultTheme.colors.text,
                         },
-                      ]}
-                    >
+                      ]}>
                       <Picker.Item
                         color={
                           dark
@@ -306,8 +300,7 @@ const AddFarmExpense = () => {
                   {errors?.farm_id && (
                     <HelperText
                       type="error"
-                      visible={errors?.farm_id ? true : false}
-                    >
+                      visible={errors?.farm_id ? true : false}>
                       {errors?.farm_id}
                     </HelperText>
                   )}
@@ -361,8 +354,7 @@ const AddFarmExpense = () => {
                     <Button
                       onPress={retry}
                       uppercase={false}
-                      theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    >
+                      theme={dark ? combinedDarkTheme : combinedDefaultTheme}>
                       Retry
                     </Button>
                   </View>
@@ -382,8 +374,7 @@ const AddFarmExpense = () => {
                             ? combinedDarkTheme.colors.background
                             : combinedDefaultTheme.colors.surface,
                         },
-                      ]}
-                    >
+                      ]}>
                       <Picker
                         mode="dropdown"
                         selectedValue={selectedCategory}
@@ -399,8 +390,7 @@ const AddFarmExpense = () => {
                               ? combinedDarkTheme.colors.primary
                               : combinedDefaultTheme.colors.text,
                           },
-                        ]}
-                      >
+                        ]}>
                         <Picker.Item
                           color={
                             dark
@@ -434,8 +424,7 @@ const AddFarmExpense = () => {
                     {errors?.category_id && (
                       <HelperText
                         type="error"
-                        visible={errors?.category_id ? true : false}
-                      >
+                        visible={errors?.category_id ? true : false}>
                         {errors?.category_id}
                       </HelperText>
                     )}
@@ -456,8 +445,7 @@ const AddFarmExpense = () => {
                             ? combinedDarkTheme.colors.background
                             : combinedDefaultTheme.colors.surface,
                         },
-                      ]}
-                    >
+                      ]}>
                       <Picker
                         mode="dropdown"
                         selectedValue={selectedActivity}
@@ -476,8 +464,7 @@ const AddFarmExpense = () => {
                               ? combinedDarkTheme.colors.primary
                               : combinedDefaultTheme.colors.text,
                           },
-                        ]}
-                      >
+                        ]}>
                         <Picker.Item
                           color={
                             dark
@@ -510,8 +497,7 @@ const AddFarmExpense = () => {
                     {errors?.category_id && (
                       <HelperText
                         type="error"
-                        visible={errors?.category_id ? true : false}
-                      >
+                        visible={errors?.category_id ? true : false}>
                         {errors?.category_id}
                       </HelperText>
                     )}
@@ -547,8 +533,7 @@ const AddFarmExpense = () => {
                   {errors?.brand && (
                     <HelperText
                       type="error"
-                      visible={errors?.brand ? true : false}
-                    >
+                      visible={errors?.brand ? true : false}>
                       {errors?.brand}
                     </HelperText>
                   )}
@@ -584,8 +569,7 @@ const AddFarmExpense = () => {
                   {errors?.quantity && (
                     <HelperText
                       type="error"
-                      visible={errors?.quantity ? true : false}
-                    >
+                      visible={errors?.quantity ? true : false}>
                       {errors?.quantity}
                     </HelperText>
                   )}
@@ -621,8 +605,7 @@ const AddFarmExpense = () => {
                   {errors?.unit_price && (
                     <HelperText
                       type="error"
-                      visible={errors?.unit_price ? true : false}
-                    >
+                      visible={errors?.unit_price ? true : false}>
                       {errors?.unit_price}
                     </HelperText>
                   )}
@@ -658,8 +641,7 @@ const AddFarmExpense = () => {
                   {errors?.amount && (
                     <HelperText
                       type="error"
-                      visible={errors?.amount ? true : false}
-                    >
+                      visible={errors?.amount ? true : false}>
                       {errors?.amount}
                     </HelperText>
                   )}
@@ -695,8 +677,7 @@ const AddFarmExpense = () => {
                   {errors?.balance_to_be_paid && (
                     <HelperText
                       type="error"
-                      visible={errors?.balance_to_be_paid ? true : false}
-                    >
+                      visible={errors?.balance_to_be_paid ? true : false}>
                       {errors?.balance_to_be_paid}
                     </HelperText>
                   )}
@@ -720,8 +701,7 @@ const AddFarmExpense = () => {
                           ? combinedDarkTheme.colors.background
                           : combinedDefaultTheme.colors.surface,
                       },
-                    ]}
-                  >
+                    ]}>
                     {date ?? "Select Date"}
                   </Button>
                 </View>
@@ -750,8 +730,7 @@ const AddFarmExpense = () => {
                   {errors?.technicalities && (
                     <HelperText
                       type="error"
-                      visible={errors?.technicalities ? true : false}
-                    >
+                      visible={errors?.technicalities ? true : false}>
                       {errors?.technicalities}
                     </HelperText>
                   )}
@@ -781,8 +760,7 @@ const AddFarmExpense = () => {
                   {errors?.note && (
                     <HelperText
                       type="error"
-                      visible={errors?.note ? true : false}
-                    >
+                      visible={errors?.note ? true : false}>
                       {errors?.note}
                     </HelperText>
                   )}
@@ -811,8 +789,7 @@ const AddFarmExpense = () => {
                   {errors?.note && (
                     <HelperText
                       type="error"
-                      visible={errors?.note ? true : false}
-                    >
+                      visible={errors?.note ? true : false}>
                       {errors?.note}
                     </HelperText>
                   )}
@@ -834,8 +811,7 @@ const AddFarmExpense = () => {
                         ? combinedDarkTheme.colors.background
                         : combinedDefaultTheme.colors.background,
                     },
-                  ]}
-                >
+                  ]}>
                   Submit
                 </Button>
 
