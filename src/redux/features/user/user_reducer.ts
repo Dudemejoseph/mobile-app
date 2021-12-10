@@ -1,0 +1,90 @@
+import { createSlice } from "@reduxjs/toolkit";
+import { User, UserState } from "../../../interfaces/user";
+import { RootState } from "../../store";
+import { PayloadType } from "./../../../interfaces/shared_components";
+
+const initialState: UserState = {
+  authLoading: false,
+  isAuthenticated: false,
+  user: null,
+  isCheckingUser: true,
+  viewedOnboarding: false,
+  error: null,
+  message: null,
+  loggedOut: null,
+  editing: false,
+  editingError: null,
+  editingMessage: null,
+};
+
+export const userSlice = createSlice({
+  name: "user",
+  initialState,
+  reducers: {
+    authRequest: (state) => {
+      state.authLoading = true;
+      state.message = null;
+      state.error = null;
+    },
+    loginSuccess: (state, { payload }: PayloadType) => {
+      state.authLoading = false;
+      state.isAuthenticated = true;
+      state.user = payload.data as unknown as User;
+      state.message = payload.message;
+      state.loggedOut = false;
+    },
+    registerSuccess: (state) => {
+      state.authLoading = false;
+      state.message = "Registered successfully";
+    },
+    authFail: (state, { payload }: PayloadType) => {
+      state.authLoading = false;
+      state.error = payload.error;
+    },
+    checkedOnboardingTrue: (state) => {
+      state.isCheckingUser = false;
+      state.viewedOnboarding = true;
+    },
+    checkedOnboardingFalse: (state) => {
+      state.isCheckingUser = false;
+      state.viewedOnboarding = false;
+    },
+    loggedOut: (state) => {
+      state.authLoading = false;
+      state.isAuthenticated = false;
+      state.user = null;
+      state.loggedOut = true;
+    },
+    editingUser: (state) => {
+      state.editing = true;
+      state.editingError = null;
+      state.editingMessage = null;
+    },
+    setUser: (state, { payload }: PayloadType) => {
+      state.user = payload.data as unknown as User;
+      state.editing = false;
+      state.editingMessage = payload.message;
+      state.editingError = null;
+    },
+    setUserFail: (state, { payload }: PayloadType) => {
+      state.editing = false;
+      state.editingMessage = null;
+      state.editingError = payload.error;
+    },
+  },
+});
+
+export const {
+  authRequest,
+  authFail,
+  loginSuccess,
+  loggedOut,
+  registerSuccess,
+  checkedOnboardingFalse,
+  checkedOnboardingTrue,
+  editingUser,
+  setUser,
+  setUserFail,
+} = userSlice.actions;
+export const userSelector = (state: RootState) => state.user;
+export default userSlice.reducer;

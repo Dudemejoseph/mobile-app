@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import Wrapper from "../../components/Wrapper";
@@ -17,6 +17,7 @@ import {
   createFarm,
   farmSelector,
   fetchCountries,
+  fetchCrops,
   fetchStates,
 } from "../../redux/features/farmSlice";
 import Toast from "react-native-toast-message";
@@ -51,25 +52,32 @@ const ownerships = [
   },
 ];
 
-const CreateFarms = ({ navigation }) => {
+const CreateFarms = ({ navigation, route }) => {
+  let hecres = route?.params?.hecres ?? 0;
+  let coordinates = route?.params?.coordinates;
+  let distance = route?.params?.distance ?? 0;
+  console.log("dio ", distance);
   const dispatch = useDispatch();
-  const { states, loading, message, error } = useSelector(farmSelector);
+  const { states, loading, message, error, crops } = useSelector(farmSelector);
   const [lgas, setLGAS] = useState([]);
   const [selectedLGA, setSelectedLGA] = useState("LGA");
   const [selectedState, setSelectedState] = useState("State");
   const [showSizePicker, setShowSize] = useState(false);
   const [showOwnerPicker, setShowOwner] = useState(false);
+  const [showCropPicker, setShowCrop] = useState(false);
   const [showStatesPicker, setShowStates] = useState(false);
   const [showLGAPicker, setShowLGAPicker] = useState(false);
   const [name, setName] = useState("");
-  const [size, setSize] = useState("");
-  const [size_unit, setUnit] = useState("Size Unit");
+  const [crop, setCrop] = useState("Choose Crop");
+  const [size, setSize] = useState(hecres);
+  const [size_unit, setUnit] = useState("Select unit");
   const [location, setLocation] = useState("");
   const [ownership, setOwnership] = useState("Ownership");
-  const [coordinates, setCoordinates] = useState("");
+  // const [coordinates, setCoordinates] = useState("");
   const [country_id, setCountry] = useState(161);
   const [lga_id, setLGA] = useState("");
   const [state_id, setStateID] = useState("");
+  const [crop_id, setCropID] = useState("");
 
   useEffect(() => {
     message &&
@@ -79,6 +87,8 @@ const CreateFarms = ({ navigation }) => {
         text2: message,
         topOffset: 40,
       });
+
+    message && navigation.navigate("Farms");
   }, [message]);
 
   useEffect(() => {
@@ -95,6 +105,7 @@ const CreateFarms = ({ navigation }) => {
   useEffect(() => {
     dispatch(fetchCountries());
     dispatch(fetchStates());
+    dispatch(fetchCrops());
   }, [dispatch]);
 
   const submitFarmData = () => {
@@ -109,7 +120,7 @@ const CreateFarms = ({ navigation }) => {
       country_id,
       state_id,
       lga_id,
-      crop_id: 1,
+      crop_id,
     };
     dispatch(createFarm(data));
   };
@@ -151,14 +162,38 @@ const CreateFarms = ({ navigation }) => {
               onChangeText={(val) => setName(val)}
             />
 
-            {/* ======== Size ========== */}
-            <TextInput
-              placeholder='Size'
-              style={styles.input}
-              placeholderTextColor={COLORS.text_grey}
-              value={size}
-              onChangeText={(val) => setSize(val)}
-            />
+            {/* ========== Choose Crop ========= */}
+            <TouchableOpacity
+              activeOpacity={0.4}
+              style={styles.dropBtn}
+              onPress={() => setShowCrop(!showCropPicker)}
+            >
+              <Text style={styles.dropTxt}>{crop}</Text>
+              <Image
+                source={require("../../assets/icons/drop-icon.png")}
+                style={styles.dropIcon}
+              />
+            </TouchableOpacity>
+            {showCropPicker && (
+              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
+                {crops.map((item) => {
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      key={item.id}
+                      style={styles.size}
+                      onPress={() => {
+                        setCrop(item.name);
+                        setCropID(item.id);
+                        setShowCrop(false);
+                      }}
+                    >
+                      <Text>{item.name}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </Animatable.View>
+            )}
 
             {/* ========== Size Unit ========= */}
             <View>
@@ -175,7 +210,7 @@ const CreateFarms = ({ navigation }) => {
               </TouchableOpacity>
               {showSizePicker && (
                 <Animatable.View style={styles.sizePicker} animation='fadeIn'>
-                  {sizes.map((item) => {
+                  {sizes?.map((item) => {
                     return (
                       <TouchableOpacity
                         activeOpacity={0.6}
@@ -193,6 +228,16 @@ const CreateFarms = ({ navigation }) => {
                 </Animatable.View>
               )}
             </View>
+
+            {/* ======== Size ========== */}
+            <TextInput
+              placeholder='Size'
+              style={styles.input}
+              placeholderTextColor={COLORS.text_grey}
+              value={size_unit === "sqm (square meters)" ? ''+distance : size}
+              onChangeText={(val) => setSize(val)}
+            />
+
 
             {/* ========== Ownership ========= */}
             <TouchableOpacity
@@ -309,7 +354,11 @@ const CreateFarms = ({ navigation }) => {
                 style={styles.createBtn}
                 onPress={submitFarmData}
               >
-                {loading ? <ActivityIndicator color={COLORS.background} size='small' /> : <Text style={styles.createTxt}>Create</Text>}
+                {loading ? (
+                  <ActivityIndicator color={COLORS.background} size='small' />
+                ) : (
+                  <Text style={styles.createTxt}>Create</Text>
+                )}
               </TouchableOpacity>
               <TouchableOpacity activeOpacity={0.6} style={styles.cancelBtn}>
                 <Text style={styles.cancelTxt}>Cancel</Text>

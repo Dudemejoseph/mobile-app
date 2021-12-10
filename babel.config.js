@@ -4,10 +4,9 @@ module.exports = {
     [
       "module:react-native-dotenv",
       {
-        moduleName: "@env",
-        path: ".env.local",
-        safe: true,
+        moduleName: "react-native-dotenv",
       },
+      "react-native-reanimated/plugin",
     ],
   ],
 };

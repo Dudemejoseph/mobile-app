@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createSlice } from "@reduxjs/toolkit";
-import axiosInstance from "../../helpers/api";
+import axiosInstance from "../../config/axios_config";
 
 const initialState = {
   loading: false,
@@ -8,6 +8,7 @@ const initialState = {
   user: null,
   users: null,
   dashboard: null,
+  dashboardTwo: null,
   error: null,
   message: null,
 };
@@ -39,13 +40,19 @@ const userSlice = createSlice({
       state.dashboard = payload;
       state.isAuthenticated = true;
     },
+    setDashboardTwo: (state, { payload }) => {
+      state.loading = false;
+      state.dashboardTwo = payload;
+      state.isAuthenticated = true;
+    },
     fetchFail: (state, { payload }) => {
       state.loading = false;
       state.error = payload;
     },
-    setUsers: (state, {payload}) => {
+    setUsers: (state, { payload }) => {
       state.loading = false;
       state.users = payload;
+      state.message = "Profile updated successfully";
     },
     loggedOut: (state) => {
       state.loading = false;
@@ -64,7 +71,8 @@ export const {
   registerSuccess,
   loggedOut,
   setDashboard,
-  setUsers
+  setDashboardTwo,
+  setUsers,
 } = userSlice.actions;
 export default userSlice.reducer;
 export const userSelector = (state) => state.user;
@@ -75,18 +83,20 @@ export const userSelector = (state) => state.user;
  * @returns
  */
 export const loginUser = (data) => {
-  console.log(data);
   return async (dispatch) => {
     dispatch(fetch());
     try {
       const res = await axiosInstance.post("/auth/login", data);
-      dispatch(loginSuccess(res.data.user));
+      dispatch(loginSuccess(res?.data?.user));
       await AsyncStorage.setItem("@userToken", res?.data?.token);
-      await AsyncStorage.setItem('@userData',JSON.stringify({userData: res?.data.user}));
+      await AsyncStorage.setItem(
+        "@userData",
+        JSON.stringify({ userData: res?.data.user })
+      );
     } catch (error) {
-      if(error.message === 'Request failed with status code 422'){
-        dispatch(fetchFail('Invalid credentials'));
-        return;
+      if (error.message === "Request failed with status code 422") {
+        dispatch(fetchFail("Invalid credentials"));
+        return error;
       }
       dispatch(fetchFail(error.message));
     }
@@ -136,17 +146,17 @@ export const activateUser = (token) => {
  * @param {*} data
  * @returns
  */
- export const persistUser = () => {
+export const persistUser = () => {
   return async (dispatch) => {
     dispatch(fetch());
     try {
       let userInfo;
-      userInfo = await AsyncStorage.getItem('@userData');
+      userInfo = await AsyncStorage.getItem("@userData");
       const transformedData = JSON.parse(userInfo);
 
       if(transformedData){
         dispatch(loginSuccess(transformedData.userData))
-      }
+      } else {dispatch(loggedOut())}
     } catch (error) {
       dispatch(fetchFail("Something went wrong, please try again"));
       console.log(error.response.data.message);
@@ -162,11 +172,31 @@ export const getDashboard = () => {
   return async (dispatch) => {
     dispatch(fetch());
     try {
-      const res = await axiosInstance.get("/dashboard");
-      dispatch(setDashboard(res.data));
-      console.log(res.data);
+      const res = await axiosInstance.get("/dashboard/mobile");
+
+      const data = [];
+      res?.data?.result?.Data.map(({ crop, percentage, color, size }) => {
+        const a = { crop, percentage, color, size };
+        data.push(a);
+      });
+      dispatch(setDashboard(data));
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
+      dispatch(loggedOut());
+      AsyncStorage.clear();
+    }
+  };
+};
+
+export const logoutUser = () => {
+  return async (dispatch) => {
+    try {
+      const res = await axiosInstance.post("/logout");
+      console.log(res);
+      dispatch(loggedOut());
+      AsyncStorage.clear();
+    } catch (error) {
+      console.log(error);
     }
   };
 };
@@ -175,7 +205,7 @@ export const getDashboard = () => {
  * Fetch Users
  * @returns
  */
- export const fetchUsers = () => {
+export const fetchUsers = () => {
   return async (dispatch) => {
     dispatch(fetch());
     try {
@@ -183,6 +213,34 @@ export const getDashboard = () => {
       dispatch(setUsers(res.data));
     } catch (error) {
       dispatch(fetchFail(error.response.data.message));
+      dispatch(loggedOut());
+      AsyncStorage.clear();
+    }
+  };
+};
+
+export const getUser = (id) => {
+  return async (dispatch) => {
+    dispatch(fetch());
+    try {
+      const res = await axiosInstance.get(`/users/${id}`);
+      dispatch(setUsers(res.data.user));
+    } catch (error) {
+      dispatch(fetchFail(error.response.data.message));
+    }
+  };
+};
+
+export const editUser = (id, data) => {
+  return async (dispatch) => {
+    dispatch(fetch());
+    try {
+      const res = await axiosInstance.put(`/users/${id}`, data);
+      dispatch(setUsers(res.data.user));
+    } catch (error) {
+      dispatch(fetchFail(error.response.data.message));
+      // dispatch(loggedOut());
+      // AsyncStorage.clear();
     }
   };
 };
