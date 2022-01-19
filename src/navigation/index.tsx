@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { combinedDarkTheme, combinedDefaultTheme } from "../constants/theme";
 import { UserState } from "../interfaces/user";
 import { checkOnboarding } from "../redux/features/user/user_actions";
-import { userSelector } from "../redux/features/userSlice";
+import { userSelector } from "../redux/features/user/user_reducer";
 import AuthStack from "./AuthStack";
 import MainStack from "./MainStack";
 import OnboardingStack from "./OnboardingStack";

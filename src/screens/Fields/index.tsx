@@ -14,7 +14,7 @@ import { combinedDarkTheme, combinedDefaultTheme } from "../../constants/theme";
 import { Farm, FarmState } from "../../interfaces/farm";
 import { DefaultScreenProps } from "../../interfaces/shared_components";
 import { getFarms } from "../../redux/features/farms/farm_actions";
-import { farmSelector } from "../../redux/features/farmSlice";
+import { farmSelector } from "../../redux/features/farms/farm_reducer";
 import styles from "./styles";
 Entypo.loadFont();
 
