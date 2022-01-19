@@ -40,7 +40,7 @@ axiosInstance.interceptors.response.use(
     }),
   (error) => {
     if (error.response && error.response.status === 401) {
-      //   removeToken();
+      // removeToken();
     } else {
       return new Promise((resolve, reject) => {
         reject(error);

@@ -157,7 +157,6 @@ export const recordActivityAction = (data: RecordActivityInput) => {
         })
       );
     } catch (error: any) {
-      console.error("error ", error);
       if (error?.message === "Network Error") {
         dispatch(
           recordActivityFail({

@@ -143,7 +143,7 @@ export const editUser = (id: number, data: EditProfileInput) => {
         );
       } else if (
         error.message === "timeout of 15000ms exceeded" ||
-        error?.message === "Network Error"
+        error.message === "Network Error"
       ) {
         dispatch(
           setUserFail({ error: "Network error, check your connection" })

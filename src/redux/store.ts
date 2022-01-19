@@ -19,7 +19,6 @@ export const store = configureStore({
     dialog: dialogSlice,
     transactions: transactionSlice,
     utilities: utilitiesSlice,
-    // expenses: expensesSlice,
     inventory: inventorySlice,
   },
   middleware: (getDefaultMiddleware) =>
