@@ -2,11 +2,7 @@ import { PaginationData } from "./farm";
 import { RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ReactNode } from "react";
-import {
-  StyleProp,
-  ViewStyle,
-  TextInputProps as RNTextInputProps,
-} from "react-native";
+import { StyleProp, ViewStyle, TextInputProps as RNTextInputProps } from "react-native";
 
 export interface WrapperTypes {
   children: ReactNode;
@@ -28,7 +24,7 @@ export interface PaginatorProps {
 }
 
 export interface DefaultScreenProps {
-  navigation: NativeStackNavigationProp<any, any>;
+  navigation?: NativeStackNavigationProp<any, any>;
   route?: RouteProp<any, any>;
 }
 

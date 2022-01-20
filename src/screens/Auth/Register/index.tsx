@@ -1,19 +1,10 @@
 import { useTheme } from "@react-navigation/native";
 import { Formik } from "formik";
 import React, { useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  useColorScheme,
-  View,
-} from "react-native";
-import { Button, Caption, Text, TextInput } from "react-native-paper";
+import { KeyboardAvoidingView, Platform, ScrollView, useColorScheme, View } from "react-native";
+import { Button, Text, TextInput } from "react-native-paper";
 import FeatherIcon from "react-native-vector-icons/Feather";
-import {
-  combinedDarkTheme,
-  combinedDefaultTheme,
-} from "../../../constants/theme";
+import { combinedDarkTheme, combinedDefaultTheme } from "../../../constants/theme";
 import { AuthRegisterInput } from "../../../interfaces/user";
 import { SignupSchema } from "../../../schema/auth";
 import styles from "./styles";
@@ -21,9 +12,7 @@ FeatherIcon.loadFont();
 
 const RegisterScreen = () => {
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
       <ScrollView>
         <RegisterForm />
       </ScrollView>
@@ -49,14 +38,7 @@ const RegisterForm = () => {
       }}
       onSubmit={(values: AuthRegisterInput) => console.log("vals ", values)}
     >
-      {({
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        values,
-        errors,
-        initialTouched,
-      }) => (
+      {({ handleChange, handleBlur, handleSubmit, values, errors, initialTouched }) => (
         <View style={styles.container}>
           <View style={styles.inputView}>
             <TextInput
@@ -68,11 +50,7 @@ const RegisterForm = () => {
               error={errors?.firstname ? true : false}
               selectionColor={colors.text}
               theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-              outlineColor={
-                dark
-                  ? combinedDarkTheme.colors.border
-                  : combinedDefaultTheme.colors.backdrop
-              }
+              outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
             />
 
             {errors?.firstname && initialTouched.firstname && (
@@ -80,10 +58,7 @@ const RegisterForm = () => {
                 style={[
                   styles.errorText,
                   {
-                    color:
-                      scheme === "dark"
-                        ? combinedDarkTheme.colors.error
-                        : combinedDefaultTheme.colors.error,
+                    color: scheme === "dark" ? combinedDarkTheme.colors.error : combinedDefaultTheme.colors.error,
                   },
                 ]}
               >
@@ -102,11 +77,7 @@ const RegisterForm = () => {
               error={errors?.lastname ? true : false}
               selectionColor={colors.text}
               theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-              outlineColor={
-                dark
-                  ? combinedDarkTheme.colors.border
-                  : combinedDefaultTheme.colors.backdrop
-              }
+              outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
             />
 
             {errors?.lastname && (
@@ -114,10 +85,7 @@ const RegisterForm = () => {
                 style={[
                   styles.errorText,
                   {
-                    color:
-                      scheme === "dark"
-                        ? combinedDarkTheme.colors.error
-                        : combinedDefaultTheme.colors.error,
+                    color: scheme === "dark" ? combinedDarkTheme.colors.error : combinedDefaultTheme.colors.error,
                   },
                 ]}
               >
@@ -136,11 +104,7 @@ const RegisterForm = () => {
               error={errors?.email ? true : false}
               selectionColor={colors.text}
               theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-              outlineColor={
-                dark
-                  ? combinedDarkTheme.colors.border
-                  : combinedDefaultTheme.colors.backdrop
-              }
+              outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
             />
 
             {errors?.email && (
@@ -148,10 +112,7 @@ const RegisterForm = () => {
                 style={[
                   styles.errorText,
                   {
-                    color:
-                      scheme === "dark"
-                        ? combinedDarkTheme.colors.error
-                        : combinedDefaultTheme.colors.error,
+                    color: scheme === "dark" ? combinedDarkTheme.colors.error : combinedDefaultTheme.colors.error,
                   },
                 ]}
               >
@@ -171,11 +132,7 @@ const RegisterForm = () => {
               error={errors?.password ? true : false}
               selectionColor={colors.text}
               theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-              outlineColor={
-                dark
-                  ? combinedDarkTheme.colors.border
-                  : combinedDefaultTheme.colors.backdrop
-              }
+              outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
               right={
                 <TextInput.Icon
                   name={passwordVisible ? "eye-off" : "eye"}
@@ -192,10 +149,7 @@ const RegisterForm = () => {
                 style={[
                   styles.errorText,
                   {
-                    color:
-                      scheme === "dark"
-                        ? combinedDarkTheme.colors.error
-                        : combinedDefaultTheme.colors.error,
+                    color: scheme === "dark" ? combinedDarkTheme.colors.error : combinedDefaultTheme.colors.error,
                   },
                 ]}
               >
@@ -215,11 +169,7 @@ const RegisterForm = () => {
               error={errors?.password_confirmation ? true : false}
               selectionColor={colors.text}
               theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-              outlineColor={
-                dark
-                  ? combinedDarkTheme.colors.border
-                  : combinedDefaultTheme.colors.backdrop
-              }
+              outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
               right={
                 <TextInput.Icon
                   name={!passwordVisible2 ? "eye-off" : "eye"}
@@ -236,10 +186,7 @@ const RegisterForm = () => {
                 style={[
                   styles.errorText,
                   {
-                    color:
-                      scheme === "dark"
-                        ? combinedDarkTheme.colors.error
-                        : combinedDefaultTheme.colors.error,
+                    color: scheme === "dark" ? combinedDarkTheme.colors.error : combinedDefaultTheme.colors.error,
                   },
                 ]}
               >
@@ -258,28 +205,13 @@ const RegisterForm = () => {
               labelStyle={[
                 styles.buttonLabelStyle,
                 {
-                  color:
-                    scheme === "dark"
-                      ? combinedDarkTheme.colors.text
-                      : combinedDefaultTheme.colors.background,
+                  color: scheme === "dark" ? combinedDarkTheme.colors.text : combinedDefaultTheme.colors.background,
                 },
               ]}
             >
               Register
             </Button>
           </View>
-
-          <Caption style={styles.infoText}>
-            Already have an account?{" "}
-            <Text
-              style={[
-                styles.infoSubText,
-                { color: dark ? colors.text : colors.primary },
-              ]}
-            >
-              Login
-            </Text>
-          </Caption>
         </View>
       )}
     </Formik>
