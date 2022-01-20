@@ -1,19 +1,12 @@
 import React, { useState } from "react";
-import {
-  Text,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  Image,
-  TextInput,
-} from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import * as Animatable from "react-native-animatable";
+import ImagePicker from "react-native-image-crop-picker";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { Modal, Portal } from "react-native-paper";
 import { ScaledSheet } from "react-native-size-matters";
 import Wrapper from "../components/Wrapper";
 import { COLORS } from "../constants/theme";
-import { Modal, Portal } from "react-native-paper";
-import ImagePicker from "react-native-image-crop-picker";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import * as Animatable from "react-native-animatable";
 
 const emergencies = [
   {
@@ -113,20 +106,11 @@ const Emergency = ({ navigation }) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* ========= Header View ========= */}
         <View style={styles.headerView}>
-          <TouchableOpacity
-            activeOpacity={0.6}
-            onPress={() => navigation.goBack()}
-          >
-            <Image
-              source={require("../assets/icons/back-arrow.png")}
-              style={styles.backIcon}
-            />
+          <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.goBack()}>
+            <Image source={require("../assets/icons/back-arrow.png")} style={styles.backIcon} />
           </TouchableOpacity>
           <TouchableOpacity>
-            <Image
-              source={require("../assets/icons/bell-icon.png")}
-              style={styles.bellIcon}
-            />
+            <Image source={require("../assets/icons/bell-icon.png")} style={styles.bellIcon} />
           </TouchableOpacity>
         </View>
 
@@ -143,13 +127,10 @@ const Emergency = ({ navigation }) => {
               onPress={() => setShowEmergency(!showEmergencyPicker)}
             >
               <Text style={styles.dropTxt}>{emergency}</Text>
-              <Image
-                source={require("../assets/icons/drop-icon.png")}
-                style={styles.dropIcon}
-              />
+              <Image source={require("../assets/icons/drop-icon.png")} style={styles.dropIcon} />
             </TouchableOpacity>
             {showEmergencyPicker && (
-              <Animatable.View style={styles.sizePicker} animation='fadeIn'>
+              <Animatable.View style={styles.sizePicker} animation="fadeIn">
                 {emergencies.map((item) => {
                   return (
                     <TouchableOpacity
@@ -169,49 +150,31 @@ const Emergency = ({ navigation }) => {
             )}
 
             {/* ========== Select Date ========= */}
-            <TouchableOpacity
-              activeOpacity={0.4}
-              style={styles.dateBtn}
-              onPress={showDatePicker}
-            >
-              <Image
-                source={require("../assets/icons/calender-icon.png")}
-                style={styles.dateIcon}
-              />
+            <TouchableOpacity activeOpacity={0.4} style={styles.dateBtn} onPress={showDatePicker}>
+              <Image source={require("../assets/icons/calender-icon.png")} style={styles.dateIcon} />
               <Text style={styles.dropTxt}>{date}</Text>
             </TouchableOpacity>
             <DateTimePickerModal
               isVisible={isDatePickerVisible}
-              mode='date'
+              mode="date"
               onConfirm={handleDate}
               onCancel={hideDatePicker}
             />
 
             {/* ======== Time ========== */}
-            <TouchableOpacity
-              activeOpacity={0.4}
-              style={styles.dateBtn}
-              onPress={showTimePicker}
-            >
+            <TouchableOpacity activeOpacity={0.4} style={styles.dateBtn} onPress={showTimePicker}>
               <Text style={styles.dropTxt}>{time}</Text>
             </TouchableOpacity>
             <DateTimePickerModal
               isVisible={isTimePickerVisible}
-              mode='time'
+              mode="time"
               onConfirm={handleTime}
               onCancel={hideTimePicker}
             />
 
             {/* ========== Photo ========= */}
-            <TouchableOpacity
-              activeOpacity={0.4}
-              style={styles.dateBtn}
-              onPress={showModal}
-            >
-              <Image
-                source={require("../assets/icons/photo-icon.png")}
-                style={styles.dateIcon}
-              />
+            <TouchableOpacity activeOpacity={0.4} style={styles.dateBtn} onPress={showModal}>
+              <Image source={require("../assets/icons/photo-icon.png")} style={styles.dateIcon} />
               <Text style={styles.dropTxt}>Photo</Text>
             </TouchableOpacity>
 
@@ -226,32 +189,14 @@ const Emergency = ({ navigation }) => {
           </View>
         </View>
         <Portal>
-          <Modal
-            visible={visible}
-            onDismiss={hideModal}
-            contentContainerStyle={containerStyle}
-          >
-            <TouchableOpacity
-              activeOpacity={0.6}
-              style={styles.enter1}
-              onPress={openCamera}
-            >
+          <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
+            <TouchableOpacity activeOpacity={0.6} style={styles.enter1} onPress={openCamera}>
               <Text style={styles.enterTxt}>Take Photo</Text>
-              <Image
-                source={require("../assets/icons/arrow-right.png")}
-                style={styles.enterIcon}
-              />
+              <Image source={require("../assets/icons/arrow-right.png")} style={styles.enterIcon} />
             </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.6}
-              style={styles.enter}
-              onPress={openGallery}
-            >
+            <TouchableOpacity activeOpacity={0.6} style={styles.enter} onPress={openGallery}>
               <Text style={styles.enterTxt}>Chose From Library</Text>
-              <Image
-                source={require("../assets/icons/arrow-right.png")}
-                style={styles.enterIcon}
-              />
+              <Image source={require("../assets/icons/arrow-right.png")} style={styles.enterIcon} />
             </TouchableOpacity>
           </Modal>
         </Portal>
