@@ -89,7 +89,6 @@ const Geofencing: React.FC<DefaultScreenProps> = ({ navigation }) => {
   useEffect(() => {
     if (trackEnabled) {
       RNLocation.subscribeToLocationUpdates((location) => {
-        console.log("warris this ", location);
         const coords = location[0];
         setCoords((prev: any) => [...prev, { latitude: coords.latitude, longitude: coords.longitude }]);
       });
@@ -155,12 +154,9 @@ const Geofencing: React.FC<DefaultScreenProps> = ({ navigation }) => {
 
   const unsub = () => {
     setEnabled(false);
-
-    // Subscribe
     setDistance(geolib.getPathLength(coordinates, geolib.getDistance));
     setArea(geolib.getAreaOfPolygon(polyPoints));
     setHecres(geolib.convertArea(area, "ha").toFixed(3) as any);
-    // Unsubscribe
   };
 
   return (

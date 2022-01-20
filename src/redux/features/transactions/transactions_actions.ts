@@ -100,7 +100,6 @@ export const addFarmExpenseAction = (data: AddFarmExpenseInput) => {
     dispatch(addingFarmExpense());
     try {
       const res = await axiosInstance.post("/farmexpenses", data);
-      console.log("res ", res.data);
 
       dispatch(
         addFarmExpenseSuccess({
@@ -109,8 +108,6 @@ export const addFarmExpenseAction = (data: AddFarmExpenseInput) => {
         })
       );
     } catch (error: any) {
-      console.log("err ", error.message);
-
       if (error?.message === "Network Error") {
         dispatch(
           addFarmExpenseFail({

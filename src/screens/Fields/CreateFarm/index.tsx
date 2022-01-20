@@ -279,8 +279,6 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                       mode="dropdown"
                       selectedValue={size_unit}
                       onValueChange={(itemValue: any) => {
-                        console.log("val ", itemValue);
-
                         setUnit(itemValue);
                         setFieldValue("size_unit", itemValue);
                       }}

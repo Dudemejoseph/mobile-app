@@ -26,7 +26,6 @@ const EditProfile = () => {
 
   const submitForm = async (values: EditProfileInput) => {
     setTempValues(values);
-    console.log("user ", user);
     dispatch(editUser(user.id as number, values));
   };
 

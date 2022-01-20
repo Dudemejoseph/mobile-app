@@ -3,12 +3,7 @@ import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import Wrapper from "../components/Wrapper";
 import * as geolib from "geolib";
-import MapView, {
-  PROVIDER_GOOGLE,
-  Marker,
-  Polygon,
-  Polyline,
-} from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE, Marker, Polygon, Polyline } from "react-native-maps";
 import RNLocation from "react-native-location";
 import { COLORS } from "../constants/theme";
 import * as Animatable from "react-native-animatable";
@@ -29,8 +24,6 @@ const GeoFence = ({ navigation }) => {
   const [area, setArea] = useState(0);
   const [hecres, setHecres] = useState(0);
   const [showActionBox, setShowActionBox] = useState(false);
-
-  console.log("distance ", distance);
 
   let polyPoints = coordinates.map(function (obj) {
     return Object.keys(obj)
@@ -76,14 +69,10 @@ const GeoFence = ({ navigation }) => {
   useEffect(() => {
     if (trackEnabled) {
       RNLocation.subscribeToLocationUpdates((location) => {
-        console.log("warris this ", location);
         const coords = location[0];
         setLat(coords.latitude);
         setLng(coords.longitude);
-        setCoords((prev) => [
-          ...prev,
-          { latitude: coords.latitude, longitude: coords.longitude },
-        ]);
+        setCoords((prev) => [...prev, { latitude: coords.latitude, longitude: coords.longitude }]);
       });
     } else {
       return null;
@@ -112,23 +101,14 @@ const GeoFence = ({ navigation }) => {
 
   const sub = () => {
     setEnabled(true);
-    console.log("yooo");
   };
 
   const unsub = () => {
     setEnabled(false);
-    // Subscribe
     setDistance(geolib.getPathLength(coordinates, geolib.getDistance));
     setArea(geolib.getAreaOfPolygon(polyPoints));
     setHecres(geolib.convertArea(area, "ha").toFixed(3));
-    // Unsubscribe
   };
-
-  const unsubscribe = RNLocation.subscribeToPermissionUpdates(
-    (currentPermission) => {
-      console.log(currentPermission);
-    }
-  );
 
   return (
     <View style={styles.container}>
@@ -141,43 +121,23 @@ const GeoFence = ({ navigation }) => {
         zoomControlEnabled={true}
         maxZoomLevel={50}
       >
-        <Polyline
-          coordinates={coordinates}
-          strokeColor={COLORS.primary}
-          fillColor={COLORS.primary}
-          strokeWidth={4}
-        />
+        <Polyline coordinates={coordinates} strokeColor={COLORS.primary} fillColor={COLORS.primary} strokeWidth={4} />
       </MapView>
       <View style={styles.distanceView}>
-        <TouchableOpacity
-          activeOpacity={0.4}
-          onPress={() => navigation.goBack()}
-        >
+        <TouchableOpacity activeOpacity={0.4} onPress={() => navigation.goBack()}>
           <Image source={backIcon} style={styles.backIcon} />
         </TouchableOpacity>
         <Text>Perimeter: {distance}m</Text>
         <Text>Area: {hecres}ha</Text>
       </View>
       {showActionBox && (
-        <Animatable.View
-          animation="fadeInUp"
-          duration={300}
-          style={styles.actionBox}
-        >
+        <Animatable.View animation="fadeInUp" duration={300} style={styles.actionBox}>
           {!trackEnabled ? (
-            <TouchableOpacity
-              activeOpacity={0.6}
-              style={styles.boxItem}
-              onPress={sub}
-            >
+            <TouchableOpacity activeOpacity={0.6} style={styles.boxItem} onPress={sub}>
               <Text>Start Geo Fencing</Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity
-              activeOpacity={0.6}
-              style={styles.boxItem}
-              onPress={unsub}
-            >
+            <TouchableOpacity activeOpacity={0.6} style={styles.boxItem} onPress={unsub}>
               <Text>Stop Geo Fencing</Text>
             </TouchableOpacity>
           )}
@@ -198,21 +158,11 @@ const GeoFence = ({ navigation }) => {
         </Animatable.View>
       )}
 
-      <TouchableOpacity
-        activeOpacity={0.6}
-        style={styles.iconView}
-        onPress={() => setShowActionBox(!showActionBox)}
-      >
+      <TouchableOpacity activeOpacity={0.6} style={styles.iconView} onPress={() => setShowActionBox(!showActionBox)}>
         {!showActionBox ? (
-          <Image
-            source={require("../assets/icons/plus-icon.png")}
-            style={styles.icon}
-          />
+          <Image source={require("../assets/icons/plus-icon.png")} style={styles.icon} />
         ) : (
-          <Image
-            source={require("../assets/icons/close-icon.png")}
-            style={styles.icon}
-          />
+          <Image source={require("../assets/icons/close-icon.png")} style={styles.icon} />
         )}
       </TouchableOpacity>
     </View>

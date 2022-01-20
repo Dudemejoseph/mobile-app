@@ -36,7 +36,7 @@ const RegisterForm = () => {
         lastname: "",
         password_confirmation: "",
       }}
-      onSubmit={(values: AuthRegisterInput) => console.log("vals ", values)}
+      onSubmit={(values: AuthRegisterInput) => console.log("register values", values)}
     >
       {({ handleChange, handleBlur, handleSubmit, values, errors, initialTouched }) => (
         <View style={styles.container}>

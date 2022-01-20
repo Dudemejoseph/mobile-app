@@ -120,7 +120,6 @@ export const fetchCategoryActivitesAction = (id: number) => {
     try {
       const res = await axiosInstance.get(`/farm-activities/activities/${id}`);
       dispatch(fetchCategoryActivitiesSuccess({ data: res?.data?.categories }));
-      console.log("res for cat ", res.data.categories);
     } catch (error: any) {
       if (error?.message === "Network Error") {
         dispatch(
