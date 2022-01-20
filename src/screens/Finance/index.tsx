@@ -5,14 +5,11 @@ import { Button, DataTable, Divider, Menu } from "react-native-paper";
 import Entypo from "react-native-vector-icons/Entypo";
 import { useDispatch, useSelector } from "react-redux";
 import AppbarComponent from "../../components/Shared/Appbar";
+import EmptyList from "../../components/Shared/EmptyListComponent";
 import ErrorComponent from "../../components/Shared/ErrorComponent";
 import LoadingComponent from "../../components/Shared/LoadingComponent";
 import Wrapper from "../../components/Shared/Wrapper";
-import {
-  ADD_FINANCE_SCREEN,
-  EOP_SCREEN,
-  FINANCE_STACK,
-} from "../../constants/route_names";
+import { ADD_FINANCE_SCREEN, EOP_SCREEN, FINANCE_STACK } from "../../constants/route_names";
 import { combinedDarkTheme, combinedDefaultTheme } from "../../constants/theme";
 import { DefaultScreenProps } from "../../interfaces/shared_components";
 import { Transaction, TransactionsState } from "../../interfaces/transactions";
@@ -29,18 +26,11 @@ const Finance: React.FC<DefaultScreenProps> = ({ navigation }) => {
   const dispatch = useDispatch();
   const { dark } = useTheme();
   const { user } = useSelector(userSelector) as UserState;
-  const { fetching, financesData, error } = useSelector(
-    transactionsSelector
-  ) as TransactionsState;
+  const { fetching, financesData, error } = useSelector(transactionsSelector) as TransactionsState;
   const [pageState, setPageState] = useState<number>(0);
-  const [numberOfItemsPerPage, onItemsPerPageChange] = useState<number>(
-    numberOfItemsPerPageList[0]
-  );
+  const [numberOfItemsPerPage, onItemsPerPageChange] = useState<number>(numberOfItemsPerPageList[0]);
   const from = pageState * numberOfItemsPerPage;
-  const to = Math.min(
-    (pageState + 1) * numberOfItemsPerPage,
-    financesData?.length
-  );
+  const to = Math.min((pageState + 1) * numberOfItemsPerPage, financesData?.length);
   const [visible, setVisible] = useState<number | any>(null);
 
   const openMenu = (itemId: number) => setVisible(itemId);
@@ -79,18 +69,12 @@ const Finance: React.FC<DefaultScreenProps> = ({ navigation }) => {
 
   return (
     <Wrapper>
-      <ScrollView contentContainerStyle={styles.wrapper}>
-        <AppbarComponent
-          title="Finance Overview"
-          backButton={true}
-          search={false}
-        />
+      <AppbarComponent title="Finance Overview" backButton={true} search={false} />
+      <ScrollView showsVerticalScrollIndicator={false}>
         {user?.role.includes("admin") && (
           <Button
             uppercase={false}
-            onPress={() =>
-              navigation.push(FINANCE_STACK, { screen: EOP_SCREEN })
-            }
+            onPress={() => navigation.push(FINANCE_STACK, { screen: EOP_SCREEN })}
             theme={dark ? combinedDarkTheme : combinedDefaultTheme}
             mode="outlined"
             style={styles.eopButton}
@@ -117,12 +101,7 @@ const Finance: React.FC<DefaultScreenProps> = ({ navigation }) => {
                       visible={visible === index ? true : false}
                       onDismiss={closeMenu}
                       anchor={
-                        <Button
-                          onPress={() => openMenu(index)}
-                          theme={
-                            dark ? combinedDarkTheme : combinedDefaultTheme
-                          }
-                        >
+                        <Button onPress={() => openMenu(index)} theme={dark ? combinedDarkTheme : combinedDefaultTheme}>
                           <Entypo name="dots-three-horizontal" size={20} />
                         </Button>
                       }
@@ -132,24 +111,17 @@ const Finance: React.FC<DefaultScreenProps> = ({ navigation }) => {
                         icon="subdirectory-arrow-right"
                         onPress={() => {
                           closeMenu();
-                          // navigation.push(FARM_DETAILS_SCREEN, { item });
                         }}
                         title="View"
                       />
-                      <Menu.Item
-                        icon="circle-edit-outline"
-                        onPress={() => {}}
-                        title="Edit"
-                      />
+                      <Menu.Item icon="circle-edit-outline" onPress={() => {}} title="Edit" />
                       <Divider />
                       <Menu.Item
                         icon="delete"
                         onPress={() => {}}
                         title="Delete"
                         titleStyle={{
-                          color: dark
-                            ? combinedDarkTheme.colors.error
-                            : combinedDefaultTheme.colors.error,
+                          color: dark ? combinedDarkTheme.colors.error : combinedDefaultTheme.colors.error,
                         }}
                       />
                     </Menu>
@@ -159,9 +131,7 @@ const Finance: React.FC<DefaultScreenProps> = ({ navigation }) => {
             })}
             <DataTable.Pagination
               page={pageState}
-              numberOfPages={Math.ceil(
-                financesData?.length / numberOfItemsPerPage
-              )}
+              numberOfPages={Math.ceil(financesData?.length / numberOfItemsPerPage)}
               onPageChange={(number) => setPageState(number)}
               label={`${from + 1}-${to} of ${financesData?.length}`}
               showFastPaginationControls
@@ -180,12 +150,11 @@ const Finance: React.FC<DefaultScreenProps> = ({ navigation }) => {
           mode="contained"
           style={styles.eopButton}
           labelStyle={styles.eopText}
-          onPress={() =>
-            navigation.push(FINANCE_STACK, { screen: ADD_FINANCE_SCREEN })
-          }
+          onPress={() => navigation.push(FINANCE_STACK, { screen: ADD_FINANCE_SCREEN })}
         >
           Add Cost
         </Button>
+        {financesData.length < 1 && <EmptyList text="Finance record" />}
       </ScrollView>
     </Wrapper>
   );

@@ -1,10 +1,7 @@
 import { useTheme } from "@react-navigation/native";
 import React from "react";
 import { Snackbar } from "react-native-paper";
-import {
-  combinedDarkTheme,
-  combinedDefaultTheme,
-} from "../../../constants/theme";
+import { combinedDarkTheme, combinedDefaultTheme } from "../../../constants/theme";
 
 const InfoSnackbar = (visible: boolean, setVisible: Function, info: string) => {
   const { dark } = useTheme();
@@ -13,6 +10,7 @@ const InfoSnackbar = (visible: boolean, setVisible: Function, info: string) => {
     <Snackbar
       theme={dark ? combinedDarkTheme : combinedDefaultTheme}
       visible={visible}
+      duration={1000}
       onDismiss={() => setVisible(false)}
     >
       {info}

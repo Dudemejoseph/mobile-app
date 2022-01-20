@@ -70,7 +70,14 @@ const LoginScreen = () => {
           initialValues={{ email: "", password: "" }}
           onSubmit={(values: AuthLoginInput) => submitForm(values)}
         >
-          {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            initialTouched,
+          }) => (
             <View style={styles.container}>
               <View style={styles.inputView}>
                 <TextInput
@@ -89,7 +96,7 @@ const LoginScreen = () => {
                   }
                 />
 
-                {errors?.email && (
+                {errors?.email && initialTouched.email && (
                   <HelperText
                     type="error"
                     visible={errors?.email ? true : false}
@@ -126,7 +133,7 @@ const LoginScreen = () => {
                   }
                 />
 
-                {errors?.password && (
+                {errors?.password && initialTouched.password && (
                   <HelperText
                     type="error"
                     visible={errors?.password ? true : false}

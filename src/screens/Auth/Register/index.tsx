@@ -49,7 +49,14 @@ const RegisterForm = () => {
       }}
       onSubmit={(values: AuthRegisterInput) => console.log("vals ", values)}
     >
-      {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+      {({
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        values,
+        errors,
+        initialTouched,
+      }) => (
         <View style={styles.container}>
           <View style={styles.inputView}>
             <TextInput
@@ -68,7 +75,7 @@ const RegisterForm = () => {
               }
             />
 
-            {errors?.firstname && (
+            {errors?.firstname && initialTouched.firstname && (
               <Text
                 style={[
                   styles.errorText,
@@ -159,7 +166,7 @@ const RegisterForm = () => {
               value={values.password}
               onChangeText={handleChange("password")}
               mode="outlined"
-              secureTextEntry={passwordVisible}
+              secureTextEntry={!passwordVisible}
               onBlur={handleBlur("password")}
               error={errors?.password ? true : false}
               selectionColor={colors.text}
@@ -171,7 +178,7 @@ const RegisterForm = () => {
               }
               right={
                 <TextInput.Icon
-                  name={!passwordVisible ? "eye-off" : "eye"}
+                  name={passwordVisible ? "eye-off" : "eye"}
                   size={24}
                   onPress={() => {
                     setPasswordVisible(!passwordVisible);

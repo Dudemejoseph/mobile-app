@@ -22,10 +22,8 @@ const timeToString = (time: any) => {
 const Calendar = () => {
   const { dark } = useTheme();
   const dispatch = useDispatch();
-  const { fetchingFarmActivities, farmActivities, farmActivitiesError } =
-    useSelector(farmSelector) as FarmState;
+  const { fetchingFarmActivities, farmActivities, farmActivitiesError } = useSelector(farmSelector) as FarmState;
   const [items, setItems] = useState<{} | any>({});
-  console.log("items ", farmActivities);
 
   // Getting list of famr activities for calendar
   useEffect(() => {
@@ -46,7 +44,9 @@ const Calendar = () => {
         if (!items[strTime]) {
           items[strTime] = [];
           items[strTime].push({
-            name: item.activity,
+            name: item.category,
+            subCategory: item.subcategory,
+            workers_per_hectare: item.workers_per_hectare,
             height: Math.max(50, Math.floor(Math.random() * 150)),
           });
         }
@@ -80,9 +80,10 @@ const Calendar = () => {
       <TouchableOpacity style={styles.eventItem}>
         <View style={styles.agendaItemContainer}>
           <View>
-            <Text style={styles.agendaTimeRangeText}>11:30 - 12:30</Text>
-            <Text style={styles.agendaActivityText}>{item.name}</Text>
-            <Text style={styles.durationText}>1 hour</Text>
+            <Text style={styles.agendaTimeRangeText}>All day</Text>
+            <Text style={styles.agendaActivityText}>Category: {item.name}</Text>
+            <Text style={styles.durationText}>Activity: {item.subCategory}</Text>
+            <Text style={styles.durationText}>Workers / hectare: {item.workers_per_hectare}</Text>
           </View>
           <View>
             <Image source={require("../../assets/icons/ellipsis-v1.png")} />
@@ -108,24 +109,19 @@ const Calendar = () => {
 
   return (
     <Wrapper>
+      <AppbarComponent title="Calendar" search={false} backButton={true} />
       <View style={styles.container}>
-        <AppbarComponent title="Calendar" search={false} backButton={true} />
         {farmActivities?.length > 0 && (
           // @ts-ignore
           <Agenda
             items={items}
             loadItemsForMonth={loadActivityItems}
             selected={Date.now()}
-            renderItem={(item, firstItemInDay) =>
-              renderItem(item, firstItemInDay)
-            }
+            renderItem={(item, firstItemInDay) => renderItem(item, firstItemInDay)}
+            renderEmptyDate={() => <EmptyList text="Oops!! No activity for selected date" />}
             theme={{
-              backgroundColor: dark
-                ? combinedDarkTheme.colors.background
-                : combinedDefaultTheme.colors.background,
-              calendarBackground: dark
-                ? combinedDarkTheme.colors.background
-                : combinedDefaultTheme.colors.background,
+              backgroundColor: dark ? combinedDarkTheme.colors.background : combinedDefaultTheme.colors.background,
+              calendarBackground: dark ? combinedDarkTheme.colors.background : combinedDefaultTheme.colors.background,
               // textSectionTitleColor: "#b6c1cd",
               // textSectionTitleDisabledColor: "#d9e1e8",
               // selectedDayBackgroundColor: "#00adf5",
@@ -137,9 +133,7 @@ const Calendar = () => {
               // selectedDotColor: "#ffffff",
               // arrowColor: "orange",
               // disabledArrowColor: "#d9e1e8",
-              monthTextColor: dark
-                ? combinedDarkTheme.colors.primary
-                : combinedDefaultTheme.colors.primary,
+              monthTextColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.primary,
               // indicatorColor: "blue",
               // textDayFontFamily: "monospace",
               // textMonthFontFamily: "monospace",
@@ -153,7 +147,7 @@ const Calendar = () => {
             }}
           />
         )}
-        {farmActivities?.length < 1 && EmptyList("Activities")}
+        {farmActivities?.length < 1 && <EmptyList text="Activities" />}
       </View>
     </Wrapper>
   );

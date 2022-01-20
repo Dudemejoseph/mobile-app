@@ -79,3 +79,9 @@ export interface ErrorComponentProps {
   action: Function;
   loading: boolean;
 }
+
+export interface SuccessToastProps {
+  visible: boolean;
+  setVisible: Function;
+  message: string;
+}

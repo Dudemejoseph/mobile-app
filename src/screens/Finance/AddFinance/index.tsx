@@ -3,13 +3,7 @@ import { useTheme } from "@react-navigation/native";
 import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
-import {
-  Button,
-  HelperText,
-  Subheading,
-  Surface,
-  TextInput,
-} from "react-native-paper";
+import { Button, HelperText, Subheading, Surface, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import AppbarComponent from "../../../components/Shared/Appbar";
 import ErrorComponent from "../../../components/Shared/ErrorComponent";
@@ -17,15 +11,9 @@ import LoadingComponent from "../../../components/Shared/LoadingComponent";
 import ErrorSnackbar from "../../../components/Shared/Snackbar/ErrorSnackbar";
 import InfoSnackbar from "../../../components/Shared/Snackbar/InfoSnackbar";
 import Wrapper from "../../../components/Shared/Wrapper";
-import {
-  combinedDarkTheme,
-  combinedDefaultTheme,
-} from "../../../constants/theme";
+import { combinedDarkTheme, combinedDefaultTheme } from "../../../constants/theme";
 import { Farm, FarmState } from "../../../interfaces/farm";
-import {
-  AddFinanceInput,
-  TransactionsState,
-} from "../../../interfaces/transactions";
+import { AddFinanceInput, TransactionsState } from "../../../interfaces/transactions";
 import { getFarms } from "../../../redux/features/farms/farm_actions";
 import { farmSelector } from "../../../redux/features/farms/farm_reducer";
 import { addFinance } from "../../../redux/features/transactions/transactions_actions";
@@ -37,18 +25,15 @@ const AddFinance = () => {
   const dispatch = useDispatch();
   const { colors, dark } = useTheme();
   const { farmData, fetching, error } = useSelector(farmSelector) as FarmState;
-  const { addingFinance, addingFinanceError, addingFinanceMessage } =
-    useSelector(transactionsSelector) as TransactionsState;
+  const { addingFinance, addingFinanceError, addingFinanceMessage } = useSelector(
+    transactionsSelector
+  ) as TransactionsState;
   const [tempValues, setTempValues] = useState<AddFinanceInput | any>(null);
-  const [errorSnackbarVisible, setErrorSnackbarVisible] =
-    useState<boolean>(false);
-  const [infoSnackbarVisible, setInfoSnackbarVisible] =
-    useState<boolean>(false);
+  const [errorSnackbarVisible, setErrorSnackbarVisible] = useState<boolean>(false);
+  const [infoSnackbarVisible, setInfoSnackbarVisible] = useState<boolean>(false);
   const [selectedFarm, setSelectedFarm] = useState<Farm | any>(null);
   const [farm_id, setFarmId] = useState<number | any>("");
-  const [selectedType, setSelectedType] = useState<"credit" | "debit">(
-    "credit"
-  );
+  const [selectedType, setSelectedType] = useState<"credit" | "debit">("credit");
 
   useEffect(() => {
     const fetchFarms = async () => {
@@ -96,12 +81,9 @@ const AddFinance = () => {
 
   return (
     <Wrapper>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.wrapper}
-      >
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.wrapper}>
+        <AppbarComponent title="Add Cost" backButton={true} search={false} />
         <ScrollView>
-          <AppbarComponent title="Add Cost" backButton={true} search={false} />
           <Formik
             validationSchema={AddFinanceSchema}
             initialValues={
@@ -115,22 +97,13 @@ const AddFinance = () => {
             }
             onSubmit={(values: AddFinanceInput) => submitForm(values)}
           >
-            {({
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              values,
-              errors,
-              setFieldValue,
-            }) => (
+            {({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue }) => (
               <Surface style={styles.surface}>
                 <View
                   style={[
                     styles.headingView,
                     {
-                      backgroundColor: dark
-                        ? combinedDarkTheme.colors.placeholder
-                        : combinedDefaultTheme.colors.border,
+                      backgroundColor: dark ? combinedDarkTheme.colors.placeholder : combinedDefaultTheme.colors.border,
                       borderBottomColor: dark
                         ? combinedDarkTheme.colors.placeholder
                         : combinedDefaultTheme.colors.border,
@@ -141,9 +114,7 @@ const AddFinance = () => {
                     style={[
                       styles.headingText,
                       {
-                        color: dark
-                          ? combinedDarkTheme.colors.text
-                          : combinedDefaultTheme.colors.text,
+                        color: dark ? combinedDarkTheme.colors.text : combinedDefaultTheme.colors.text,
                       },
                     ]}
                   >
@@ -155,9 +126,7 @@ const AddFinance = () => {
                     style={[
                       styles.pickerView,
                       {
-                        borderColor: dark
-                          ? combinedDarkTheme.colors.primary
-                          : combinedDefaultTheme.colors.backdrop,
+                        borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.backdrop,
                         backgroundColor: dark
                           ? combinedDarkTheme.colors.background
                           : combinedDefaultTheme.colors.surface,
@@ -175,9 +144,7 @@ const AddFinance = () => {
                       itemStyle={[
                         styles.pickerView,
                         {
-                          borderColor: dark
-                            ? combinedDarkTheme.colors.primary
-                            : combinedDefaultTheme.colors.text,
+                          borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text,
                         },
                       ]}
                     >
@@ -185,11 +152,7 @@ const AddFinance = () => {
                         return (
                           <Picker.Item
                             key={index}
-                            color={
-                              dark
-                                ? combinedDarkTheme.colors.primary
-                                : combinedDefaultTheme.colors.text
-                            }
+                            color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
                             label={item.name}
                             value={item}
                             style={styles.buttonLabel}
@@ -199,10 +162,7 @@ const AddFinance = () => {
                     </Picker>
                   </Surface>
                   {errors?.farm_id && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.farm_id ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.farm_id ? true : false}>
                       {errors?.farm_id}
                     </HelperText>
                   )}
@@ -217,11 +177,7 @@ const AddFinance = () => {
                     error={errors?.activity ? true : false}
                     selectionColor={colors.text}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    outlineColor={
-                      dark
-                        ? combinedDarkTheme.colors.border
-                        : combinedDefaultTheme.colors.backdrop
-                    }
+                    outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                     style={[
                       styles.buttonLabel,
                       {
@@ -233,10 +189,7 @@ const AddFinance = () => {
                   />
 
                   {errors?.activity && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.activity ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.activity ? true : false}>
                       {errors?.activity}
                     </HelperText>
                   )}
@@ -247,9 +200,7 @@ const AddFinance = () => {
                     style={[
                       styles.pickerView,
                       {
-                        borderColor: dark
-                          ? combinedDarkTheme.colors.primary
-                          : combinedDefaultTheme.colors.backdrop,
+                        borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.backdrop,
                         backgroundColor: dark
                           ? combinedDarkTheme.colors.background
                           : combinedDefaultTheme.colors.surface,
@@ -266,28 +217,18 @@ const AddFinance = () => {
                       itemStyle={[
                         styles.pickerView,
                         {
-                          borderColor: dark
-                            ? combinedDarkTheme.colors.primary
-                            : combinedDefaultTheme.colors.text,
+                          borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text,
                         },
                       ]}
                     >
                       <Picker.Item
-                        color={
-                          dark
-                            ? combinedDarkTheme.colors.primary
-                            : combinedDefaultTheme.colors.text
-                        }
+                        color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
                         label="Credit"
                         value="credit"
                         style={styles.buttonLabel}
                       />
                       <Picker.Item
-                        color={
-                          dark
-                            ? combinedDarkTheme.colors.primary
-                            : combinedDefaultTheme.colors.text
-                        }
+                        color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
                         label="Debit"
                         value="debit"
                         style={styles.buttonLabel}
@@ -295,10 +236,7 @@ const AddFinance = () => {
                     </Picker>
                   </Surface>
                   {errors?.type && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.type ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.type ? true : false}>
                       {errors?.type}
                     </HelperText>
                   )}
@@ -315,11 +253,7 @@ const AddFinance = () => {
                     error={errors?.amount ? true : false}
                     selectionColor={colors.text}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    outlineColor={
-                      dark
-                        ? combinedDarkTheme.colors.border
-                        : combinedDefaultTheme.colors.backdrop
-                    }
+                    outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                     style={[
                       styles.buttonLabel,
                       {
@@ -331,10 +265,7 @@ const AddFinance = () => {
                   />
 
                   {errors?.amount && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.amount ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.amount ? true : false}>
                       {errors?.amount}
                     </HelperText>
                   )}
@@ -352,19 +283,12 @@ const AddFinance = () => {
                     error={errors?.note ? true : false}
                     selectionColor={colors.text}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    outlineColor={
-                      dark
-                        ? combinedDarkTheme.colors.border
-                        : combinedDefaultTheme.colors.backdrop
-                    }
+                    outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                     style={styles.buttonLabel}
                   />
 
                   {errors?.note && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.note ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.note ? true : false}>
                       {errors?.note}
                     </HelperText>
                   )}
@@ -379,9 +303,7 @@ const AddFinance = () => {
                   labelStyle={[
                     styles.buttonLabel,
                     {
-                      color: dark
-                        ? combinedDarkTheme.colors.background
-                        : combinedDefaultTheme.colors.background,
+                      color: dark ? combinedDarkTheme.colors.background : combinedDefaultTheme.colors.background,
                     },
                   ]}
                 >
@@ -392,18 +314,10 @@ const AddFinance = () => {
           </Formik>
         </ScrollView>
         {addingFinanceError &&
-          ErrorSnackbar(
-            errorSnackbarVisible,
-            setErrorSnackbarVisible,
-            addingFinanceError,
-            () => submitForm(tempValues)
+          ErrorSnackbar(errorSnackbarVisible, setErrorSnackbarVisible, addingFinanceError, () =>
+            submitForm(tempValues)
           )}
-        {addingFinanceMessage &&
-          InfoSnackbar(
-            infoSnackbarVisible,
-            setInfoSnackbarVisible,
-            addingFinanceMessage
-          )}
+        {addingFinanceMessage && InfoSnackbar(infoSnackbarVisible, setInfoSnackbarVisible, addingFinanceMessage)}
       </KeyboardAvoidingView>
     </Wrapper>
   );

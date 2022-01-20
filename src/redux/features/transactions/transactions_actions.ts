@@ -1,8 +1,5 @@
 import axiosInstance from "../../../config/axios_config";
-import {
-  AddFarmExpenseInput,
-  AddFinanceInput,
-} from "./../../../interfaces/transactions";
+import { AddFarmExpenseInput, AddFinanceInput } from "./../../../interfaces/transactions";
 import { AppDispatch } from "./../../store";
 import {
   addFarmExpenseFail,
@@ -29,8 +26,7 @@ export const fetchFinancesAction = () => {
       if (error?.message === "Network Error") {
         dispatch(
           fetchFinancesFail({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {
@@ -60,8 +56,7 @@ export const addFinance = (data: AddFinanceInput) => {
       if (error?.message === "Network Error") {
         dispatch(
           addingFinanceFail({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {
@@ -85,8 +80,7 @@ export const fetchExpenses = () => {
       if (error?.message === "Network Error") {
         dispatch(
           fetchingFarmExpensesFail({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {
@@ -115,13 +109,12 @@ export const addFarmExpenseAction = (data: AddFarmExpenseInput) => {
         })
       );
     } catch (error: any) {
-      console.log("err ", error);
+      console.log("err ", error.message);
 
       if (error?.message === "Network Error") {
         dispatch(
           addFarmExpenseFail({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {

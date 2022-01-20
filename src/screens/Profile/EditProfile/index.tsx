@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  useColorScheme,
-  View,
-} from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView, useColorScheme, View } from "react-native";
 import Wrapper from "../../../components/Shared/Wrapper";
 import AppbarComponent from "../../../components/Shared/Appbar";
 import styles from "./styles";
@@ -17,10 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { editUser } from "../../../redux/features/user/user_actions";
 import { Button, HelperText, TextInput } from "react-native-paper";
 import { useTheme } from "@react-navigation/native";
-import {
-  combinedDarkTheme,
-  combinedDefaultTheme,
-} from "../../../constants/theme";
+import { combinedDarkTheme, combinedDefaultTheme } from "../../../constants/theme";
 import ErrorSnackbar from "../../../components/Shared/Snackbar/ErrorSnackbar";
 import InfoSnackbar from "../../../components/Shared/Snackbar/InfoSnackbar";
 
@@ -28,18 +19,15 @@ const EditProfile = () => {
   const dispatch = useDispatch();
   const { colors, dark } = useTheme();
   const [tempValues, setTempValues] = useState<EditProfileInput | any>(null);
-  const [errorSnackbarVisible, setErrorSnackbarVisible] =
-    useState<boolean>(false);
-  const [infoSnackbarVisible, setInfoSnackbarVisible] =
-    useState<boolean>(false);
-  const { editing, editingError, editingMessage, user } = useSelector(
-    userSelector
-  ) as UserState;
+  const [errorSnackbarVisible, setErrorSnackbarVisible] = useState<boolean>(false);
+  const [infoSnackbarVisible, setInfoSnackbarVisible] = useState<boolean>(false);
+  const { editing, editingError, editingMessage, user } = useSelector(userSelector) as UserState;
   const scheme = useColorScheme();
 
   const submitForm = async (values: EditProfileInput) => {
     setTempValues(values);
-    dispatch(editUser(user?.id as number, values));
+    console.log("user ", user);
+    dispatch(editUser(user.id as number, values));
   };
 
   useEffect(() => {
@@ -54,17 +42,9 @@ const EditProfile = () => {
 
   return (
     <Wrapper>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.wrapper}
-      >
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.wrapper}>
+        <AppbarComponent profileIcon={false} backButton={true} title="Edit Profile" search={false} />
         <ScrollView showsVerticalScrollIndicator={false}>
-          <AppbarComponent
-            profileIcon={false}
-            backButton={true}
-            title="Edit Profile"
-            search={false}
-          />
           <Formik
             validationSchema={EditProfileSchema}
             initialValues={{
@@ -88,18 +68,11 @@ const EditProfile = () => {
                     error={errors?.firstname ? true : false}
                     selectionColor={colors.text}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    outlineColor={
-                      dark
-                        ? combinedDarkTheme.colors.border
-                        : combinedDefaultTheme.colors.backdrop
-                    }
+                    outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                   />
 
                   {errors?.firstname && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.firstname ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.firstname ? true : false}>
                       {errors?.firstname}
                     </HelperText>
                   )}
@@ -115,18 +88,11 @@ const EditProfile = () => {
                     error={errors?.lastname ? true : false}
                     selectionColor={colors.text}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    outlineColor={
-                      dark
-                        ? combinedDarkTheme.colors.border
-                        : combinedDefaultTheme.colors.backdrop
-                    }
+                    outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                   />
 
                   {errors?.lastname && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.lastname ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.lastname ? true : false}>
                       {errors?.lastname}
                     </HelperText>
                   )}
@@ -134,6 +100,7 @@ const EditProfile = () => {
 
                 <View style={styles.inputView}>
                   <TextInput
+                    disabled={true}
                     label="Email"
                     value={values.email}
                     onChangeText={handleChange("email")}
@@ -142,18 +109,11 @@ const EditProfile = () => {
                     error={errors?.email ? true : false}
                     selectionColor={colors.text}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    outlineColor={
-                      dark
-                        ? combinedDarkTheme.colors.border
-                        : combinedDefaultTheme.colors.backdrop
-                    }
+                    outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                   />
 
                   {errors?.email && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.email ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.email ? true : false}>
                       {errors?.email}
                     </HelperText>
                   )}
@@ -169,17 +129,10 @@ const EditProfile = () => {
                     error={errors?.phone ? true : false}
                     selectionColor={colors.text}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    outlineColor={
-                      dark
-                        ? combinedDarkTheme.colors.border
-                        : combinedDefaultTheme.colors.backdrop
-                    }
+                    outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                   />
                   {errors?.phone && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.phone ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.phone ? true : false}>
                       {errors?.phone}
                     </HelperText>
                   )}
@@ -195,17 +148,10 @@ const EditProfile = () => {
                     error={errors?.phone ? true : false}
                     selectionColor={colors.text}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    outlineColor={
-                      dark
-                        ? combinedDarkTheme.colors.border
-                        : combinedDefaultTheme.colors.backdrop
-                    }
+                    outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                   />
                   {errors?.address && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.phone ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.phone ? true : false}>
                       {errors?.address}
                     </HelperText>
                   )}
@@ -223,9 +169,7 @@ const EditProfile = () => {
                       styles.buttonLabelStyle,
                       {
                         color:
-                          scheme === "dark"
-                            ? combinedDarkTheme.colors.text
-                            : combinedDefaultTheme.colors.background,
+                          scheme === "dark" ? combinedDarkTheme.colors.text : combinedDefaultTheme.colors.background,
                       },
                     ]}
                   >
@@ -237,18 +181,8 @@ const EditProfile = () => {
           </Formik>
         </ScrollView>
         {editingError &&
-          ErrorSnackbar(
-            errorSnackbarVisible,
-            setErrorSnackbarVisible,
-            editingError,
-            () => submitForm(tempValues)
-          )}
-        {editingMessage &&
-          InfoSnackbar(
-            infoSnackbarVisible,
-            setInfoSnackbarVisible,
-            editingMessage
-          )}
+          ErrorSnackbar(errorSnackbarVisible, setErrorSnackbarVisible, editingError, () => submitForm(tempValues))}
+        {editingMessage && InfoSnackbar(infoSnackbarVisible, setInfoSnackbarVisible, editingMessage)}
       </KeyboardAvoidingView>
     </Wrapper>
   );

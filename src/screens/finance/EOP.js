@@ -1,15 +1,10 @@
 import React, { useEffect } from "react";
-import { Text, View, ScrollView, TouchableOpacity, Image } from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Wrapper from "../../components/Shared/Wrapper";
-import {
-  ADD_EXPENSE_SCREEN,
-  ADD_FINANCE_SCREEN,
-} from "../../constants/route_names";
 import { COLORS } from "../../constants/theme";
-import { fetchExpenses } from "../../redux/features/expensesSlice";
-import { userSelector } from "../../redux/features/userSlice";
+import { fetchExpenses } from "../../redux/features/transactions/transactions_actions";
 
 const data = [
   {
@@ -56,20 +51,11 @@ const Eop = ({ navigation }) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* ========= Header View ========= */}
         <View style={styles.headerView}>
-          <TouchableOpacity
-            activeOpacity={0.6}
-            onPress={() => navigation.goBack()}
-          >
-            <Image
-              source={require("../../assets/icons/back-arrow.png")}
-              style={styles.backIcon}
-            />
+          <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.goBack()}>
+            <Image source={require("../../assets/icons/back-arrow.png")} style={styles.backIcon} />
           </TouchableOpacity>
           <TouchableOpacity>
-            <Image
-              source={require("../../assets/icons/bell-icon.png")}
-              style={styles.bellIcon}
-            />
+            <Image source={require("../../assets/icons/bell-icon.png")} style={styles.bellIcon} />
           </TouchableOpacity>
         </View>
 

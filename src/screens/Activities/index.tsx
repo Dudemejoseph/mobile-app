@@ -4,16 +4,7 @@ import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import {
-  Button,
-  HelperText,
-  Paragraph,
-  ProgressBar,
-  Subheading,
-  Surface,
-  Text,
-  TextInput,
-} from "react-native-paper";
+import { Button, HelperText, Paragraph, ProgressBar, Subheading, Surface, Text, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import AppbarComponent from "../../components/Shared/Appbar";
 import ErrorComponent from "../../components/Shared/ErrorComponent";
@@ -24,11 +15,7 @@ import Wrapper from "../../components/Shared/Wrapper";
 import { combinedDarkTheme, combinedDefaultTheme } from "../../constants/theme";
 import { Farm, FarmState, RecordActivityInput } from "../../interfaces/farm";
 import { UtilitiesState } from "../../interfaces/utilities";
-import {
-  fetchCategoryActivitesAction,
-  getFarms,
-  recordActivityAction,
-} from "../../redux/features/farms/farm_actions";
+import { fetchCategoryActivitesAction, getFarms, recordActivityAction } from "../../redux/features/farms/farm_actions";
 import { farmSelector } from "../../redux/features/farms/farm_reducer";
 import { utlitiesSelector } from "../../redux/features/utilities/utilties_reducer";
 import styles from "./styles";
@@ -58,18 +45,14 @@ const Activities = () => {
   const [farm_activity_id, setFarmActivtyId] = useState<number | any>(null);
   const [crop_id, setCropId] = useState<number | any>(null);
   const [crop, setCrop] = useState<string | any>(null);
-  const [isDatePickerVisible, setDatePickerVisibility] =
-    useState<boolean>(false);
-  const [isDatePickerVisible2, setDatePickerVisibility2] =
-    useState<boolean>(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState<boolean>(false);
+  const [isDatePickerVisible2, setDatePickerVisibility2] = useState<boolean>(false);
   const [start_date, setStartDate] = useState(null);
   const [end_date, setEndDate] = useState(null);
   const [categoryActivities2, setCategoryActivities] = useState<any>(null);
   const [tempValues, setTempValues] = useState<RecordActivityInput | any>(null);
-  const [errorSnackbarVisible, setErrorSnackbarVisible] =
-    useState<boolean>(false);
-  const [infoSnackbarVisible, setInfoSnackbarVisible] =
-    useState<boolean>(false);
+  const [errorSnackbarVisible, setErrorSnackbarVisible] = useState<boolean>(false);
+  const [infoSnackbarVisible, setInfoSnackbarVisible] = useState<boolean>(false);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -208,7 +191,7 @@ const Activities = () => {
   return (
     <Wrapper>
       <ScrollView>
-        <AppbarComponent title="Activities" backButton={true} />
+        <AppbarComponent title="Activities" backButton={true} search={false} />
         <Formik
           validationSchema={null}
           initialValues={
@@ -230,12 +213,8 @@ const Activities = () => {
                 style={[
                   styles.headingView,
                   {
-                    backgroundColor: dark
-                      ? combinedDarkTheme.colors.placeholder
-                      : combinedDefaultTheme.colors.border,
-                    borderBottomColor: dark
-                      ? combinedDarkTheme.colors.placeholder
-                      : combinedDefaultTheme.colors.border,
+                    backgroundColor: dark ? combinedDarkTheme.colors.placeholder : combinedDefaultTheme.colors.border,
+                    borderBottomColor: dark ? combinedDarkTheme.colors.placeholder : combinedDefaultTheme.colors.border,
                   },
                 ]}
               >
@@ -243,9 +222,7 @@ const Activities = () => {
                   style={[
                     styles.headingText,
                     {
-                      color: dark
-                        ? combinedDarkTheme.colors.text
-                        : combinedDefaultTheme.colors.text,
+                      color: dark ? combinedDarkTheme.colors.text : combinedDefaultTheme.colors.text,
                     },
                   ]}
                 >
@@ -259,12 +236,8 @@ const Activities = () => {
                   style={[
                     styles.pickerView,
                     {
-                      borderColor: dark
-                        ? combinedDarkTheme.colors.primary
-                        : combinedDefaultTheme.colors.backdrop,
-                      backgroundColor: dark
-                        ? combinedDarkTheme.colors.background
-                        : combinedDefaultTheme.colors.surface,
+                      borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.backdrop,
+                      backgroundColor: dark ? combinedDarkTheme.colors.background : combinedDefaultTheme.colors.surface,
                     },
                   ]}
                 >
@@ -282,18 +255,12 @@ const Activities = () => {
                     itemStyle={[
                       styles.pickerView,
                       {
-                        borderColor: dark
-                          ? combinedDarkTheme.colors.primary
-                          : combinedDefaultTheme.colors.text,
+                        borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text,
                       },
                     ]}
                   >
                     <Picker.Item
-                      color={
-                        dark
-                          ? combinedDarkTheme.colors.primary
-                          : combinedDefaultTheme.colors.text
-                      }
+                      color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
                       label={"Select Farm"}
                       value={null}
                       style={styles.buttonLabel}
@@ -302,11 +269,7 @@ const Activities = () => {
                       return (
                         <Picker.Item
                           key={index}
-                          color={
-                            dark
-                              ? combinedDarkTheme.colors.primary
-                              : combinedDefaultTheme.colors.text
-                          }
+                          color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
                           label={item.name}
                           value={item}
                           style={styles.buttonLabel}
@@ -316,10 +279,7 @@ const Activities = () => {
                   </Picker>
                 </Surface>
                 {errors?.farm_id && (
-                  <HelperText
-                    type="error"
-                    visible={errors?.farm_id ? true : false}
-                  >
+                  <HelperText type="error" visible={errors?.farm_id ? true : false}>
                     {errors?.farm_id}
                   </HelperText>
                 )}
@@ -334,11 +294,7 @@ const Activities = () => {
                     mode="outlined"
                     selectionColor={colors.text}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    outlineColor={
-                      dark
-                        ? combinedDarkTheme.colors.border
-                        : combinedDefaultTheme.colors.backdrop
-                    }
+                    outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                     style={[
                       styles.buttonLabel,
                       {
@@ -356,25 +312,15 @@ const Activities = () => {
                   <ProgressBar
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
                     indeterminate={true}
-                    color={
-                      dark
-                        ? combinedDarkTheme.colors.primary
-                        : combinedDefaultTheme.colors.primary
-                    }
+                    color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.primary}
                   />
                 </View>
               )}
 
               {categoryActivitiesError && (
                 <View style={styles.inputView}>
-                  <Text>
-                    Oops! Something went wrong while fetching extra farm data
-                  </Text>
-                  <Button
-                    onPress={retry}
-                    uppercase={false}
-                    theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                  >
+                  <Text>Oops! Something went wrong while fetching extra farm data</Text>
+                  <Button onPress={retry} uppercase={false} theme={dark ? combinedDarkTheme : combinedDefaultTheme}>
                     Retry
                   </Button>
                 </View>
@@ -387,9 +333,7 @@ const Activities = () => {
                     style={[
                       styles.pickerView,
                       {
-                        borderColor: dark
-                          ? combinedDarkTheme.colors.primary
-                          : combinedDefaultTheme.colors.backdrop,
+                        borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.backdrop,
                         backgroundColor: dark
                           ? combinedDarkTheme.colors.background
                           : combinedDefaultTheme.colors.surface,
@@ -407,18 +351,12 @@ const Activities = () => {
                       itemStyle={[
                         styles.pickerView,
                         {
-                          borderColor: dark
-                            ? combinedDarkTheme.colors.primary
-                            : combinedDefaultTheme.colors.text,
+                          borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text,
                         },
                       ]}
                     >
                       <Picker.Item
-                        color={
-                          dark
-                            ? combinedDarkTheme.colors.primary
-                            : combinedDefaultTheme.colors.text
-                        }
+                        color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
                         label={"Select Category"}
                         value={null}
                         style={styles.buttonLabel}
@@ -428,11 +366,7 @@ const Activities = () => {
                         return (
                           <Picker.Item
                             key={index}
-                            color={
-                              dark
-                                ? combinedDarkTheme.colors.primary
-                                : combinedDefaultTheme.colors.text
-                            }
+                            color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
                             label={item.category}
                             value={item}
                             style={styles.buttonLabel}
@@ -442,10 +376,7 @@ const Activities = () => {
                     </Picker>
                   </Surface>
                   {errors?.category_id && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.category_id ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.category_id ? true : false}>
                       {errors?.category_id}
                     </HelperText>
                   )}
@@ -459,9 +390,7 @@ const Activities = () => {
                     style={[
                       styles.pickerView,
                       {
-                        borderColor: dark
-                          ? combinedDarkTheme.colors.primary
-                          : combinedDefaultTheme.colors.backdrop,
+                        borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.backdrop,
                         backgroundColor: dark
                           ? combinedDarkTheme.colors.background
                           : combinedDefaultTheme.colors.surface,
@@ -474,54 +403,36 @@ const Activities = () => {
                       onValueChange={(itemValue: any) => {
                         setSelectedActivity(itemValue);
                         setFarmActivtyId(itemValue.farm_activity_id);
-                        setFieldValue(
-                          "farm_activity_id",
-                          itemValue?.farm_activity_id
-                        );
+                        setFieldValue("farm_activity_id", itemValue?.farm_activity_id);
                       }}
                       itemStyle={[
                         styles.pickerView,
                         {
-                          borderColor: dark
-                            ? combinedDarkTheme.colors.primary
-                            : combinedDefaultTheme.colors.text,
+                          borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text,
                         },
                       ]}
                     >
                       <Picker.Item
-                        color={
-                          dark
-                            ? combinedDarkTheme.colors.primary
-                            : combinedDefaultTheme.colors.text
-                        }
+                        color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
                         label={"Select Farm Activity"}
                         value={""}
                         style={styles.buttonLabel}
                       />
-                      {selectedCategory.subCategory?.map(
-                        (item: any, index: number) => {
-                          return (
-                            <Picker.Item
-                              key={index}
-                              color={
-                                dark
-                                  ? combinedDarkTheme.colors.primary
-                                  : combinedDefaultTheme.colors.text
-                              }
-                              label={item.subCategory}
-                              value={item}
-                              style={styles.buttonLabel}
-                            />
-                          );
-                        }
-                      )}
+                      {selectedCategory.subCategory?.map((item: any, index: number) => {
+                        return (
+                          <Picker.Item
+                            key={index}
+                            color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
+                            label={item.subCategory}
+                            value={item}
+                            style={styles.buttonLabel}
+                          />
+                        );
+                      })}
                     </Picker>
                   </Surface>
                   {errors?.category_id && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.category_id ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.category_id ? true : false}>
                       {errors?.category_id}
                     </HelperText>
                   )}
@@ -539,12 +450,8 @@ const Activities = () => {
                   style={[
                     styles.pickerView,
                     {
-                      borderColor: dark
-                        ? combinedDarkTheme.colors.primary
-                        : combinedDefaultTheme.colors.backdrop,
-                      backgroundColor: dark
-                        ? combinedDarkTheme.colors.background
-                        : combinedDefaultTheme.colors.surface,
+                      borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.backdrop,
+                      backgroundColor: dark ? combinedDarkTheme.colors.background : combinedDefaultTheme.colors.surface,
                     },
                   ]}
                 >
@@ -563,12 +470,8 @@ const Activities = () => {
                   style={[
                     styles.pickerView,
                     {
-                      borderColor: dark
-                        ? combinedDarkTheme.colors.primary
-                        : combinedDefaultTheme.colors.backdrop,
-                      backgroundColor: dark
-                        ? combinedDarkTheme.colors.background
-                        : combinedDefaultTheme.colors.surface,
+                      borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.backdrop,
+                      backgroundColor: dark ? combinedDarkTheme.colors.background : combinedDefaultTheme.colors.surface,
                     },
                   ]}
                 >
@@ -589,19 +492,12 @@ const Activities = () => {
                   error={errors?.note ? true : false}
                   selectionColor={colors.text}
                   theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                  outlineColor={
-                    dark
-                      ? combinedDarkTheme.colors.border
-                      : combinedDefaultTheme.colors.backdrop
-                  }
+                  outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                   style={styles.buttonLabel}
                 />
 
                 {errors?.note && (
-                  <HelperText
-                    type="error"
-                    visible={errors?.note ? true : false}
-                  >
+                  <HelperText type="error" visible={errors?.note ? true : false}>
                     {errors?.note}
                   </HelperText>
                 )}
@@ -620,19 +516,12 @@ const Activities = () => {
                   error={errors?.note ? true : false}
                   selectionColor={colors.text}
                   theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                  outlineColor={
-                    dark
-                      ? combinedDarkTheme.colors.border
-                      : combinedDefaultTheme.colors.backdrop
-                  }
+                  outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                   style={styles.buttonLabel}
                 />
 
                 {errors?.note && (
-                  <HelperText
-                    type="error"
-                    visible={errors?.note ? true : false}
-                  >
+                  <HelperText type="error" visible={errors?.note ? true : false}>
                     {errors?.note}
                   </HelperText>
                 )}
@@ -651,19 +540,12 @@ const Activities = () => {
                   error={errors?.note ? true : false}
                   selectionColor={colors.text}
                   theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                  outlineColor={
-                    dark
-                      ? combinedDarkTheme.colors.border
-                      : combinedDefaultTheme.colors.backdrop
-                  }
+                  outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                   style={styles.buttonLabel}
                 />
 
                 {errors?.note && (
-                  <HelperText
-                    type="error"
-                    visible={errors?.note ? true : false}
-                  >
+                  <HelperText type="error" visible={errors?.note ? true : false}>
                     {errors?.note}
                   </HelperText>
                 )}
@@ -682,9 +564,7 @@ const Activities = () => {
                 labelStyle={[
                   styles.buttonLabel,
                   {
-                    color: dark
-                      ? combinedDarkTheme.colors.background
-                      : combinedDefaultTheme.colors.background,
+                    color: dark ? combinedDarkTheme.colors.background : combinedDefaultTheme.colors.background,
                   },
                 ]}
               >
@@ -711,18 +591,8 @@ const Activities = () => {
         </Formik>
       </ScrollView>
       {recordActivityError &&
-        ErrorSnackbar(
-          errorSnackbarVisible,
-          setErrorSnackbarVisible,
-          recordActivityError,
-          () => submitForm()
-        )}
-      {recordActivityMessage &&
-        InfoSnackbar(
-          infoSnackbarVisible,
-          setInfoSnackbarVisible,
-          recordActivityMessage
-        )}
+        ErrorSnackbar(errorSnackbarVisible, setErrorSnackbarVisible, recordActivityError, () => submitForm())}
+      {recordActivityMessage && InfoSnackbar(infoSnackbarVisible, setInfoSnackbarVisible, recordActivityMessage)}
     </Wrapper>
   );
 };

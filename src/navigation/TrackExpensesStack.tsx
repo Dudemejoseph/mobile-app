@@ -1,9 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
-import {
-  ADD_EXPENSE_SCREEN,
-  TRACK_EXPENSES_SCREEN,
-} from "../constants/route_names";
+import { ADD_EXPENSE_SCREEN, TRACK_EXPENSES_SCREEN } from "../constants/route_names";
 import TrackExpenses from "../screens/TrackExpenses";
 import AddFarmExpense from "../screens/TrackExpenses/AddFarmExpense";
 
@@ -15,6 +12,7 @@ const TrackExpensesStack = () => {
       initialRouteName={TRACK_EXPENSES_SCREEN}
       screenOptions={{
         headerShown: false,
+        animation: "fade_from_bottom",
       }}
     >
       <Stack.Screen name={TRACK_EXPENSES_SCREEN} component={TrackExpenses} />

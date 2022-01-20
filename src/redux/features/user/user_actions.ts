@@ -1,11 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { add, compareAsc } from "date-fns";
 import axiosInstance from "../../../config/axios_config";
-import {
-  AuthLoginInput,
-  EditProfileInput,
-  User,
-} from "../../../interfaces/user";
+import { AuthLoginInput, EditProfileInput, User } from "../../../interfaces/user";
 import { fetchDashboardFail } from "../dashboard/dashboard_reducer";
 import { AppDispatch } from "./../../store";
 import {
@@ -25,17 +21,12 @@ export const loginUser = (data: AuthLoginInput) => {
     try {
       dispatch(authRequest());
       const res = await axiosInstance.post("/auth/login", data);
-      dispatch(
-        loginSuccess({ data: res?.data?.user, message: "Login successful" })
-      );
+      dispatch(loginSuccess({ data: res?.data?.user, message: "Login successful" }));
       saveUserTokenToStorage(res?.data?.user, res.data.token);
     } catch (error: any) {
       if (error.message === "Request failed with status code 422") {
         dispatch(authFail({ error: "Invalid credentials" }));
-      } else if (
-        error.message === "timeout of 15000ms exceeded" ||
-        error?.message === "Network Error"
-      ) {
+      } else if (error.message === "timeout of 15000ms exceeded" || error?.message === "Network Error") {
         dispatch(authFail({ error: "Network error, check your connection" }));
       } else {
         dispatch(authFail({ error: "Something went wrong, please try again" }));
@@ -130,6 +121,7 @@ export const editUser = (id: number, data: EditProfileInput) => {
     dispatch(editingUser());
     try {
       const res = await axiosInstance.put(`/users/${id}`, data);
+
       dispatch(
         setUser({
           data: res.data.user,
@@ -137,21 +129,14 @@ export const editUser = (id: number, data: EditProfileInput) => {
         })
       );
     } catch (error: any) {
+      console.error("erorr is now ", error.message);
+
       if (error.message === "Request failed with status code 422") {
-        dispatch(
-          setUserFail({ error: "Oops: something is worng with your form" })
-        );
-      } else if (
-        error.message === "timeout of 15000ms exceeded" ||
-        error.message === "Network Error"
-      ) {
-        dispatch(
-          setUserFail({ error: "Network error, check your connection" })
-        );
+        dispatch(setUserFail({ error: "Oops: something is worng with your form" }));
+      } else if (error.message === "timeout of 15000ms exceeded" || error.message === "Network Error") {
+        dispatch(setUserFail({ error: "Network error, check your connection" }));
       } else {
-        dispatch(
-          setUserFail({ error: "Something went wrong, please try again" })
-        );
+        dispatch(setUserFail({ error: "Something went wrong, please try again" }));
       }
     }
   };
@@ -166,8 +151,7 @@ export const getUser = (id: number) => {
       if (error?.message === "Network Error") {
         dispatch(
           fetchDashboardFail({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {

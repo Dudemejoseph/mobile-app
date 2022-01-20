@@ -26,8 +26,9 @@ const TrackExpenses: React.FC<DefaultScreenProps> = ({ navigation }) => {
   const [page, setPage] = React.useState<number>(0);
   const [itemsPerPage, setItemsPerPage] = React.useState(optionsPerPage[0]);
   const [visible, setVisible] = useState<number | any>(null);
-  const { fetchingFarmExpenses, fetchFarmExpensesError, expensesData } =
-    useSelector(transactionsSelector) as TransactionsState;
+  const { fetchingFarmExpenses, fetchFarmExpensesError, expensesData } = useSelector(
+    transactionsSelector
+  ) as TransactionsState;
   const openMenu = (itemId: number) => setVisible(itemId);
   const closeMenu = () => setVisible(null);
 
@@ -67,12 +68,9 @@ const TrackExpenses: React.FC<DefaultScreenProps> = ({ navigation }) => {
 
   return (
     <Wrapper>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.wrapper}
-      >
-        <AppbarComponent title="Track Expenses" backButton={true} />
-        {expensesData?.length > 0 && (
+      <AppbarComponent title="Track Expenses" backButton={true} />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {expensesData?.data?.length > 0 && (
           <DataTable>
             <DataTable.Header>
               <DataTable.Title>Expense</DataTable.Title>
@@ -80,7 +78,7 @@ const TrackExpenses: React.FC<DefaultScreenProps> = ({ navigation }) => {
               <DataTable.Title numeric>Action</DataTable.Title>
             </DataTable.Header>
 
-            {expensesData?.map((item: any, index: number) => {
+            {expensesData?.data?.map((item: any, index: number) => {
               return (
                 <DataTable.Row key={index}>
                   <DataTable.Cell>{item.activity_type}</DataTable.Cell>
@@ -90,12 +88,7 @@ const TrackExpenses: React.FC<DefaultScreenProps> = ({ navigation }) => {
                       visible={visible === index ? true : false}
                       onDismiss={closeMenu}
                       anchor={
-                        <Button
-                          onPress={() => openMenu(index)}
-                          theme={
-                            dark ? combinedDarkTheme : combinedDefaultTheme
-                          }
-                        >
+                        <Button onPress={() => openMenu(index)} theme={dark ? combinedDarkTheme : combinedDefaultTheme}>
                           <Entypo name="dots-three-horizontal" size={20} />
                         </Button>
                       }
@@ -109,20 +102,14 @@ const TrackExpenses: React.FC<DefaultScreenProps> = ({ navigation }) => {
                         }}
                         title="View"
                       />
-                      <Menu.Item
-                        icon="circle-edit-outline"
-                        onPress={() => {}}
-                        title="Edit"
-                      />
+                      <Menu.Item icon="circle-edit-outline" onPress={() => {}} title="Edit" />
                       <Divider />
                       <Menu.Item
                         icon="delete"
                         onPress={() => {}}
                         title="Delete"
                         titleStyle={{
-                          color: dark
-                            ? combinedDarkTheme.colors.error
-                            : combinedDefaultTheme.colors.error,
+                          color: dark ? combinedDarkTheme.colors.error : combinedDefaultTheme.colors.error,
                         }}
                       />
                     </Menu>
@@ -146,8 +133,6 @@ const TrackExpenses: React.FC<DefaultScreenProps> = ({ navigation }) => {
           </DataTable>
         )}
 
-        {expensesData?.length < 1 && EmptyList("Farm Expenses")}
-
         <Button
           uppercase={false}
           theme={dark ? combinedDarkTheme : combinedDefaultTheme}
@@ -156,15 +141,14 @@ const TrackExpenses: React.FC<DefaultScreenProps> = ({ navigation }) => {
           labelStyle={[
             styles.eopText,
             {
-              color: dark
-                ? combinedDarkTheme.colors.text
-                : combinedDefaultTheme.colors.background,
+              color: dark ? combinedDarkTheme.colors.text : combinedDefaultTheme.colors.background,
             },
           ]}
-          onPress={() => navigation.push(ADD_EXPENSE_SCREEN)}
+          onPress={() => navigation.navigate(ADD_EXPENSE_SCREEN)}
         >
           Add Expense
         </Button>
+        {expensesData?.data.length < 1 && <EmptyList text="Farm Expenses" />}
       </ScrollView>
     </Wrapper>
   );

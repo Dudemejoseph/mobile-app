@@ -30,6 +30,7 @@ export const styles = StyleSheet.create({
     color: "#f2994a",
     fontSize: 14,
     fontWeight: "bold",
+    textTransform: "capitalize",
   },
   nextText: { color: "#4D6EFF" },
   durationText: {

@@ -25,9 +25,7 @@ const Fields: React.FC<DefaultScreenProps> = ({ navigation }) => {
   const { dark } = useTheme();
   const { error, fetching, farmData } = useSelector(farmSelector) as FarmState;
   const [pageState, setPageState] = useState<number>(0);
-  const [numberOfItemsPerPage, onItemsPerPageChange] = useState<number>(
-    numberOfItemsPerPageList[0]
-  );
+  const [numberOfItemsPerPage, onItemsPerPageChange] = useState<number>(numberOfItemsPerPageList[0]);
   const from = pageState * numberOfItemsPerPage;
   const to = Math.min((pageState + 1) * numberOfItemsPerPage, farmData?.length);
   const [visible, setVisible] = useState<number | any>(null);
@@ -68,9 +66,8 @@ const Fields: React.FC<DefaultScreenProps> = ({ navigation }) => {
 
   return (
     <Wrapper>
-      <ScrollView contentContainerStyle={styles.wrapper}>
-        <AppbarComponent backButton={true} title="Farm Overview" />
-        <Headline style={styles.welcomeText}>List of Farms</Headline>
+      <AppbarComponent backButton={true} title="Farm Overview" />
+      <ScrollView showsVerticalScrollIndicator={false}>
         {farmData?.length > 0 && (
           <DataTable>
             <DataTable.Header>
@@ -91,12 +88,7 @@ const Fields: React.FC<DefaultScreenProps> = ({ navigation }) => {
                       visible={visible === index ? true : false}
                       onDismiss={closeMenu}
                       anchor={
-                        <Button
-                          onPress={() => openMenu(index)}
-                          theme={
-                            dark ? combinedDarkTheme : combinedDefaultTheme
-                          }
-                        >
+                        <Button onPress={() => openMenu(index)} theme={dark ? combinedDarkTheme : combinedDefaultTheme}>
                           <Entypo name="dots-three-horizontal" size={20} />
                         </Button>
                       }
@@ -110,20 +102,14 @@ const Fields: React.FC<DefaultScreenProps> = ({ navigation }) => {
                         }}
                         title="View"
                       />
-                      <Menu.Item
-                        icon="circle-edit-outline"
-                        onPress={() => {}}
-                        title="Edit"
-                      />
+                      <Menu.Item icon="circle-edit-outline" onPress={() => {}} title="Edit" />
                       <Divider />
                       <Menu.Item
                         icon="delete"
                         onPress={() => {}}
                         title="Delete"
                         titleStyle={{
-                          color: dark
-                            ? combinedDarkTheme.colors.error
-                            : combinedDefaultTheme.colors.error,
+                          color: dark ? combinedDarkTheme.colors.error : combinedDefaultTheme.colors.error,
                         }}
                       />
                     </Menu>
@@ -145,7 +131,7 @@ const Fields: React.FC<DefaultScreenProps> = ({ navigation }) => {
             />
           </DataTable>
         )}
-        {farmData?.length < 1 && EmptyList("Farm")}
+        {farmData?.length < 1 && <EmptyList text="Farm" />}
       </ScrollView>
     </Wrapper>
   );

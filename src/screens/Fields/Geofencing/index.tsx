@@ -9,10 +9,7 @@ import { FAB, Surface, Text } from "react-native-paper";
 import AppbarComponent from "../../../components/Shared/Appbar";
 import Wrapper from "../../../components/Shared/Wrapper";
 import { CREATE_FARMS_SCREEN } from "../../../constants/route_names";
-import {
-  combinedDarkTheme,
-  combinedDefaultTheme,
-} from "../../../constants/theme";
+import { combinedDarkTheme, combinedDefaultTheme } from "../../../constants/theme";
 import { DefaultScreenProps } from "../../../interfaces/shared_components";
 import { darkModeMapStyles } from "../../../seeder/mapStyles";
 import styles from "./styles";
@@ -54,16 +51,13 @@ const Geofencing: React.FC<DefaultScreenProps> = ({ navigation }) => {
 
     const checkAndroidPermission = async () => {
       try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          {
-            title: "Farm monitor Permission",
-            message: "We need permission to access your location",
-            buttonNeutral: "Later",
-            buttonNegative: "No",
-            buttonPositive: "OK",
-          }
-        );
+        const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
+          title: "Farm monitor Permission",
+          message: "We need permission to access your location",
+          buttonNeutral: "Later",
+          buttonNegative: "No",
+          buttonPositive: "OK",
+        });
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
           getCurrentPosition();
         } else {
@@ -97,10 +91,7 @@ const Geofencing: React.FC<DefaultScreenProps> = ({ navigation }) => {
       RNLocation.subscribeToLocationUpdates((location) => {
         console.log("warris this ", location);
         const coords = location[0];
-        setCoords((prev: any) => [
-          ...prev,
-          { latitude: coords.latitude, longitude: coords.longitude },
-        ]);
+        setCoords((prev: any) => [...prev, { latitude: coords.latitude, longitude: coords.longitude }]);
       });
     }
   }, [trackEnabled]);
@@ -174,8 +165,8 @@ const Geofencing: React.FC<DefaultScreenProps> = ({ navigation }) => {
 
   return (
     <Wrapper>
+      <AppbarComponent backButton={true} search={false} title="Geofencing" />
       <ScrollView contentContainerStyle={styles.wrapper}>
-        <AppbarComponent backButton={true} title="Geofencing" />
         <MapView
           ref={mapRef}
           provider={PROVIDER_GOOGLE}
@@ -193,16 +184,8 @@ const Geofencing: React.FC<DefaultScreenProps> = ({ navigation }) => {
         >
           <Polyline
             coordinates={coordinates}
-            strokeColor={
-              dark
-                ? combinedDarkTheme.colors.primary
-                : combinedDefaultTheme.colors.primary
-            }
-            fillColor={
-              dark
-                ? combinedDarkTheme.colors.primary
-                : combinedDefaultTheme.colors.primary
-            }
+            strokeColor={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.primary}
+            fillColor={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.primary}
             strokeWidth={4}
           />
         </MapView>
