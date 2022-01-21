@@ -1,19 +1,19 @@
+import { useTheme } from "@react-navigation/native";
+import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, useColorScheme, View } from "react-native";
-import Wrapper from "../../../components/Shared/Wrapper";
-import AppbarComponent from "../../../components/Shared/Appbar";
-import styles from "./styles";
-import { Formik } from "formik";
-import { EditProfileSchema } from "../../../schema/profile";
-import { EditProfileInput, UserState } from "../../../interfaces/user";
-import { userSelector } from "../../../redux/features/user/user_reducer";
-import { useDispatch, useSelector } from "react-redux";
-import { editUser } from "../../../redux/features/user/user_actions";
 import { Button, HelperText, TextInput } from "react-native-paper";
-import { useTheme } from "@react-navigation/native";
-import { combinedDarkTheme, combinedDefaultTheme } from "../../../constants/theme";
+import { useDispatch, useSelector } from "react-redux";
+import AppbarComponent from "../../../components/Shared/Appbar";
 import ErrorSnackbar from "../../../components/Shared/Snackbar/ErrorSnackbar";
 import InfoSnackbar from "../../../components/Shared/Snackbar/InfoSnackbar";
+import Wrapper from "../../../components/Shared/Wrapper";
+import { combinedDarkTheme, combinedDefaultTheme } from "../../../constants/theme";
+import { EditProfileInput, UserState } from "../../../interfaces/user";
+import { editUser } from "../../../redux/features/user/user_actions";
+import { userSelector } from "../../../redux/features/user/user_reducer";
+import { EditProfileSchema } from "../../../schema/profile";
+import styles from "./styles";
 
 const EditProfile = () => {
   const dispatch = useDispatch();
@@ -179,9 +179,17 @@ const EditProfile = () => {
             )}
           </Formik>
         </ScrollView>
-        {editingError &&
-          ErrorSnackbar(errorSnackbarVisible, setErrorSnackbarVisible, editingError, () => submitForm(tempValues))}
-        {editingMessage && InfoSnackbar(infoSnackbarVisible, setInfoSnackbarVisible, editingMessage)}
+        {editingError && (
+          <ErrorSnackbar
+            action={() => submitForm(tempValues)}
+            error={editingError}
+            setVisible={setErrorSnackbarVisible}
+            visible={errorSnackbarVisible}
+          />
+        )}
+        {editingMessage && (
+          <InfoSnackbar info={editingMessage} setVisible={setInfoSnackbarVisible} visible={infoSnackbarVisible} />
+        )}
       </KeyboardAvoidingView>
     </Wrapper>
   );

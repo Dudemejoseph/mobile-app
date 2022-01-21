@@ -2,8 +2,9 @@ import { useTheme } from "@react-navigation/native";
 import React from "react";
 import { Snackbar } from "react-native-paper";
 import { combinedDarkTheme, combinedDefaultTheme } from "../../../constants/theme";
+import { ErrorToastProps } from "../../../interfaces/shared_components";
 
-const ErrorSnackbar = (visible: boolean, setVisible: Function, error: any, action: Function | any) => {
+const ErrorSnackbar: React.FC<ErrorToastProps> = ({ action, error, setVisible, visible }) => {
   const { dark } = useTheme();
 
   return (

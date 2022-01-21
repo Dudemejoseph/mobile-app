@@ -98,12 +98,12 @@ const AddFarmExpense = () => {
       const entries = Object.entries(categoryActivities).map((e) => ({
         [e[0]]: e[1],
       }));
-      let keyArr: any = [];
+      const keyArr: any = [];
       for (let i = 0; i < entries.length; i++) {
-        let key = Object.keys(entries[i]);
-        let values = Object.values(entries[i]);
-        let subValues: any = values;
-        let miniValues: any = subValues[0];
+        const key = Object.keys(entries[i]);
+        const values = Object.values(entries[i]);
+        const subValues: any = values;
+        const miniValues: any = subValues[0];
         for (let j = 0; j < miniValues.length; j++) {
           keyArr.push({
             category: key[0],
