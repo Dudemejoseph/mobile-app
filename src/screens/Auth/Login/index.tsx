@@ -1,28 +1,13 @@
 import { useTheme } from "@react-navigation/native";
 import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  useColorScheme,
-  View,
-} from "react-native";
-import {
-  Button,
-  Caption,
-  HelperText,
-  Text,
-  TextInput,
-} from "react-native-paper";
+import { KeyboardAvoidingView, Platform, ScrollView, useColorScheme, View } from "react-native";
+import { Button, Caption, HelperText, Text, TextInput } from "react-native-paper";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { useDispatch, useSelector } from "react-redux";
 import ErrorSnackbar from "../../../components/Shared/Snackbar/ErrorSnackbar";
 import InfoSnackbar from "../../../components/Shared/Snackbar/InfoSnackbar";
-import {
-  combinedDarkTheme,
-  combinedDefaultTheme,
-} from "../../../constants/theme";
+import { combinedDarkTheme, combinedDefaultTheme } from "../../../constants/theme";
 import { AuthLoginInput, UserState } from "../../../interfaces/user";
 import { loginUser } from "../../../redux/features/user/user_actions";
 import { userSelector } from "../../../redux/features/user/user_reducer";
@@ -36,13 +21,9 @@ const LoginScreen = () => {
   const { colors, dark } = useTheme();
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const [tempValues, setTempValues] = useState<AuthLoginInput | any>(null);
-  const [errorSnackbarVisible, setErrorSnackbarVisible] =
-    useState<boolean>(false);
-  const [infoSnackbarVisible, setInfoSnackbarVisible] =
-    useState<boolean>(false);
-  const { authLoading, error, loggedOut } = useSelector(
-    userSelector
-  ) as UserState;
+  const [errorSnackbarVisible, setErrorSnackbarVisible] = useState<boolean>(false);
+  const [infoSnackbarVisible, setInfoSnackbarVisible] = useState<boolean>(false);
+  const { authLoading, error, loggedOut } = useSelector(userSelector) as UserState;
 
   const submitForm = async (values: AuthLoginInput) => {
     setTempValues(values);
@@ -60,24 +41,14 @@ const LoginScreen = () => {
   }, [error, loggedOut]);
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.wrapper}
-    >
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null} style={styles.wrapper}>
       <ScrollView>
         <Formik
           validationSchema={LoginSchema}
           initialValues={{ email: "", password: "" }}
           onSubmit={(values: AuthLoginInput) => submitForm(values)}
         >
-          {({
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            values,
-            errors,
-            initialTouched,
-          }) => (
+          {({ handleChange, handleBlur, handleSubmit, values, errors, initialTouched }) => (
             <View style={styles.container}>
               <View style={styles.inputView}>
                 <TextInput
@@ -89,18 +60,11 @@ const LoginScreen = () => {
                   error={errors?.email ? true : false}
                   selectionColor={colors.text}
                   theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                  outlineColor={
-                    dark
-                      ? combinedDarkTheme.colors.border
-                      : combinedDefaultTheme.colors.backdrop
-                  }
+                  outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                 />
 
                 {errors?.email && initialTouched.email && (
-                  <HelperText
-                    type="error"
-                    visible={errors?.email ? true : false}
-                  >
+                  <HelperText type="error" visible={errors?.email ? true : false}>
                     {errors?.email}
                   </HelperText>
                 )}
@@ -117,11 +81,7 @@ const LoginScreen = () => {
                   error={errors?.password ? true : false}
                   selectionColor={colors.text}
                   theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                  outlineColor={
-                    dark
-                      ? combinedDarkTheme.colors.border
-                      : combinedDefaultTheme.colors.backdrop
-                  }
+                  outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                   right={
                     <TextInput.Icon
                       name={passwordVisible ? "eye-off" : "eye"}
@@ -134,10 +94,7 @@ const LoginScreen = () => {
                 />
 
                 {errors?.password && initialTouched.password && (
-                  <HelperText
-                    type="error"
-                    visible={errors?.password ? true : false}
-                  >
+                  <HelperText type="error" visible={errors?.password ? true : false}>
                     {errors?.password}
                   </HelperText>
                 )}
@@ -153,10 +110,7 @@ const LoginScreen = () => {
                   labelStyle={[
                     styles.buttonLabelStyle,
                     {
-                      color:
-                        scheme === "dark"
-                          ? combinedDarkTheme.colors.text
-                          : combinedDefaultTheme.colors.background,
+                      color: scheme === "dark" ? combinedDarkTheme.colors.text : combinedDefaultTheme.colors.background,
                     },
                   ]}
                 >
@@ -166,32 +120,27 @@ const LoginScreen = () => {
 
               <Caption style={styles.infoText}>
                 Forgot password?{" "}
-                <Text
-                  style={[
-                    styles.infoSubText,
-                    { color: dark ? colors.text : colors.primary },
-                  ]}
-                >
-                  Reset
-                </Text>
+                <Text style={[styles.infoSubText, { color: dark ? colors.text : colors.primary }]}>Reset</Text>
               </Caption>
             </View>
           )}
         </Formik>
       </ScrollView>
-      {error &&
-        ErrorSnackbar(
-          errorSnackbarVisible,
-          setErrorSnackbarVisible,
-          error,
-          () => submitForm(tempValues)
-        )}
-      {loggedOut &&
-        InfoSnackbar(
-          infoSnackbarVisible,
-          setInfoSnackbarVisible,
-          "You have been logged out, hope to see you again soon"
-        )}
+      {error && (
+        <ErrorSnackbar
+          action={() => submitForm(tempValues)}
+          error={error}
+          setVisible={setErrorSnackbarVisible}
+          visible={errorSnackbarVisible}
+        />
+      )}
+      {loggedOut && (
+        <InfoSnackbar
+          info="You have been logged out, hope to see you again soon"
+          setVisible={setInfoSnackbarVisible}
+          visible={infoSnackbarVisible}
+        />
+      )}
     </KeyboardAvoidingView>
   );
 };
