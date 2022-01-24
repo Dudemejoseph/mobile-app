@@ -700,11 +700,21 @@ const AddFarmExpense = () => {
             )}
           </Formik>
         </ScrollView>
-        {addFarmExpenseError &&
-          ErrorSnackbar(errorSnackbarVisible, setErrorSnackbarVisible, addFarmExpenseError, () =>
-            submitForm(tempValues)
-          )}
-        {addFarmExpenseMessage && InfoSnackbar(infoSnackbarVisible, setInfoSnackbarVisible, addFarmExpenseMessage)}
+        {addFarmExpenseError && (
+          <ErrorSnackbar
+            action={() => submitForm(tempValues)}
+            error={addFarmExpenseError}
+            setVisible={setErrorSnackbarVisible}
+            visible={errorSnackbarVisible}
+          />
+        )}
+        {addFarmExpenseMessage && (
+          <InfoSnackbar
+            info={addFarmExpenseMessage}
+            setVisible={setInfoSnackbarVisible}
+            visible={infoSnackbarVisible}
+          />
+        )}
       </KeyboardAvoidingView>
     </Wrapper>
   );

@@ -75,7 +75,7 @@ export const fetchExpenses = () => {
     try {
       dispatch(fetchingFarmExpenses());
       const res = await axiosInstance.get("/farmexpenses");
-      dispatch(fetchingFarmExpensesSuccess({ data: res.data.result.expense }));
+      dispatch(fetchingFarmExpensesSuccess({ data: res.data.result.expense.data }));
     } catch (error: any) {
       if (error?.message === "Network Error") {
         dispatch(
@@ -96,10 +96,13 @@ export const fetchExpenses = () => {
 
 // Adding expense for a farm activity
 export const addFarmExpenseAction = (data: AddFarmExpenseInput) => {
+  console.log("data ", data);
+
   return async (dispatch: AppDispatch) => {
     dispatch(addingFarmExpense());
     try {
       const res = await axiosInstance.post("/farmexpenses", data);
+      console.log("res is what ", res.data);
 
       dispatch(
         addFarmExpenseSuccess({
@@ -108,6 +111,7 @@ export const addFarmExpenseAction = (data: AddFarmExpenseInput) => {
         })
       );
     } catch (error: any) {
+      console.error("error is ", error);
       if (error?.message === "Network Error") {
         dispatch(
           addFarmExpenseFail({

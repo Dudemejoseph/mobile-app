@@ -94,3 +94,8 @@ export interface InfoToastProps {
   setVisible: (arg: boolean) => void;
   info: string;
 }
+
+export interface CustomModalProps {
+  visible: boolean;
+  onDismiss: () => void;
+}

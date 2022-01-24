@@ -16,6 +16,18 @@ import {
   setUserFail,
 } from "./user_reducer";
 
+// Save user data to device via AsyncStorage
+const saveUserTokenToStorage = (userData: User, authToken: string) => {
+  AsyncStorage.setItem(
+    "@authData",
+    JSON.stringify({
+      userData,
+      authToken,
+      dateAssigned: Date.now(),
+    })
+  );
+};
+
 export const loginUser = (data: AuthLoginInput) => {
   return async (dispatch: AppDispatch) => {
     try {
@@ -35,76 +47,54 @@ export const loginUser = (data: AuthLoginInput) => {
   };
 };
 
-// Save user data to device via AsyncStorage
-const saveUserTokenToStorage = (userData: User, authToken: string) => {
-  AsyncStorage.setItem(
-    "@authData",
-    JSON.stringify({
-      userData,
-      authToken,
-      dateAssigned: Date.now(),
-    })
-  );
+// Checking user authentication status
+export const checkUserAuthStatus = async () => {
+  let authData = [] as any;
+  authData = await AsyncStorage.getItem("@authData");
+  if (!authData) {
+    return null;
+  } else {
+    const transformedData = JSON.parse(authData);
+    return transformedData;
+  }
 };
 
 // Checking for Onboarding
 export const checkOnboarding = () => async (dispatch: AppDispatch) => {
-  try {
-    const value = await AsyncStorage.getItem("@viewedOnBoarding");
-    if (value !== null) {
-      const res = await checkUserAuthStatus();
-      if (res) {
-        const dateRes = add(res?.dateAssigned, { days: 4 });
-        const dateRes2 = compareAsc(Date.now(), dateRes);
-        if (dateRes2 === -1) {
+  const value = await AsyncStorage.getItem("@viewedOnBoarding");
+  if (value !== null) {
+    const res = await checkUserAuthStatus();
+    if (res) {
+      const dateRes = add(res?.dateAssigned, { days: 4 });
+      const dateRes2 = compareAsc(Date.now(), dateRes);
+      if (dateRes2 === -1) {
+        dispatch(
+          loginSuccess({
+            data: res?.userData,
+            message: "Welcome back, we missed you",
+          })
+        );
+      } else {
+        dispatch(
           dispatch(
-            loginSuccess({
-              data: res?.userData,
-              message: "Welcome back, we missed you",
+            authFail({
+              error: "Session expired, please login again",
             })
-          );
-        } else {
-          dispatch(
-            dispatch(
-              authFail({
-                error: "Session expired, please login again",
-              })
-            )
-          );
-        }
+          )
+        );
       }
-      dispatch(checkedOnboardingTrue());
-    } else {
-      dispatch(checkedOnboardingFalse());
     }
-  } catch (error) {
-    throw error;
+    dispatch(checkedOnboardingTrue());
+  } else {
+    dispatch(checkedOnboardingFalse());
   }
-};
-
-// Checking user authentication status
-export const checkUserAuthStatus = async () => {
-  try {
-    let authData = [] as any;
-    authData = await AsyncStorage.getItem("@authData");
-    if (!authData) {
-      return null;
-    } else {
-      const transformedData = JSON.parse(authData);
-      return transformedData;
-    }
-  } catch (error) {}
 };
 
 // Set user viewed onboarding status to true
 export const setOnboarding = () => {
   return async (dispatch: AppDispatch) => {
-    try {
-      await AsyncStorage.setItem("@viewedOnBoarding", "true");
-      dispatch(checkedOnboardingTrue());
-    } catch (error) {
-      throw error;
-    }
+    await AsyncStorage.setItem("@viewedOnBoarding", "true");
+    dispatch(checkedOnboardingTrue());
   };
 };
 

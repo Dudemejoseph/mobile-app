@@ -114,6 +114,7 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
       <AppbarComponent search={false} />
       <ScrollView showsVerticalScrollIndicator={false}>
         {bannerVisible && (
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           /* @ts-ignore */
           <Banner
             style={{

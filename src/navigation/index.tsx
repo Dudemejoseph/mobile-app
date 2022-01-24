@@ -14,9 +14,7 @@ import SplashStack from "./SplashStack";
 const AppNavContainer = () => {
   const dispatch = useDispatch();
   const scheme = useColorScheme();
-  const { isCheckingUser, viewedOnboarding, isAuthenticated } = useSelector(
-    userSelector
-  ) as UserState;
+  const { isCheckingUser, viewedOnboarding, isAuthenticated } = useSelector(userSelector) as UserState;
 
   useEffect(() => {
     dispatch(checkOnboarding());
@@ -24,9 +22,7 @@ const AppNavContainer = () => {
 
   return (
     <>
-      <NavigationContainer
-        theme={scheme === "dark" ? combinedDarkTheme : combinedDefaultTheme}
-      >
+      <NavigationContainer theme={scheme === "dark" ? combinedDarkTheme : combinedDefaultTheme}>
         {isCheckingUser ? (
           <SplashStack />
         ) : viewedOnboarding && isAuthenticated ? (

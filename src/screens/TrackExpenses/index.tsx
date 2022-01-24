@@ -70,7 +70,7 @@ const TrackExpenses: React.FC<DefaultScreenProps> = ({ navigation }) => {
     <Wrapper>
       <AppbarComponent title="Track Expenses" backButton={true} />
       <ScrollView showsVerticalScrollIndicator={false}>
-        {expensesData?.data?.length > 0 && (
+        {expensesData?.length > 0 && (
           <DataTable>
             <DataTable.Header>
               <DataTable.Title>Expense</DataTable.Title>
@@ -78,7 +78,7 @@ const TrackExpenses: React.FC<DefaultScreenProps> = ({ navigation }) => {
               <DataTable.Title numeric>Action</DataTable.Title>
             </DataTable.Header>
 
-            {expensesData?.data?.map((item: any, index: number) => {
+            {expensesData?.map((item: any, index: number) => {
               return (
                 <DataTable.Row key={index}>
                   <DataTable.Cell>{item.activity_type}</DataTable.Cell>
@@ -123,6 +123,7 @@ const TrackExpenses: React.FC<DefaultScreenProps> = ({ navigation }) => {
               numberOfPages={3}
               onPageChange={(page) => setPage(page)}
               label="1-2 of 6"
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
               optionsPerPage={optionsPerPage}
               itemsPerPage={itemsPerPage}
@@ -148,7 +149,7 @@ const TrackExpenses: React.FC<DefaultScreenProps> = ({ navigation }) => {
         >
           Add Expense
         </Button>
-        {expensesData?.data.length < 1 && <EmptyList text="Farm Expenses" />}
+        {expensesData.length < 1 && <EmptyList text="Farm Expenses" />}
       </ScrollView>
     </Wrapper>
   );
