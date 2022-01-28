@@ -1,10 +1,10 @@
 import { Picker } from "@react-native-picker/picker";
 import { useTheme } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { Image, TouchableOpacity, useColorScheme, View } from "react-native";
+import { Image, TouchableOpacity, useColorScheme, View, ScrollView, CameraRoll } from "react-native";
 import { RNCamera } from "react-native-camera";
 import ImagePicker from "react-native-image-crop-picker";
-import { Button, Surface, Text } from "react-native-paper";
+import { Button, Surface, Text, TextInput } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useDispatch, useSelector } from "react-redux";
 import AppbarComponent from "../../components/Shared/Appbar";
@@ -12,11 +12,14 @@ import CustomModal from "../../components/Shared/CustomModal";
 import SuccessSnackbar from "../../components/Shared/Snackbar/SuccessSnackbar";
 import Wrapper from "../../components/Shared/Wrapper";
 import { combinedDarkTheme, combinedDefaultTheme } from "../../constants/theme";
+import { CropRating } from "../../interfaces/crop";
 import { Farm, FarmState } from "../../interfaces/farm";
 import { getFarms } from "../../redux/features/farms/farm_actions";
 import { farmSelector } from "../../redux/features/farms/farm_reducer";
+import { ratings } from "../../seeder/cropHealth";
 import { cloudinaryUpload, uploadChi } from "../../utils/cloudinary";
 import styles from "./styles";
+import { getAlbums, save } from "@react-native-community/cameraroll";
 MaterialCommunityIcons.loadFont();
 
 const Camera = () => {
@@ -29,17 +32,31 @@ const Camera = () => {
   const [imageUri, setImageUri] = useState<any>(null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [selectedFarm, setSelectedFarm] = useState<Farm | any>(null);
+  const [selectedRating, setSelectedRating] = useState<CropRating | any>(null);
   const [showSuccessSnackbar, setShowSuccessSnackbar] = useState<boolean>(false);
   const [farmId, setFarmId] = useState<number | any>(null);
-  console.log("image is ", farmId);
+  const [color, setColor] = useState<string>("");
+  const [height, setHeight] = useState<number | string | any>(0);
+  const [shape, setShape] = useState<string>("");
+  const [texture, setTexture] = useState<string>("");
 
   const takePicture = async () => {
-    if (cameraRef) {
-      const options = { quality: 0.5, fixOrientation: true, forceUpOrientation: true, base64: true };
-      const data = await cameraRef?.current?.takePictureAsync(options);
-      console.log("data ", data);
-      setImageUri(data.uri);
-      setImage(data);
+    try {
+      if (cameraRef) {
+        const options = {
+          quality: 0.5,
+          fixOrientation: true,
+          forceUpOrientation: true,
+          base64: true,
+        };
+        const data = await cameraRef?.current?.takePictureAsync(options);
+        console.log("data ", data);
+        setImageUri(data.uri);
+        setImage(data);
+        await save(data.uri, { type: "photo", album: "Farm monitor" });
+      }
+    } catch (error) {
+      console.error("error while camera is ", error);
     }
   };
 
@@ -76,7 +93,7 @@ const Camera = () => {
       if (res) {
         console.log("response from secure url  ", res);
         const body = {
-          rating: 5,
+          rating: selectedRating.value as number,
           farm_id: farmId,
           image_url: res,
         };
@@ -126,8 +143,7 @@ const Camera = () => {
           if (image) {
             return (
               <CustomModal visible={true} onDismiss={() => setImage(null)}>
-                <View>
-                  <Text>Select Farm</Text>
+                <ScrollView showsVerticalScrollIndicator={false}>
                   <Surface
                     style={[
                       styles.pickerView,
@@ -172,6 +188,162 @@ const Camera = () => {
                     </Picker>
                   </Surface>
 
+                  <Surface
+                    style={[
+                      styles.pickerView,
+                      {
+                        borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.backdrop,
+                        backgroundColor: dark
+                          ? combinedDarkTheme.colors.background
+                          : combinedDefaultTheme.colors.surface,
+                      },
+                    ]}
+                  >
+                    <Picker
+                      mode="dropdown"
+                      selectedValue={selectedRating}
+                      onValueChange={(itemValue: CropRating) => {
+                        setSelectedRating(itemValue);
+                      }}
+                      itemStyle={[
+                        {
+                          borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text,
+                        },
+                      ]}
+                    >
+                      <Picker.Item
+                        color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
+                        label="Select Rating"
+                        value={null}
+                        style={styles.buttonLabel}
+                      />
+                      {ratings?.map((item: CropRating, index: number) => {
+                        return (
+                          <Picker.Item
+                            key={index}
+                            color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
+                            label={item.label}
+                            value={item}
+                            style={styles.buttonLabel}
+                          />
+                        );
+                      })}
+                    </Picker>
+                  </Surface>
+
+                  <View style={styles.inputView}>
+                    <TextInput
+                      label="Color"
+                      value={color}
+                      onChangeText={(value) => setColor(value)}
+                      mode="outlined"
+                      // onBlur={handleBlur("unit_price")}
+                      // error={errors?.unit_price ? true : false}
+                      // selectionColor={colors.text}
+                      theme={dark ? combinedDarkTheme : combinedDefaultTheme}
+                      outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
+                      style={[
+                        styles.buttonLabel,
+                        {
+                          backgroundColor: dark
+                            ? combinedDarkTheme.colors.background
+                            : combinedDefaultTheme.colors.surface,
+                        },
+                      ]}
+                    />
+
+                    {/* {errors?.unit_price && (
+                    <HelperText type="error" visible={errors?.unit_price ? true : false}>
+                      {errors?.unit_price}
+                    </HelperText>
+                  )} */}
+                  </View>
+
+                  <View style={styles.inputView}>
+                    <TextInput
+                      label="Height"
+                      value={height}
+                      onChangeText={(value) => setHeight(value)}
+                      mode="outlined"
+                      keyboardType="number-pad"
+                      // onBlur={handleBlur("unit_price")}
+                      // error={errors?.unit_price ? true : false}
+                      // selectionColor={colors.text}
+                      theme={dark ? combinedDarkTheme : combinedDefaultTheme}
+                      outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
+                      style={[
+                        styles.buttonLabel,
+                        {
+                          backgroundColor: dark
+                            ? combinedDarkTheme.colors.background
+                            : combinedDefaultTheme.colors.surface,
+                        },
+                      ]}
+                    />
+
+                    {/* {errors?.unit_price && (
+                    <HelperText type="error" visible={errors?.unit_price ? true : false}>
+                      {errors?.unit_price}
+                    </HelperText>
+                  )} */}
+                  </View>
+
+                  <View style={styles.inputView}>
+                    <TextInput
+                      label="Shape"
+                      value={shape}
+                      onChangeText={(value) => setShape(value)}
+                      mode="outlined"
+                      // onBlur={handleBlur("unit_price")}
+                      // error={errors?.unit_price ? true : false}
+                      // selectionColor={colors.text}
+                      theme={dark ? combinedDarkTheme : combinedDefaultTheme}
+                      outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
+                      style={[
+                        styles.buttonLabel,
+                        {
+                          backgroundColor: dark
+                            ? combinedDarkTheme.colors.background
+                            : combinedDefaultTheme.colors.surface,
+                        },
+                      ]}
+                    />
+
+                    {/* {errors?.unit_price && (
+                    <HelperText type="error" visible={errors?.unit_price ? true : false}>
+                      {errors?.unit_price}
+                    </HelperText>
+                  )} */}
+                  </View>
+
+                  <View style={styles.inputView}>
+                    <TextInput
+                      label="Texture"
+                      value={texture}
+                      onChangeText={(value) => setTexture(value)}
+                      mode="outlined"
+                      // onBlur={handleBlur("unit_price")}
+                      // error={errors?.unit_price ? true : false}
+                      // selectionColor={colors.text}
+                      theme={dark ? combinedDarkTheme : combinedDefaultTheme}
+                      outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
+                      style={[
+                        styles.buttonLabel,
+                        {
+                          backgroundColor: dark
+                            ? combinedDarkTheme.colors.background
+                            : combinedDefaultTheme.colors.surface,
+                        },
+                      ]}
+                    />
+
+                    {/* {errors?.unit_price && (
+                    <HelperText type="error" visible={errors?.unit_price ? true : false}>
+                      {errors?.unit_price}
+                    </HelperText>
+                  )} */}
+                  </View>
+
                   <Image style={{ height: 300 }} source={{ uri: imageUri }} />
                   <View style={styles.actionRow}>
                     <Button
@@ -209,7 +381,7 @@ const Camera = () => {
                       Upload
                     </Button>
                   </View>
-                </View>
+                </ScrollView>
               </CustomModal>
             );
           }

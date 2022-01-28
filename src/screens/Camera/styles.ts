@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     marginTop: 20,
   },
+  inputView: { paddingVertical: 10, marginVertical: 5 },
   buttonLabelStyle: { fontSize: 12, fontFamily: "CircularStd-Medium" },
   pickerView: { borderWidth: 1, borderRadius: 4, marginVertical: 10 },
   buttonLabel: { fontFamily: "Poppins-Regular", fontSize: 12, lineHeight: 18 },

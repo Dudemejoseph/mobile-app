@@ -314,7 +314,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                   <TextInput
                     disabled={true}
                     label=""
-                    value={size_unit?.name === "sqm (square meters)" ? "" + distance.toString() : hecres.toString()}
+                    value={size_unit?.name === "Acre" ? "" + distance.toString() : hecres.toString()}
                     onChangeText={handleChange("size")}
                     mode="outlined"
                     onBlur={handleBlur("size")}

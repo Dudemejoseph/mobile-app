@@ -36,3 +36,9 @@ export interface CropState {
   submitDefaultCropActivitiesError: string | any;
   submitDefaultCropActivitiesMessage: string | any;
 }
+
+export interface CropRating {
+  id: number;
+  value: number;
+  label: string;
+}

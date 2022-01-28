@@ -240,6 +240,28 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
               </Text>
             </TouchableOpacity>
           </View>
+          <View style={styles.directoryRow}>
+            <TouchableOpacity
+              style={[
+                styles.buttonView,
+                {
+                  borderColor: dark ? combinedDarkTheme.colors.text : "brown",
+                },
+              ]}
+            >
+              {/* <GenerateReportIcon /> */}
+              <Text
+                style={[
+                  styles.buttonLabel,
+                  {
+                    color: dark ? combinedDarkTheme.colors.text : "brown",
+                  },
+                ]}
+              >
+                Crop health indicator
+              </Text>
+            </TouchableOpacity>
+          </View>
         </Surface>
       </ScrollView>
       <Portal theme={dark ? combinedDarkTheme : combinedDefaultTheme}>

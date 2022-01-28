@@ -597,7 +597,7 @@ const AddFarmExpense = () => {
                 </View>
 
                 {/* Technicalities */}
-                <View style={styles.inputView}>
+                {/* <View style={styles.inputView}>
                   <TextInput
                     label="Technicalities"
                     multiline={true}
@@ -618,10 +618,10 @@ const AddFarmExpense = () => {
                       {errors?.technicalities}
                     </HelperText>
                   )}
-                </View>
+                </View> */}
 
                 {/* Lessons lesrtn */}
-                <View style={styles.inputView}>
+                {/* <View style={styles.inputView}>
                   <TextInput
                     label="Lessons learnt"
                     multiline={true}
@@ -642,7 +642,7 @@ const AddFarmExpense = () => {
                       {errors?.note}
                     </HelperText>
                   )}
-                </View>
+                </View> */}
 
                 <View style={styles.inputView}>
                   <TextInput

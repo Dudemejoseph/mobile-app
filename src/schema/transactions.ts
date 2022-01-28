@@ -20,5 +20,4 @@ export const AddFarmExpenseSchema = Yup.object().shape({
   date: Yup.string().required("Please select date"),
   brand: Yup.string().required("Please enter brand"),
   category_id: Yup.number().nullable(),
-  lessons_learnt: Yup.string().required("Please enter lessons learnt"),
 });
