@@ -1,10 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
-import {
-  ADD_FINANCE_SCREEN,
-  EOP_SCREEN,
-  FINANCE_SCREEN,
-} from "../constants/route_names";
+import { ADD_FINANCE_SCREEN, EOP_SCREEN, FINANCE_SCREEN } from "../constants/route_names";
 import Finance from "../screens/Finance";
 import AddFinance from "../screens/Finance/AddFinance";
 import Eop from "../screens/finance/EOP";
@@ -17,6 +13,7 @@ const FinancesStack = () => {
       initialRouteName={FINANCE_SCREEN}
       screenOptions={{
         headerShown: false,
+        animation: "fade_from_bottom",
       }}
     >
       <Stack.Screen name={FINANCE_SCREEN} component={Finance} />

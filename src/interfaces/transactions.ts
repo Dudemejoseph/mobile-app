@@ -44,9 +44,10 @@ export interface AddFarmExpenseInput {
   unit_price?: number | any;
   balance_to_be_paid: number | any;
   date: string;
-  amount?: number | any;
+  amount: number | any;
   quantity: number | any;
   note: string;
-  category_id?: number;
-  technicalities?: string;
+  category_id: number;
+  technicalities: string;
+  lessons_learnt: string;
 }

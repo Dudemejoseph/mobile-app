@@ -35,8 +35,7 @@ const inventorySlice = createSlice({
   },
 });
 
-export const { fetch, setError, setMessage, setInventory } =
-  inventorySlice.actions;
+export const { fetch, setError, setMessage, setInventory } = inventorySlice.actions;
 export default inventorySlice.reducer;
 export const inventorySelector = (state) => state.inventory;
 
@@ -60,7 +59,6 @@ export const fetchInventory = () => {
     dispatch(fetch());
     try {
       const res = await axiosInstance.get("/inventory");
-      console.log(res.data);
       dispatch(setInventory(res?.data?.result?.data));
     } catch (error) {
       console.error("inv error ", error);

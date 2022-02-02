@@ -2,15 +2,7 @@ import { Picker } from "@react-native-picker/picker";
 import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { KeyboardAvoidingView, ScrollView, View } from "react-native";
-import {
-  Button,
-  HelperText,
-  Paragraph,
-  Subheading,
-  Surface,
-  TextInput,
-  useTheme,
-} from "react-native-paper";
+import { Button, HelperText, Paragraph, Subheading, Surface, TextInput, useTheme } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import AppbarComponent from "../../../components/Shared/Appbar";
 import ErrorComponent from "../../../components/Shared/ErrorComponent";
@@ -18,10 +10,7 @@ import LoadingComponent from "../../../components/Shared/LoadingComponent";
 import ErrorSnackbar from "../../../components/Shared/Snackbar/ErrorSnackbar";
 import InfoSnackbar from "../../../components/Shared/Snackbar/InfoSnackbar";
 import Wrapper from "../../../components/Shared/Wrapper";
-import {
-  combinedDarkTheme,
-  combinedDefaultTheme,
-} from "../../../constants/theme";
+import { combinedDarkTheme, combinedDefaultTheme } from "../../../constants/theme";
 import { Crop } from "../../../interfaces/crop";
 import { CreateFarmInput, FarmState } from "../../../interfaces/farm";
 import { DefaultScreenProps } from "../../../interfaces/shared_components";
@@ -29,11 +18,7 @@ import { UtilitiesState } from "../../../interfaces/utilities";
 import { createFarm } from "../../../redux/features/farms/farm_actions";
 import { farmSelector } from "../../../redux/features/farms/farm_reducer";
 import { utlitiesSelector } from "../../../redux/features/utilities/utilties_reducer";
-import {
-  fetchCountries,
-  fetchCrops,
-  fetchStates,
-} from "../../../redux/features/utilities/utlities_actions";
+import { fetchCountries, fetchCrops, fetchStates } from "../../../redux/features/utilities/utlities_actions";
 import { CreateFarmSchema } from "../../../schema/farm";
 import { ownerships, sizes } from "../../../utils/utilsData";
 import styles from "./styles";
@@ -55,23 +40,18 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
     fetchingStates,
     fetchingStatesError,
   } = useSelector(utlitiesSelector) as UtilitiesState;
-  const { creatingFarm, creatingFarmError, creatingFarmMessage } = useSelector(
-    farmSelector
-  ) as FarmState;
-  const [errorSnackbarVisible, setErrorSnackbarVisible] =
-    useState<boolean>(false);
-  const [infoSnackbarVisible, setInfoSnackbarVisible] =
-    useState<boolean>(false);
+  const { creatingFarm, creatingFarmError, creatingFarmMessage } = useSelector(farmSelector) as FarmState;
+  const [errorSnackbarVisible, setErrorSnackbarVisible] = useState<boolean>(false);
+  const [infoSnackbarVisible, setInfoSnackbarVisible] = useState<boolean>(false);
   const country_id = 161;
-  const [state_id, setStateID] = useState<number | any>("");
-  const [crop_id, setCropID] = useState<number | any>("");
+  const [state_id, setStateID] = useState<number>(0);
+  const [crop_id, setCropID] = useState<number>(0);
   const [lgas, setLGAS] = useState<[]>([]);
-  const [lga_id, setLGA] = useState<number | any>("");
+  const [lga_id, setLGA] = useState<number>(null);
   const [selectedLGA, setSelectedLGA] = useState<string>("LGA");
   const [selectedState, setSelectedState] = useState<string>("State");
   const [name, setName] = useState("");
-  const [crop, setCrop] = useState("Choose Crop");
-  // const [size, setSize] = useState(hecres);
+  const [crop, setCrop] = useState("Select crop");
   const [size_unit, setUnit] = useState<string | any>("Select unit");
   const [location, setLocation] = useState<string>("");
   const [ownership, setOwnership] = useState<string>("Ownership");
@@ -145,9 +125,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
   if (fetchingCountriesError || fetchingCropsError || fetchingStatesError) {
     return (
       <ErrorComponent
-        error={
-          fetchingCountriesError ?? fetchingCropsError ?? fetchingStatesError
-        }
+        error={fetchingCountriesError ?? fetchingCropsError ?? fetchingStatesError}
         loading={
           (fetchingCountriesError && fetchingCountries) ??
           (fetchingCropsError && fetchingCrops) ??
@@ -164,11 +142,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
     <Wrapper>
       <KeyboardAvoidingView>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <AppbarComponent
-            title="Create Farm"
-            backButton={true}
-            search={false}
-          />
+          <AppbarComponent title="Create Farm" backButton={true} search={false} />
           <Formik
             validationSchema={CreateFarmSchema}
             initialValues={
@@ -187,15 +161,13 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
             }
             onSubmit={() => {}}
           >
-            {({ handleChange, handleBlur, values, errors, setFieldValue }) => (
+            {({ handleChange, handleBlur, values, errors, setFieldValue, isValid }) => (
               <Surface style={styles.surface}>
                 <View
                   style={[
                     styles.headingView,
                     {
-                      backgroundColor: dark
-                        ? combinedDarkTheme.colors.placeholder
-                        : combinedDefaultTheme.colors.border,
+                      backgroundColor: dark ? combinedDarkTheme.colors.placeholder : combinedDefaultTheme.colors.border,
                       borderBottomColor: dark
                         ? combinedDarkTheme.colors.placeholder
                         : combinedDefaultTheme.colors.border,
@@ -206,9 +178,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                     style={[
                       styles.headingText,
                       {
-                        color: dark
-                          ? combinedDarkTheme.colors.text
-                          : combinedDefaultTheme.colors.text,
+                        color: dark ? combinedDarkTheme.colors.text : combinedDefaultTheme.colors.text,
                       },
                     ]}
                   >
@@ -228,11 +198,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                     error={errors?.name ? true : false}
                     selectionColor={colors.text}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    outlineColor={
-                      dark
-                        ? combinedDarkTheme.colors.border
-                        : combinedDefaultTheme.colors.backdrop
-                    }
+                    outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                     style={[
                       styles.buttonLabel,
                       {
@@ -244,10 +210,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                   />
 
                   {errors?.name && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.name ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.name ? true : false}>
                       {errors?.name}
                     </HelperText>
                   )}
@@ -258,9 +221,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                     style={[
                       styles.pickerView,
                       {
-                        borderColor: dark
-                          ? combinedDarkTheme.colors.primary
-                          : combinedDefaultTheme.colors.backdrop,
+                        borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.backdrop,
                         backgroundColor: dark
                           ? combinedDarkTheme.colors.background
                           : combinedDefaultTheme.colors.surface,
@@ -278,9 +239,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                       itemStyle={[
                         styles.pickerView,
                         {
-                          borderColor: dark
-                            ? combinedDarkTheme.colors.primary
-                            : combinedDefaultTheme.colors.text,
+                          borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text,
                         },
                       ]}
                     >
@@ -288,11 +247,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                         return (
                           <Picker.Item
                             key={index}
-                            color={
-                              dark
-                                ? combinedDarkTheme.colors.primary
-                                : combinedDefaultTheme.colors.text
-                            }
+                            color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
                             label={item.name}
                             value={item}
                             style={styles.buttonLabel}
@@ -302,10 +257,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                     </Picker>
                   </Surface>
                   {errors?.crop_id && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.crop_id ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.crop_id ? true : false}>
                       {errors?.crop_id}
                     </HelperText>
                   )}
@@ -316,9 +268,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                     style={[
                       styles.pickerView,
                       {
-                        borderColor: dark
-                          ? combinedDarkTheme.colors.primary
-                          : combinedDefaultTheme.colors.backdrop,
+                        borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.backdrop,
                         backgroundColor: dark
                           ? combinedDarkTheme.colors.background
                           : combinedDefaultTheme.colors.surface,
@@ -329,17 +279,13 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                       mode="dropdown"
                       selectedValue={size_unit}
                       onValueChange={(itemValue: any) => {
-                        console.log("val ", itemValue);
-
                         setUnit(itemValue);
                         setFieldValue("size_unit", itemValue);
                       }}
                       itemStyle={[
                         styles.pickerView,
                         {
-                          borderColor: dark
-                            ? combinedDarkTheme.colors.primary
-                            : combinedDefaultTheme.colors.text,
+                          borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text,
                         },
                       ]}
                     >
@@ -347,11 +293,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                         return (
                           <Picker.Item
                             key={index}
-                            color={
-                              dark
-                                ? combinedDarkTheme.colors.primary
-                                : combinedDefaultTheme.colors.text
-                            }
+                            color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
                             label={item.name}
                             value={item}
                             style={styles.buttonLabel}
@@ -361,10 +303,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                     </Picker>
                   </Surface>
                   {errors?.size_unit && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.size_unit ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.size_unit ? true : false}>
                       {errors?.size_unit}
                     </HelperText>
                   )}
@@ -375,22 +314,14 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                   <TextInput
                     disabled={true}
                     label=""
-                    value={
-                      size_unit?.name === "sqm (square meters)"
-                        ? "" + distance.toString()
-                        : hecres.toString()
-                    }
+                    value={size_unit?.name === "Acre" ? "" + distance.toString() : hecres.toString()}
                     onChangeText={handleChange("size")}
                     mode="outlined"
                     onBlur={handleBlur("size")}
                     error={errors?.size ? true : false}
                     selectionColor={colors.text}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    outlineColor={
-                      dark
-                        ? combinedDarkTheme.colors.border
-                        : combinedDefaultTheme.colors.backdrop
-                    }
+                    outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                     style={[
                       styles.buttonLabel,
                       {
@@ -407,9 +338,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                     style={[
                       styles.pickerView,
                       {
-                        borderColor: dark
-                          ? combinedDarkTheme.colors.primary
-                          : combinedDefaultTheme.colors.backdrop,
+                        borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.backdrop,
                         backgroundColor: dark
                           ? combinedDarkTheme.colors.background
                           : combinedDefaultTheme.colors.surface,
@@ -426,9 +355,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                       itemStyle={[
                         styles.pickerView,
                         {
-                          borderColor: dark
-                            ? combinedDarkTheme.colors.primary
-                            : combinedDefaultTheme.colors.text,
+                          borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text,
                         },
                       ]}
                     >
@@ -436,11 +363,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                         return (
                           <Picker.Item
                             key={index}
-                            color={
-                              dark
-                                ? combinedDarkTheme.colors.primary
-                                : combinedDefaultTheme.colors.text
-                            }
+                            color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
                             label={item.name}
                             value={item.name}
                             style={styles.buttonLabel}
@@ -450,10 +373,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                     </Picker>
                   </Surface>
                   {errors?.ownership && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.ownership ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.ownership ? true : false}>
                       {errors?.ownership}
                     </HelperText>
                   )}
@@ -464,9 +384,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                     style={[
                       styles.pickerView,
                       {
-                        borderColor: dark
-                          ? combinedDarkTheme.colors.primary
-                          : combinedDefaultTheme.colors.backdrop,
+                        borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.backdrop,
                         backgroundColor: dark
                           ? combinedDarkTheme.colors.background
                           : combinedDefaultTheme.colors.surface,
@@ -485,9 +403,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                       itemStyle={[
                         styles.pickerView,
                         {
-                          borderColor: dark
-                            ? combinedDarkTheme.colors.primary
-                            : combinedDefaultTheme.colors.text,
+                          borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text,
                         },
                       ]}
                     >
@@ -495,11 +411,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                         return (
                           <Picker.Item
                             key={index}
-                            color={
-                              dark
-                                ? combinedDarkTheme.colors.primary
-                                : combinedDefaultTheme.colors.text
-                            }
+                            color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
                             label={item.name}
                             value={item}
                             style={styles.buttonLabel}
@@ -509,10 +421,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                     </Picker>
                   </Surface>
                   {errors?.state_id && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.state_id ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.state_id ? true : false}>
                       {errors?.state_id}
                     </HelperText>
                   )}
@@ -524,9 +433,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                       style={[
                         styles.pickerView,
                         {
-                          borderColor: dark
-                            ? combinedDarkTheme.colors.primary
-                            : combinedDefaultTheme.colors.backdrop,
+                          borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.backdrop,
                           backgroundColor: dark
                             ? combinedDarkTheme.colors.background
                             : combinedDefaultTheme.colors.surface,
@@ -544,9 +451,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                         itemStyle={[
                           styles.pickerView,
                           {
-                            borderColor: dark
-                              ? combinedDarkTheme.colors.primary
-                              : combinedDefaultTheme.colors.text,
+                            borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text,
                           },
                         ]}
                       >
@@ -554,11 +459,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                           return (
                             <Picker.Item
                               key={index}
-                              color={
-                                dark
-                                  ? combinedDarkTheme.colors.primary
-                                  : combinedDefaultTheme.colors.text
-                              }
+                              color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
                               label={item.name}
                               value={item}
                               style={styles.buttonLabel}
@@ -568,10 +469,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                       </Picker>
                     </Surface>
                     {errors?.lga_id && (
-                      <HelperText
-                        type="error"
-                        visible={errors?.lga_id ? true : false}
-                      >
+                      <HelperText type="error" visible={errors?.lga_id ? true : false}>
                         {errors?.lga_id}
                       </HelperText>
                     )}
@@ -591,11 +489,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                     error={errors?.name ? true : false}
                     selectionColor={colors.text}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    outlineColor={
-                      dark
-                        ? combinedDarkTheme.colors.border
-                        : combinedDefaultTheme.colors.backdrop
-                    }
+                    outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                     style={[
                       styles.buttonLabel,
                       {
@@ -607,10 +501,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                   />
 
                   {errors?.location && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.location ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.location ? true : false}>
                       {errors?.location}
                     </HelperText>
                   )}
@@ -628,9 +519,7 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                   labelStyle={[
                     styles.buttonLabel,
                     {
-                      color: dark
-                        ? combinedDarkTheme.colors.background
-                        : combinedDefaultTheme.colors.background,
+                      color: dark ? combinedDarkTheme.colors.background : combinedDefaultTheme.colors.background,
                     },
                   ]}
                 >
@@ -641,18 +530,8 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
           </Formik>
         </ScrollView>
         {creatingFarmError &&
-          ErrorSnackbar(
-            errorSnackbarVisible,
-            setErrorSnackbarVisible,
-            creatingFarmError,
-            () => submitForm()
-          )}
-        {creatingFarmMessage &&
-          InfoSnackbar(
-            infoSnackbarVisible,
-            setInfoSnackbarVisible,
-            creatingFarmMessage
-          )}
+          ErrorSnackbar(errorSnackbarVisible, setErrorSnackbarVisible, creatingFarmError, () => submitForm())}
+        {creatingFarmMessage && InfoSnackbar(infoSnackbarVisible, setInfoSnackbarVisible, creatingFarmMessage)}
       </KeyboardAvoidingView>
     </Wrapper>
   );

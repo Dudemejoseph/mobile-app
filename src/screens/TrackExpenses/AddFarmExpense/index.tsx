@@ -4,16 +4,7 @@ import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import {
-  Button,
-  HelperText,
-  Paragraph,
-  ProgressBar,
-  Subheading,
-  Surface,
-  Text,
-  TextInput,
-} from "react-native-paper";
+import { Button, HelperText, Paragraph, ProgressBar, Subheading, Surface, Text, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import AppbarComponent from "../../../components/Shared/Appbar";
 import ErrorComponent from "../../../components/Shared/ErrorComponent";
@@ -21,19 +12,10 @@ import LoadingComponent from "../../../components/Shared/LoadingComponent";
 import ErrorSnackbar from "../../../components/Shared/Snackbar/ErrorSnackbar";
 import InfoSnackbar from "../../../components/Shared/Snackbar/InfoSnackbar";
 import Wrapper from "../../../components/Shared/Wrapper";
-import {
-  combinedDarkTheme,
-  combinedDefaultTheme,
-} from "../../../constants/theme";
+import { combinedDarkTheme, combinedDefaultTheme } from "../../../constants/theme";
 import { Farm, FarmState } from "../../../interfaces/farm";
-import {
-  AddFarmExpenseInput,
-  TransactionsState,
-} from "../../../interfaces/transactions";
-import {
-  fetchCategoryActivitesAction,
-  getFarms,
-} from "../../../redux/features/farms/farm_actions";
+import { AddFarmExpenseInput, TransactionsState } from "../../../interfaces/transactions";
+import { fetchCategoryActivitesAction, getFarms } from "../../../redux/features/farms/farm_actions";
 import { farmSelector } from "../../../redux/features/farms/farm_reducer";
 import { addFarmExpenseAction } from "../../../redux/features/transactions/transactions_actions";
 import { transactionsSelector } from "../../../redux/features/transactions/transactions_reducer";
@@ -52,8 +34,9 @@ const AddFarmExpense = () => {
     categoryActivitiesError,
     farmActivities,
   } = useSelector(farmSelector) as FarmState;
-  const { addingFarmExpense, addFarmExpenseError, addFarmExpenseMessage } =
-    useSelector(transactionsSelector) as TransactionsState;
+  const { addingFarmExpense, addFarmExpenseError, addFarmExpenseMessage } = useSelector(
+    transactionsSelector
+  ) as TransactionsState;
   const [selectedFarm, setSelectedFarm] = useState<any>("Select Farm");
   const [selectedActivity, setSelectedActivity] = useState<any>(null);
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
@@ -61,14 +44,11 @@ const AddFarmExpense = () => {
   const [category_id, setCategoryId] = useState<number | any>(null);
   const [farm_activity_id, setFarmActivtyId] = useState<number | any>(null);
   const [crop, setCrop] = useState<string | any>(null);
-  const [isDatePickerVisible, setDatePickerVisibility] =
-    useState<boolean>(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState<boolean>(false);
   const [date, setDate] = useState(null);
   const [categoryActivities2, setCategoryActivities] = useState<any>(null);
-  const [errorSnackbarVisible, setErrorSnackbarVisible] =
-    useState<boolean>(false);
-  const [infoSnackbarVisible, setInfoSnackbarVisible] =
-    useState<boolean>(false);
+  const [errorSnackbarVisible, setErrorSnackbarVisible] = useState<boolean>(false);
+  const [infoSnackbarVisible, setInfoSnackbarVisible] = useState<boolean>(false);
   const [tempValues, setTempValues] = useState<AddFarmExpenseInput | any>(null);
 
   const showDatePicker = () => {
@@ -109,16 +89,21 @@ const AddFarmExpense = () => {
   // Converting categories activities data to an array of objects
   useEffect(() => {
     const convertToArray = () => {
+      if (selectedFarm === "Select Farm") {
+        return;
+      }
+
+      setCategoryActivities([]);
       // const entries = Object.values(categoryActivities);
       const entries = Object.entries(categoryActivities).map((e) => ({
         [e[0]]: e[1],
       }));
-      let keyArr: any = [];
+      const keyArr: any = [];
       for (let i = 0; i < entries.length; i++) {
-        let key = Object.keys(entries[i]);
-        let values = Object.values(entries[i]);
-        let subValues: any = values;
-        let miniValues: any = subValues[0];
+        const key = Object.keys(entries[i]);
+        const values = Object.values(entries[i]);
+        const subValues: any = values;
+        const miniValues: any = subValues[0];
         for (let j = 0; j < miniValues.length; j++) {
           keyArr.push({
             category: key[0],
@@ -133,10 +118,8 @@ const AddFarmExpense = () => {
       }
       setCategoryActivities(keyArr);
     };
-    if (categoryActivities && !categoryActivities2) {
-      convertToArray();
-    }
-  }, [categoryActivities, categoryActivities2]);
+    convertToArray();
+  }, [categoryActivities]);
 
   useEffect(() => {
     if (addFarmExpenseError) {
@@ -185,30 +168,24 @@ const AddFarmExpense = () => {
 
   return (
     <Wrapper>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.wrapper}
-      >
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.wrapper}>
         <ScrollView>
-          <AppbarComponent
-            title="Add Farm Expense"
-            search={false}
-            backButton={true}
-          />
+          <AppbarComponent title="Add Farm Expense" search={false} backButton={true} />
           <Formik
             validationSchema={AddFarmExpenseSchema}
             initialValues={
               {
-                farm_id: farm_id,
-                farm_activity_id: farm_activity_id,
-                balance_to_be_paid: 0.0,
+                farm_id,
+                farm_activity_id,
+                balance_to_be_paid: "",
                 brand: "",
-                date: date,
+                date,
                 note: "",
                 technicalities: "",
-                quantity: 0.0,
-                amount: 0.0,
-                unit_price: 0.0,
+                quantity: "",
+                amount: "",
+                unit_price: "",
+                lessons_learnt: "",
               } as unknown as AddFarmExpenseInput
             }
             onSubmit={() => {}}
@@ -219,9 +196,7 @@ const AddFarmExpense = () => {
                   style={[
                     styles.headingView,
                     {
-                      backgroundColor: dark
-                        ? combinedDarkTheme.colors.placeholder
-                        : combinedDefaultTheme.colors.border,
+                      backgroundColor: dark ? combinedDarkTheme.colors.placeholder : combinedDefaultTheme.colors.border,
                       borderBottomColor: dark
                         ? combinedDarkTheme.colors.placeholder
                         : combinedDefaultTheme.colors.border,
@@ -232,9 +207,7 @@ const AddFarmExpense = () => {
                     style={[
                       styles.headingText,
                       {
-                        color: dark
-                          ? combinedDarkTheme.colors.text
-                          : combinedDefaultTheme.colors.text,
+                        color: dark ? combinedDarkTheme.colors.text : combinedDefaultTheme.colors.text,
                       },
                     ]}
                   >
@@ -247,9 +220,7 @@ const AddFarmExpense = () => {
                     style={[
                       styles.pickerView,
                       {
-                        borderColor: dark
-                          ? combinedDarkTheme.colors.primary
-                          : combinedDefaultTheme.colors.backdrop,
+                        borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.backdrop,
                         backgroundColor: dark
                           ? combinedDarkTheme.colors.background
                           : combinedDefaultTheme.colors.surface,
@@ -270,18 +241,12 @@ const AddFarmExpense = () => {
                       itemStyle={[
                         styles.pickerView,
                         {
-                          borderColor: dark
-                            ? combinedDarkTheme.colors.primary
-                            : combinedDefaultTheme.colors.text,
+                          borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text,
                         },
                       ]}
                     >
                       <Picker.Item
-                        color={
-                          dark
-                            ? combinedDarkTheme.colors.primary
-                            : combinedDefaultTheme.colors.text
-                        }
+                        color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
                         label={"Select Farm"}
                         value={null}
                         style={styles.buttonLabel}
@@ -290,11 +255,7 @@ const AddFarmExpense = () => {
                         return (
                           <Picker.Item
                             key={index}
-                            color={
-                              dark
-                                ? combinedDarkTheme.colors.primary
-                                : combinedDefaultTheme.colors.text
-                            }
+                            color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
                             label={item.name}
                             value={item}
                             style={styles.buttonLabel}
@@ -304,10 +265,7 @@ const AddFarmExpense = () => {
                     </Picker>
                   </Surface>
                   {errors?.farm_id && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.farm_id ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.farm_id ? true : false}>
                       {errors?.farm_id}
                     </HelperText>
                   )}
@@ -322,11 +280,7 @@ const AddFarmExpense = () => {
                       mode="outlined"
                       selectionColor={colors.text}
                       theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                      outlineColor={
-                        dark
-                          ? combinedDarkTheme.colors.border
-                          : combinedDefaultTheme.colors.backdrop
-                      }
+                      outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                       style={[
                         styles.buttonLabel,
                         {
@@ -344,40 +298,28 @@ const AddFarmExpense = () => {
                     <ProgressBar
                       theme={dark ? combinedDarkTheme : combinedDefaultTheme}
                       indeterminate={true}
-                      color={
-                        dark
-                          ? combinedDarkTheme.colors.primary
-                          : combinedDefaultTheme.colors.primary
-                      }
+                      color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.primary}
                     />
                   </View>
                 )}
 
                 {categoryActivitiesError && (
                   <View style={styles.inputView}>
-                    <Text>
-                      Oops! Something went wrong while fetching extra farm data
-                    </Text>
-                    <Button
-                      onPress={retry}
-                      uppercase={false}
-                      theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    >
+                    <Text>Oops! Something went wrong while fetching extra farm data</Text>
+                    <Button onPress={retry} uppercase={false} theme={dark ? combinedDarkTheme : combinedDefaultTheme}>
                       Retry
                     </Button>
                   </View>
                 )}
 
                 {/* Select Category */}
-                {farm_id && categoryActivities && categoryActivities2 && (
+                {farm_id && !fetchingCategoryActivities && categoryActivities && categoryActivities2 && (
                   <View style={styles.inputView}>
                     <Surface
                       style={[
                         styles.pickerView,
                         {
-                          borderColor: dark
-                            ? combinedDarkTheme.colors.primary
-                            : combinedDefaultTheme.colors.backdrop,
+                          borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.backdrop,
                           backgroundColor: dark
                             ? combinedDarkTheme.colors.background
                             : combinedDefaultTheme.colors.surface,
@@ -395,47 +337,32 @@ const AddFarmExpense = () => {
                         itemStyle={[
                           styles.pickerView,
                           {
-                            borderColor: dark
-                              ? combinedDarkTheme.colors.primary
-                              : combinedDefaultTheme.colors.text,
+                            borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text,
                           },
                         ]}
                       >
                         <Picker.Item
-                          color={
-                            dark
-                              ? combinedDarkTheme.colors.primary
-                              : combinedDefaultTheme.colors.text
-                          }
+                          color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
                           label={"Select Category"}
                           value={null}
                           style={styles.buttonLabel}
                         />
 
-                        {categoryActivities2?.map(
-                          (item: any, index: number) => {
-                            return (
-                              <Picker.Item
-                                key={index}
-                                color={
-                                  dark
-                                    ? combinedDarkTheme.colors.primary
-                                    : combinedDefaultTheme.colors.text
-                                }
-                                label={item.category}
-                                value={item}
-                                style={styles.buttonLabel}
-                              />
-                            );
-                          }
-                        )}
+                        {categoryActivities2?.map((item: any, index: number) => {
+                          return (
+                            <Picker.Item
+                              key={index}
+                              color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
+                              label={item.category}
+                              value={item}
+                              style={styles.buttonLabel}
+                            />
+                          );
+                        })}
                       </Picker>
                     </Surface>
                     {errors?.category_id && (
-                      <HelperText
-                        type="error"
-                        visible={errors?.category_id ? true : false}
-                      >
+                      <HelperText type="error" visible={errors?.category_id ? true : false}>
                         {errors?.category_id}
                       </HelperText>
                     )}
@@ -443,15 +370,13 @@ const AddFarmExpense = () => {
                 )}
 
                 {/* Farm activity /subcategory */}
-                {selectedCategory && selectedCategory !== "" && (
+                {!fetchingCategoryActivities && selectedCategory && selectedCategory !== "" && (
                   <View style={styles.inputView}>
                     <Surface
                       style={[
                         styles.pickerView,
                         {
-                          borderColor: dark
-                            ? combinedDarkTheme.colors.primary
-                            : combinedDefaultTheme.colors.backdrop,
+                          borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.backdrop,
                           backgroundColor: dark
                             ? combinedDarkTheme.colors.background
                             : combinedDefaultTheme.colors.surface,
@@ -464,54 +389,36 @@ const AddFarmExpense = () => {
                         onValueChange={(itemValue: any) => {
                           setSelectedActivity(itemValue);
                           setFarmActivtyId(itemValue.id);
-                          setFieldValue(
-                            "farm_activity_id",
-                            itemValue?.farm_activity_id
-                          );
+                          setFieldValue("farm_activity_id", itemValue?.farm_activity_id);
                         }}
                         itemStyle={[
                           styles.pickerView,
                           {
-                            borderColor: dark
-                              ? combinedDarkTheme.colors.primary
-                              : combinedDefaultTheme.colors.text,
+                            borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text,
                           },
                         ]}
                       >
                         <Picker.Item
-                          color={
-                            dark
-                              ? combinedDarkTheme.colors.primary
-                              : combinedDefaultTheme.colors.text
-                          }
+                          color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
                           label={"Select Farm Activity"}
                           value={""}
                           style={styles.buttonLabel}
                         />
-                        {selectedCategory.subCategory?.map(
-                          (item: any, index: number) => {
-                            return (
-                              <Picker.Item
-                                key={index}
-                                color={
-                                  dark
-                                    ? combinedDarkTheme.colors.primary
-                                    : combinedDefaultTheme.colors.text
-                                }
-                                label={item.subCategory}
-                                value={item}
-                                style={styles.buttonLabel}
-                              />
-                            );
-                          }
-                        )}
+                        {selectedCategory.subCategory?.map((item: any, index: number) => {
+                          return (
+                            <Picker.Item
+                              key={index}
+                              color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
+                              label={item.subCategory}
+                              value={item}
+                              style={styles.buttonLabel}
+                            />
+                          );
+                        })}
                       </Picker>
                     </Surface>
                     {errors?.category_id && (
-                      <HelperText
-                        type="error"
-                        visible={errors?.category_id ? true : false}
-                      >
+                      <HelperText type="error" visible={errors?.category_id ? true : false}>
                         {errors?.category_id}
                       </HelperText>
                     )}
@@ -529,11 +436,7 @@ const AddFarmExpense = () => {
                     error={errors?.brand ? true : false}
                     selectionColor={colors.text}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    outlineColor={
-                      dark
-                        ? combinedDarkTheme.colors.border
-                        : combinedDefaultTheme.colors.backdrop
-                    }
+                    outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                     style={[
                       styles.buttonLabel,
                       {
@@ -545,10 +448,7 @@ const AddFarmExpense = () => {
                   />
 
                   {errors?.brand && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.brand ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.brand ? true : false}>
                       {errors?.brand}
                     </HelperText>
                   )}
@@ -566,11 +466,7 @@ const AddFarmExpense = () => {
                     error={errors?.quantity ? true : false}
                     selectionColor={colors.text}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    outlineColor={
-                      dark
-                        ? combinedDarkTheme.colors.border
-                        : combinedDefaultTheme.colors.backdrop
-                    }
+                    outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                     style={[
                       styles.buttonLabel,
                       {
@@ -582,10 +478,7 @@ const AddFarmExpense = () => {
                   />
 
                   {errors?.quantity && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.quantity ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.quantity ? true : false}>
                       {errors?.quantity}
                     </HelperText>
                   )}
@@ -603,11 +496,7 @@ const AddFarmExpense = () => {
                     error={errors?.unit_price ? true : false}
                     selectionColor={colors.text}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    outlineColor={
-                      dark
-                        ? combinedDarkTheme.colors.border
-                        : combinedDefaultTheme.colors.backdrop
-                    }
+                    outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                     style={[
                       styles.buttonLabel,
                       {
@@ -619,10 +508,7 @@ const AddFarmExpense = () => {
                   />
 
                   {errors?.unit_price && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.unit_price ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.unit_price ? true : false}>
                       {errors?.unit_price}
                     </HelperText>
                   )}
@@ -640,11 +526,7 @@ const AddFarmExpense = () => {
                     error={errors?.amount ? true : false}
                     selectionColor={colors.text}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    outlineColor={
-                      dark
-                        ? combinedDarkTheme.colors.border
-                        : combinedDefaultTheme.colors.backdrop
-                    }
+                    outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                     style={[
                       styles.buttonLabel,
                       {
@@ -656,10 +538,7 @@ const AddFarmExpense = () => {
                   />
 
                   {errors?.amount && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.amount ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.amount ? true : false}>
                       {errors?.amount}
                     </HelperText>
                   )}
@@ -677,11 +556,7 @@ const AddFarmExpense = () => {
                     error={errors?.balance_to_be_paid ? true : false}
                     selectionColor={colors.text}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    outlineColor={
-                      dark
-                        ? combinedDarkTheme.colors.border
-                        : combinedDefaultTheme.colors.backdrop
-                    }
+                    outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                     style={[
                       styles.buttonLabel,
                       {
@@ -693,10 +568,7 @@ const AddFarmExpense = () => {
                   />
 
                   {errors?.balance_to_be_paid && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.balance_to_be_paid ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.balance_to_be_paid ? true : false}>
                       {errors?.balance_to_be_paid}
                     </HelperText>
                   )}
@@ -713,9 +585,7 @@ const AddFarmExpense = () => {
                     style={[
                       styles.pickerView,
                       {
-                        borderColor: dark
-                          ? combinedDarkTheme.colors.primary
-                          : combinedDefaultTheme.colors.backdrop,
+                        borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.backdrop,
                         backgroundColor: dark
                           ? combinedDarkTheme.colors.background
                           : combinedDefaultTheme.colors.surface,
@@ -727,7 +597,7 @@ const AddFarmExpense = () => {
                 </View>
 
                 {/* Technicalities */}
-                <View style={styles.inputView}>
+                {/* <View style={styles.inputView}>
                   <TextInput
                     label="Technicalities"
                     multiline={true}
@@ -739,54 +609,40 @@ const AddFarmExpense = () => {
                     error={errors?.note ? true : false}
                     selectionColor={colors.text}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    outlineColor={
-                      dark
-                        ? combinedDarkTheme.colors.border
-                        : combinedDefaultTheme.colors.backdrop
-                    }
+                    outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                     style={styles.buttonLabel}
                   />
 
                   {errors?.technicalities && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.technicalities ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.technicalities ? true : false}>
                       {errors?.technicalities}
                     </HelperText>
                   )}
-                </View>
+                </View> */}
 
                 {/* Lessons lesrtn */}
-                <View style={styles.inputView}>
+                {/* <View style={styles.inputView}>
                   <TextInput
                     label="Lessons learnt"
                     multiline={true}
                     numberOfLines={8}
-                    // value={values.note}
-                    // onChangeText={handleChange("note")}
+                    value={values.lessons_learnt}
+                    onChangeText={handleChange("lessons_learnt")}
                     mode="outlined"
                     onBlur={handleBlur("lessons_learnt")}
                     error={errors?.note ? true : false}
                     selectionColor={colors.text}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    outlineColor={
-                      dark
-                        ? combinedDarkTheme.colors.border
-                        : combinedDefaultTheme.colors.backdrop
-                    }
+                    outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                     style={styles.buttonLabel}
                   />
 
                   {errors?.note && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.note ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.note ? true : false}>
                       {errors?.note}
                     </HelperText>
                   )}
-                </View>
+                </View> */}
 
                 <View style={styles.inputView}>
                   <TextInput
@@ -800,19 +656,12 @@ const AddFarmExpense = () => {
                     error={errors?.note ? true : false}
                     selectionColor={colors.text}
                     theme={dark ? combinedDarkTheme : combinedDefaultTheme}
-                    outlineColor={
-                      dark
-                        ? combinedDarkTheme.colors.border
-                        : combinedDefaultTheme.colors.backdrop
-                    }
+                    outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
                     style={styles.buttonLabel}
                   />
 
                   {errors?.note && (
-                    <HelperText
-                      type="error"
-                      visible={errors?.note ? true : false}
-                    >
+                    <HelperText type="error" visible={errors?.note ? true : false}>
                       {errors?.note}
                     </HelperText>
                   )}
@@ -830,9 +679,7 @@ const AddFarmExpense = () => {
                   labelStyle={[
                     styles.buttonLabel,
                     {
-                      color: dark
-                        ? combinedDarkTheme.colors.background
-                        : combinedDefaultTheme.colors.background,
+                      color: dark ? combinedDarkTheme.colors.background : combinedDefaultTheme.colors.background,
                     },
                   ]}
                 >
@@ -853,19 +700,21 @@ const AddFarmExpense = () => {
             )}
           </Formik>
         </ScrollView>
-        {addFarmExpenseError &&
-          ErrorSnackbar(
-            errorSnackbarVisible,
-            setErrorSnackbarVisible,
-            addFarmExpenseError,
-            () => submitForm(tempValues)
-          )}
-        {addFarmExpenseMessage &&
-          InfoSnackbar(
-            infoSnackbarVisible,
-            setInfoSnackbarVisible,
-            addFarmExpenseMessage
-          )}
+        {addFarmExpenseError && (
+          <ErrorSnackbar
+            action={() => submitForm(tempValues)}
+            error={addFarmExpenseError}
+            setVisible={setErrorSnackbarVisible}
+            visible={errorSnackbarVisible}
+          />
+        )}
+        {addFarmExpenseMessage && (
+          <InfoSnackbar
+            info={addFarmExpenseMessage}
+            setVisible={setInfoSnackbarVisible}
+            visible={infoSnackbarVisible}
+          />
+        )}
       </KeyboardAvoidingView>
     </Wrapper>
   );

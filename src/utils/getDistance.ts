@@ -1,6 +1,11 @@
 // ======== Get total distance covered by user =============
 
-export function getDistanceCovered(lat1, lng1, lat2, lng2) {
+export function getDistanceCovered(
+  lat1: number,
+  lng1: number,
+  lat2: number,
+  lng2: number
+) {
   let R = 6371; // Radius of the earth in km
   let dLat = deg2Rad(lat2 - lat1);
   let dLng = deg2Rad(lng2 - lng1);
@@ -18,6 +23,6 @@ export function getDistanceCovered(lat1, lng1, lat2, lng2) {
   return d.toFixed(3);
 }
 
-function deg2Rad(deg) {
+function deg2Rad(deg: number) {
   return deg * (Math.PI / 180);
 }

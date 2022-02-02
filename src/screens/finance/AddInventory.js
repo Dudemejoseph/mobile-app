@@ -14,7 +14,7 @@ import Toast from "react-native-toast-message";
 import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../../components/Shared/Wrapper";
 import { COLORS } from "../../constants/theme";
-import { fetchActivities } from "../../redux/features/farmSlice";
+import { fetchFarmActivitiesAction } from "../../redux/features/farms/farm_actions";
 import {
   addInventory,
   inventorySelector,
@@ -45,7 +45,7 @@ const AddInventory = ({ navigation }) => {
   };
 
   useEffect(() => {
-    dispatch(fetchActivities());
+    dispatch(fetchFarmActivitiesAction());
   }, [dispatch]);
 
   useEffect(() => {

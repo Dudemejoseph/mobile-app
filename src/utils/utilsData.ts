@@ -1,19 +1,11 @@
 export const sizes = [
   {
     id: "1",
-    name: "sqm (square meters)",
+    name: "Hectares",
   },
   {
     id: "2",
-    name: "sqkm (square kilometers)",
-  },
-  {
-    id: "3",
-    name: "ha (hectares)",
-  },
-  {
-    id: "4",
-    name: "sqft (square feet)",
+    name: "Acre",
   },
 ];
 
@@ -27,4 +19,3 @@ export const ownerships = [
     name: "rented",
   },
 ];
-

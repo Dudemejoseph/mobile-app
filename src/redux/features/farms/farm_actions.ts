@@ -1,9 +1,6 @@
 import axiosInstance from "../../../config/axios_config";
 import { AppDispatch } from "../../store";
-import {
-  CreateFarmInput,
-  RecordActivityInput,
-} from "./../../../interfaces/farm";
+import { CreateFarmInput, RecordActivityInput } from "./../../../interfaces/farm";
 import {
   creatingFarm,
   creatingFarmFail,
@@ -43,8 +40,7 @@ export const getFarms = () => {
       if (error?.message === "Network Error") {
         dispatch(
           fetchFarmFail({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {
@@ -73,8 +69,7 @@ export const fetchFarmActivitiesAction = () => {
       if (error?.message === "Network Error") {
         dispatch(
           fetchingFarmActivitiesFail({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {
@@ -104,8 +99,7 @@ export const createFarm = (data: CreateFarmInput) => {
       if (error?.message === "Network Error") {
         dispatch(
           creatingFarmFail({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {
@@ -130,8 +124,7 @@ export const fetchCategoryActivitesAction = (id: number) => {
       if (error?.message === "Network Error") {
         dispatch(
           fetchCategoryActivitiesFail({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {
@@ -157,12 +150,10 @@ export const recordActivityAction = (data: RecordActivityInput) => {
         })
       );
     } catch (error: any) {
-      console.error("error ", error);
       if (error?.message === "Network Error") {
         dispatch(
           recordActivityFail({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {

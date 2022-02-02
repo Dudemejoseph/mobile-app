@@ -34,7 +34,7 @@ import { cropSelector } from "../../../redux/features/crop/crop_reducer";
 import { darkModeMapStyles } from "../../../seeder/mapStyles";
 import styles from "./styles";
 
-const FarmDetails: React.FC<DefaultScreenProps> = ({ route, navigation }) => {
+const FarmDetails: React.FC<DefaultScreenProps> = ({ route }) => {
   const item: any = route?.params;
   const farmItem: Farm | any = item?.item;
   const dispatch = useDispatch();
@@ -90,7 +90,11 @@ const FarmDetails: React.FC<DefaultScreenProps> = ({ route, navigation }) => {
   return (
     <Wrapper>
       <ScrollView contentContainerStyle={styles.container}>
-        <AppbarComponent backButton={true} title={`${farmItem.name} details`} />
+        <AppbarComponent
+          backButton={true}
+          title={`${farmItem.name} details`}
+          search={false}
+        />
         <View>
           <View style={styles.row}>
             <Subheading style={styles.leftText}>Farm Name:</Subheading>

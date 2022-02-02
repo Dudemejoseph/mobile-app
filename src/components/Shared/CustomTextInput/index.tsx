@@ -4,16 +4,9 @@ import { useColorScheme, View, Text } from "react-native";
 import styles from "./styles";
 import { useTheme } from "@react-navigation/native";
 import { TextInput } from "react-native-paper";
-import {
-  combinedDarkTheme,
-  combinedDefaultTheme,
-} from "../../../constants/theme";
+import { combinedDarkTheme, combinedDefaultTheme } from "../../../constants/theme";
 
-const CustomTextInput: React.FC<CustomTextInputProps> = ({
-  touched,
-  error,
-  ...props
-}) => {
+const CustomTextInput: React.FC<CustomTextInputProps> = ({ touched, error, ...props }) => {
   const { colors } = useTheme();
   const scheme = useColorScheme();
   const color = !touched
@@ -29,9 +22,7 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
       <View style={styles.inputContainer}>
         <TextInput {...(props as any)} />
       </View>
-      {touched && error && (
-        <Text style={[styles.error, { color }]}>{error}</Text>
-      )}
+      {touched && error && <Text style={[styles.error, { color }]}>{error}</Text>}
       {/* {touched && (
         <View
           style={[

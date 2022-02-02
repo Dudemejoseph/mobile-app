@@ -11,6 +11,7 @@ const ActivitiesStack = () => {
       initialRouteName={ACTIVITIES_SCREEN}
       screenOptions={{
         headerShown: false,
+        animation: "fade_from_bottom",
       }}
     >
       <Stack.Screen name={ACTIVITIES_SCREEN} component={Activities} />

@@ -6,4 +6,5 @@ declare module "*.svg" {
 
 declare module "react-native-dot-env" {
   export const BASE_URL: string;
+  export const CLOUDINARY_API: string;
 }

@@ -1,8 +1,5 @@
 import axiosInstance from "../../../config/axios_config";
-import {
-  AddFarmExpenseInput,
-  AddFinanceInput,
-} from "./../../../interfaces/transactions";
+import { AddFarmExpenseInput, AddFinanceInput } from "./../../../interfaces/transactions";
 import { AppDispatch } from "./../../store";
 import {
   addFarmExpenseFail,
@@ -29,8 +26,7 @@ export const fetchFinancesAction = () => {
       if (error?.message === "Network Error") {
         dispatch(
           fetchFinancesFail({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {
@@ -60,8 +56,7 @@ export const addFinance = (data: AddFinanceInput) => {
       if (error?.message === "Network Error") {
         dispatch(
           addingFinanceFail({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {
@@ -80,13 +75,12 @@ export const fetchExpenses = () => {
     try {
       dispatch(fetchingFarmExpenses());
       const res = await axiosInstance.get("/farmexpenses");
-      dispatch(fetchingFarmExpensesSuccess({ data: res.data.result.expense }));
+      dispatch(fetchingFarmExpensesSuccess({ data: res.data.result.expense.data }));
     } catch (error: any) {
       if (error?.message === "Network Error") {
         dispatch(
           fetchingFarmExpensesFail({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {
@@ -102,11 +96,13 @@ export const fetchExpenses = () => {
 
 // Adding expense for a farm activity
 export const addFarmExpenseAction = (data: AddFarmExpenseInput) => {
+  console.log("data ", data);
+
   return async (dispatch: AppDispatch) => {
     dispatch(addingFarmExpense());
     try {
       const res = await axiosInstance.post("/farmexpenses", data);
-      console.log("res ", res.data);
+      console.log("res is what ", res.data);
 
       dispatch(
         addFarmExpenseSuccess({
@@ -115,13 +111,11 @@ export const addFarmExpenseAction = (data: AddFarmExpenseInput) => {
         })
       );
     } catch (error: any) {
-      console.log("err ", error);
-
+      console.error("error is ", error);
       if (error?.message === "Network Error") {
         dispatch(
           addFarmExpenseFail({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {

@@ -1,12 +1,8 @@
-import { PaginationData } from "./farm";
 import { RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ReactNode } from "react";
-import {
-  StyleProp,
-  ViewStyle,
-  TextInputProps as RNTextInputProps,
-} from "react-native";
+import { StyleProp, TextInputProps as RNTextInputProps, ViewStyle } from "react-native";
+import { PaginationData } from "./farm";
 
 export interface WrapperTypes {
   children: ReactNode;
@@ -28,7 +24,7 @@ export interface PaginatorProps {
 }
 
 export interface DefaultScreenProps {
-  navigation: NativeStackNavigationProp<any, any>;
+  navigation?: NativeStackNavigationProp<any, any>;
   route?: RouteProp<any, any>;
 }
 
@@ -53,7 +49,7 @@ export interface PayloadType {
     message?: string | any;
     error?: any;
     paginationData?: PaginationData;
-    action?: Function;
+    action?: () => void;
   };
 }
 
@@ -67,15 +63,39 @@ export interface CarouselDataType {
   crop?: string;
 }
 
-export interface HomeDIrectoryProps {
+export interface HomeDirectoryProps {
   id?: number;
   title: string;
   color: string;
-  onAction: Function;
+  onAction: () => void;
 }
 
 export interface ErrorComponentProps {
   error: string;
-  action: Function;
+  action: () => void;
   loading: boolean;
+}
+
+export interface SuccessToastProps {
+  visible: boolean;
+  setVisible: (arg: boolean) => void;
+  message: string;
+}
+
+export interface ErrorToastProps {
+  visible: boolean;
+  setVisible: (arg: boolean) => void;
+  error: string;
+  action: () => void;
+}
+
+export interface InfoToastProps {
+  visible: boolean;
+  setVisible: (arg: boolean) => void;
+  info: string;
+}
+
+export interface CustomModalProps {
+  visible: boolean;
+  onDismiss: () => void;
 }

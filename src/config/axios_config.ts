@@ -1,10 +1,11 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore package not working well with typescript at at now
 import { BASE_URL } from "react-native-dotenv";
 
 // Creating axuios client, preconfigured with base url and other fields
-let axiosInstance = axios.create({
+const axiosInstance = axios.create({
   baseURL: BASE_URL as string,
   // timeout: 15000,
   headers: {
@@ -40,7 +41,7 @@ axiosInstance.interceptors.response.use(
     }),
   (error) => {
     if (error.response && error.response.status === 401) {
-      //   removeToken();
+      // removeToken();
     } else {
       return new Promise((resolve, reject) => {
         reject(error);

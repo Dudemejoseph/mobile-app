@@ -1,21 +1,7 @@
 import { useTheme } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import {
-  Image,
-  ScrollView,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from "react-native";
-import {
-  Banner,
-  Headline,
-  Modal,
-  Portal,
-  Subheading,
-  Surface,
-  Text,
-} from "react-native-paper";
+import { Image, ScrollView, TouchableOpacity, useColorScheme, View } from "react-native";
+import { Banner, Headline, Modal, Portal, Subheading, Surface, Text } from "react-native-paper";
 import MaterialCommunityIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useDispatch, useSelector } from "react-redux";
 import EmergencyIcon from "../../assets/svgs/emergency.svg";
@@ -30,6 +16,9 @@ import Wrapper from "../../components/Shared/Wrapper";
 import {
   ACTIVITIES_SCREEN,
   ACTIVITIES_STACK,
+  CAMERA_SCREEN,
+  CAMERA_STACK,
+  CAMERA_TAB,
   CREATE_FARMS_SCREEN,
   EDIT_PROFILE_SCREEN,
   FIELDS_STACK,
@@ -56,15 +45,10 @@ MaterialCommunityIcon.loadFont();
 const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
   const dispatch = useDispatch();
   const { user, message } = useSelector(userSelector) as UserState;
-  const { error: dashboardError, fetching: dashboardFetching } = useSelector(
-    dashboardSelector
-  ) as DashboardState;
-  const { error: cropError, fetching: cropFetching } = useSelector(
-    cropSelector
-  ) as CropState;
+  const { error: dashboardError, fetching: dashboardFetching } = useSelector(dashboardSelector) as DashboardState;
+  const { error: cropError, fetching: cropFetching } = useSelector(cropSelector) as CropState;
 
-  const [successSnackbarVisible, setSuccessSnackbarVisible] =
-    useState<boolean>(false);
+  const [successSnackbarVisible, setSuccessSnackbarVisible] = useState<boolean>(false);
   const [bannerVisible, setBannerVisible] = useState<boolean>(false);
   const [visible, setVisible] = useState(false);
 
@@ -130,15 +114,14 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
 
   return (
     <Wrapper>
+      <AppbarComponent search={false} />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <AppbarComponent />
         {bannerVisible && (
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           /* @ts-ignore */
           <Banner
             style={{
-              backgroundColor: dark
-                ? combinedDarkTheme.colors.background
-                : combinedDefaultTheme.colors.card,
+              backgroundColor: dark ? combinedDarkTheme.colors.background : combinedDefaultTheme.colors.card,
             }}
             theme={dark ? combinedDarkTheme : combinedDefaultTheme}
             visible={bannerVisible}
@@ -151,10 +134,7 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
                 labelStyle: [
                   styles.buttonLabelStyle,
                   {
-                    color:
-                      scheme === "dark"
-                        ? combinedDarkTheme.colors.error
-                        : combinedDefaultTheme.colors.error,
+                    color: scheme === "dark" ? combinedDarkTheme.colors.error : combinedDefaultTheme.colors.error,
                   },
                 ],
               },
@@ -166,7 +146,6 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
                   });
                   setBannerVisible(false);
                 },
-                // @ts-ignore
                 uppercase: false,
                 theme: dark ? combinedDarkTheme : combinedDefaultTheme,
               },
@@ -175,30 +154,20 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
               <MaterialCommunityIcon
                 name="information-outline"
                 size={20}
-                color={
-                  dark
-                    ? combinedDarkTheme.colors.text
-                    : combinedDefaultTheme.colors.primary
-                }
+                color={dark ? combinedDarkTheme.colors.text : combinedDefaultTheme.colors.primary}
               />
             )}
           >
             You need to complete your profile information
           </Banner>
         )}
-        <Headline style={styles.welcomeText}>
-          Welcome Back {user?.firstname}
-        </Headline>
+        <Headline style={styles.welcomeText}>Welcome Back {user?.firstname}</Headline>
         <View>
           <CustomSnapCarousel />
         </View>
         <Surface style={[styles.middleView]}>
           <View style={styles.directoryRow}>
-            <HomeDirectory
-              title="Create Farms"
-              color={blue}
-              onAction={showModal}
-            />
+            <HomeDirectory title="Create Farms" color={blue} onAction={showModal} />
 
             <HomeDirectory
               title="Activities"
@@ -237,9 +206,7 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
               style={[
                 styles.buttonView,
                 {
-                  borderColor: dark
-                    ? combinedDarkTheme.colors.text
-                    : combinedDefaultTheme.colors.primary,
+                  borderColor: dark ? combinedDarkTheme.colors.text : combinedDefaultTheme.colors.primary,
                 },
               ]}
             >
@@ -248,9 +215,7 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
                 style={[
                   styles.buttonLabel,
                   {
-                    color: dark
-                      ? combinedDarkTheme.colors.text
-                      : combinedDefaultTheme.colors.primary,
+                    color: dark ? combinedDarkTheme.colors.text : combinedDefaultTheme.colors.primary,
                   },
                 ]}
               >
@@ -261,9 +226,7 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
               style={[
                 styles.buttonView,
                 {
-                  borderColor: dark
-                    ? combinedDarkTheme.colors.error
-                    : combinedDefaultTheme.colors.error,
+                  borderColor: dark ? combinedDarkTheme.colors.error : combinedDefaultTheme.colors.error,
                 },
               ]}
             >
@@ -272,13 +235,35 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
                 style={[
                   styles.buttonLabel,
                   {
-                    color: dark
-                      ? combinedDarkTheme.colors.error
-                      : combinedDefaultTheme.colors.error,
+                    color: dark ? combinedDarkTheme.colors.error : combinedDefaultTheme.colors.error,
                   },
                 ]}
               >
                 Emergency
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.directoryRow}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate(CAMERA_TAB);
+              }}
+              style={[
+                styles.buttonView,
+                {
+                  borderColor: dark ? combinedDarkTheme.colors.text : "brown",
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.buttonLabel,
+                  {
+                    color: dark ? combinedDarkTheme.colors.text : "brown",
+                  },
+                ]}
+              >
+                Crop health indicator
               </Text>
             </TouchableOpacity>
           </View>
@@ -292,9 +277,7 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
           contentContainerStyle={[
             styles.containerStyle,
             {
-              backgroundColor: dark
-                ? combinedDarkTheme.colors.primary
-                : combinedDefaultTheme.colors.card,
+              backgroundColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.card,
             },
           ]}
         >
@@ -312,18 +295,13 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
               style={[
                 styles.enterTxt,
                 {
-                  color: dark
-                    ? combinedDarkTheme.colors.background
-                    : combinedDefaultTheme.colors.text,
+                  color: dark ? combinedDarkTheme.colors.background : combinedDefaultTheme.colors.text,
                 },
               ]}
             >
               Create Farm
             </Subheading>
-            <Image
-              source={require("../../assets/icons/arrow-right.png")}
-              style={styles.enterIcon}
-            />
+            <Image source={require("../../assets/icons/arrow-right.png")} style={styles.enterIcon} />
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.6}
@@ -337,27 +315,19 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
               style={[
                 styles.enterTxt,
                 {
-                  color: dark
-                    ? combinedDarkTheme.colors.background
-                    : combinedDefaultTheme.colors.text,
+                  color: dark ? combinedDarkTheme.colors.background : combinedDefaultTheme.colors.text,
                 },
               ]}
             >
               Map Farm
             </Subheading>
-            <Image
-              source={require("../../assets/icons/arrow-right.png")}
-              style={styles.enterIcon}
-            />
+            <Image source={require("../../assets/icons/arrow-right.png")} style={styles.enterIcon} />
           </TouchableOpacity>
         </Modal>
       </Portal>
-      {message &&
-        SuccessSnackbar(
-          successSnackbarVisible,
-          setSuccessSnackbarVisible,
-          message
-        )}
+      {message && (
+        <SuccessSnackbar message={message} visible={successSnackbarVisible} setVisible={setSuccessSnackbarVisible} />
+      )}
     </Wrapper>
   );
 };

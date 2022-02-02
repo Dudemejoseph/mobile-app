@@ -23,8 +23,7 @@ export const getCrops = () => {
       if (error?.message === "Network Error") {
         dispatch(
           fetchCropFail({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {
@@ -44,14 +43,12 @@ export const fetchActivityForCrop = (id: number) => {
     dispatch(fetchDefaultCropActivities());
     try {
       const res = await axiosInstance.get(`/crop/activity/default/${id}`);
-      console.log("arct ", res.data);
       dispatch(fetchDefaultCropActivitiesSuccess({ data: res.data?.result }));
     } catch (error: any) {
       if (error?.message === "Network Error") {
         dispatch(
           fetchDefaultCropActivitiesFailure({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {
@@ -77,12 +74,11 @@ export const submitCropActivities = (data: any) => {
         })
       );
     } catch (error: any) {
-      console.error("ee ", error)
+      console.error("ee ", error);
       if (error?.message === "Network Error") {
         dispatch(
           submitDefaultCropActivitiesFail({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {

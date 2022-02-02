@@ -5,10 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ErrorComponent from "../../components/Shared/ErrorComponent";
 import LoadingComponent from "../../components/Shared/LoadingComponent";
 import Wrapper from "../../components/Shared/Wrapper";
-import {
-  ADD_EXPENSE_SCREEN,
-  PROFILE_SCREEN,
-} from "../../constants/route_names";
+import { ADD_EXPENSE_SCREEN, PROFILE_SCREEN } from "../../constants/route_names";
 import { COLORS } from "../../constants/theme";
 import { DefaultScreenProps } from "../../interfaces/shared_components";
 import { TransactionsState } from "../../interfaces/transactions";
@@ -17,10 +14,9 @@ import { transactionsSelector } from "../../redux/features/transactions/transact
 
 const TrackExpenses: React.FC<DefaultScreenProps> = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { expensesData, fetchingFarmExpenses, fetchFarmExpensesError } =
-    useSelector(transactionsSelector) as TransactionsState;
-
-  console.log("farm ", fetchFarmExpensesError, fetchingFarmExpenses);
+  const { expensesData, fetchingFarmExpenses, fetchFarmExpensesError } = useSelector(
+    transactionsSelector
+  ) as TransactionsState;
 
   useEffect(() => {
     dispatch(fetchExpenses());
@@ -48,30 +44,18 @@ const TrackExpenses: React.FC<DefaultScreenProps> = ({ navigation }) => {
 
   return (
     <Wrapper customStyle={{ flex: 1, backgroundColor: "white", padding: 20 }}>
-      <ScrollView
-        contentContainerStyle={[styles.container, { padding: 10 }]}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView contentContainerStyle={[styles.container, { padding: 10 }]} showsVerticalScrollIndicator={false}>
         {/* ========= Header View ========= */}
         <View style={styles.headerView}>
-          <TouchableOpacity
-            activeOpacity={0.6}
-            onPress={() => navigation.goBack()}
-          >
-            <Image
-              source={require("../../assets/icons/back-arrow.png")}
-              style={styles.backIcon}
-            />
+          <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.goBack()}>
+            <Image source={require("../../assets/icons/back-arrow.png")} style={styles.backIcon} />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
               navigation.navigate(PROFILE_SCREEN);
             }}
           >
-            <Image
-              source={require("../../assets/icons/user-profile.png")}
-              style={styles.bellIcon}
-            />
+            <Image source={require("../../assets/icons/user-profile.png")} style={styles.bellIcon} />
           </TouchableOpacity>
         </View>
 
