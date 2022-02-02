@@ -16,6 +16,9 @@ import Wrapper from "../../components/Shared/Wrapper";
 import {
   ACTIVITIES_SCREEN,
   ACTIVITIES_STACK,
+  CAMERA_SCREEN,
+  CAMERA_STACK,
+  CAMERA_TAB,
   CREATE_FARMS_SCREEN,
   EDIT_PROFILE_SCREEN,
   FIELDS_STACK,
@@ -242,6 +245,9 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
           </View>
           <View style={styles.directoryRow}>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate(CAMERA_TAB);
+              }}
               style={[
                 styles.buttonView,
                 {
@@ -249,7 +255,6 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
                 },
               ]}
             >
-              {/* <GenerateReportIcon /> */}
               <Text
                 style={[
                   styles.buttonLabel,

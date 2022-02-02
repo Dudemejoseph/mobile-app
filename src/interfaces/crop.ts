@@ -42,3 +42,9 @@ export interface CropRating {
   value: number;
   label: string;
 }
+
+export interface HeightUnit {
+  id: number;
+  value: string;
+  label: string;
+}

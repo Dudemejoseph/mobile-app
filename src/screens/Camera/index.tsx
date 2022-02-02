@@ -12,11 +12,11 @@ import CustomModal from "../../components/Shared/CustomModal";
 import SuccessSnackbar from "../../components/Shared/Snackbar/SuccessSnackbar";
 import Wrapper from "../../components/Shared/Wrapper";
 import { combinedDarkTheme, combinedDefaultTheme } from "../../constants/theme";
-import { CropRating } from "../../interfaces/crop";
+import { CropRating, HeightUnit } from "../../interfaces/crop";
 import { Farm, FarmState } from "../../interfaces/farm";
 import { getFarms } from "../../redux/features/farms/farm_actions";
 import { farmSelector } from "../../redux/features/farms/farm_reducer";
-import { ratings } from "../../seeder/cropHealth";
+import { heightUnits, ratings } from "../../seeder/cropHealth";
 import { cloudinaryUpload, uploadChi } from "../../utils/cloudinary";
 import styles from "./styles";
 import { getAlbums, save } from "@react-native-community/cameraroll";
@@ -37,6 +37,7 @@ const Camera = () => {
   const [farmId, setFarmId] = useState<number | any>(null);
   const [color, setColor] = useState<string>("");
   const [height, setHeight] = useState<number | string | any>(0);
+  const [heightUnit, setHeightUnit] = useState<HeightUnit>(null);
   const [shape, setShape] = useState<string>("");
   const [texture, setTexture] = useState<string>("");
 
@@ -96,6 +97,11 @@ const Camera = () => {
           rating: selectedRating.value as number,
           farm_id: farmId,
           image_url: res,
+          height,
+          height_unit: "Inches",
+          texture,
+          color,
+          shape,
         };
         await uploadChi(body);
         setImage(null);
@@ -287,6 +293,49 @@ const Camera = () => {
                     </HelperText>
                   )} */}
                   </View>
+
+                  <Surface
+                    style={[
+                      styles.pickerView,
+                      {
+                        borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.backdrop,
+                        backgroundColor: dark
+                          ? combinedDarkTheme.colors.background
+                          : combinedDefaultTheme.colors.surface,
+                      },
+                    ]}
+                  >
+                    <Picker
+                      mode="dropdown"
+                      selectedValue={selectedRating}
+                      onValueChange={(itemValue: HeightUnit) => {
+                        setHeightUnit(itemValue);
+                      }}
+                      itemStyle={[
+                        {
+                          borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text,
+                        },
+                      ]}
+                    >
+                      <Picker.Item
+                        color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
+                        label="Select unit for height"
+                        value={null}
+                        style={styles.buttonLabel}
+                      />
+                      {heightUnits?.map((item: HeightUnit, index: number) => {
+                        return (
+                          <Picker.Item
+                            key={index}
+                            color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
+                            label={item.label}
+                            value={item}
+                            style={styles.buttonLabel}
+                          />
+                        );
+                      })}
+                    </Picker>
+                  </Surface>
 
                   <View style={styles.inputView}>
                     <TextInput

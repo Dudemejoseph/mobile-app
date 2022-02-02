@@ -63,7 +63,7 @@ export interface CarouselDataType {
   crop?: string;
 }
 
-export interface HomeDIrectoryProps {
+export interface HomeDirectoryProps {
   id?: number;
   title: string;
   color: string;
