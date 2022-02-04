@@ -18,9 +18,9 @@ const Geofencing: React.FC<DefaultScreenProps> = ({ navigation }) => {
   const [state, setState] = useState({ open: false });
   const LATITUDE_DELTA = 0.005 as any;
   const LONGITUDE_DELTA = 0.005;
-  let [mapRegion, setMapRegion] = useState<Region | any>(null);
+  const [mapRegion, setMapRegion] = useState<Region | any>(null);
   const [coordinates, setCoords] = useState<[] | any>([]);
-  const [trackEnabled, setEnabled] = useState<boolean>(false);
+  const [trackEnabled, setEnabled] = useState<boolean>(true);
   const [distance, setDistance] = useState(0);
   const [area, setArea] = useState(0);
   const [hecres, setHecres] = useState<number>(0);
@@ -28,92 +28,15 @@ const Geofencing: React.FC<DefaultScreenProps> = ({ navigation }) => {
   const mapRef: any = useRef(null);
 
   const onStateChange = ({ open }: any) => setState({ open });
-
   const { open } = state;
 
-  let polyPoints = coordinates.map(function (obj: any) {
+  const polyPoints = coordinates.map(function (obj: any) {
     return Object.keys(obj)
       .sort()
       .map(function (key) {
         return obj[key];
       });
   });
-
-  // Asking user for permission to access location
-  useEffect(() => {
-    const checkPermission = () => {
-      if (Platform.OS === "ios") {
-        getCurrentPosition();
-      } else if (Platform.OS === "android") {
-        checkAndroidPermission();
-      }
-    };
-
-    const checkAndroidPermission = async () => {
-      try {
-        const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
-          title: "Farm monitor Permission",
-          message: "We need permission to access your location",
-          buttonNeutral: "Later",
-          buttonNegative: "No",
-          buttonPositive: "OK",
-        });
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          getCurrentPosition();
-        } else {
-          checkAndroidPermission();
-        }
-      } catch (err) {}
-    };
-
-    const getCurrentPosition = () => {
-      Geolocation.getCurrentPosition(
-        (position) => {
-          setMapRegion({
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA,
-            longitude: position.coords.longitude,
-            latitude: position.coords.latitude,
-          });
-        },
-        (error) => {
-          console.error("location error ", error);
-        },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-      );
-    };
-
-    checkPermission();
-  }, []);
-
-  useEffect(() => {
-    if (trackEnabled) {
-      RNLocation.subscribeToLocationUpdates((location) => {
-        const coords = location[0];
-        setCoords((prev: any) => [...prev, { latitude: coords.latitude, longitude: coords.longitude }]);
-      });
-    }
-  }, [trackEnabled]);
-
-  useEffect(() => {
-    const getCurrentPosition = () => {
-      Geolocation.getCurrentPosition(
-        (position: any) => {
-          setMapRegion({
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA,
-            longitude: position.coords.longitude,
-            latitude: position.coords.latitude,
-          });
-        },
-        (error: any) => {
-          console.error("location error ", error);
-        },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-      );
-    };
-    getCurrentPosition();
-  }, []);
 
   RNLocation.configure({
     distanceFilter: 10, // Meters
@@ -148,15 +71,88 @@ const Geofencing: React.FC<DefaultScreenProps> = ({ navigation }) => {
     },
   });
 
+  const getCurrentPosition = () => {
+    Geolocation.getCurrentPosition(
+      (position) => {
+        setMapRegion({
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA,
+          longitude: position.coords.longitude,
+          latitude: position.coords.latitude,
+        });
+      },
+      (error) => {
+        console.error("location error ", error);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+    );
+  };
+
+  const checkAndroidPermission = async () => {
+    const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
+      title: "Farm monitor Permission",
+      message: "We need permission to access your location",
+      buttonNeutral: "Later",
+      buttonNegative: "No",
+      buttonPositive: "OK",
+    });
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      getCurrentPosition();
+    } else {
+      checkAndroidPermission();
+    }
+  };
+
+  // Asking user for permission to access location
+  useEffect(() => {
+    const checkPermission = () => {
+      if (Platform.OS === "ios") {
+        getCurrentPosition();
+      } else if (Platform.OS === "android") {
+        checkAndroidPermission();
+      }
+    };
+    checkPermission();
+  }, []);
+
+  useEffect(() => {
+    // if (trackEnabled) {
+    RNLocation.subscribeToLocationUpdates((location) => {
+      const coords = location[0];
+      setCoords((prev: any) => [...prev, { latitude: coords.latitude, longitude: coords.longitude }]);
+    });
+    // }
+  }, [trackEnabled]);
+
+  useEffect(() => {
+    const getCurrentPosition = () => {
+      Geolocation.getCurrentPosition(
+        (position: any) => {
+          setMapRegion({
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+            longitude: position.coords.longitude,
+            latitude: position.coords.latitude,
+          });
+        },
+        (error: any) => {
+          console.error("location error ", error);
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+      );
+    };
+    getCurrentPosition();
+  }, []);
+
   const sub = () => {
     setEnabled(true);
   };
 
   const unsub = () => {
-    setEnabled(false);
     setDistance(geolib.getPathLength(coordinates, geolib.getDistance));
     setArea(geolib.getAreaOfPolygon(polyPoints));
     setHecres(geolib.convertArea(area, "ha").toFixed(3) as any);
+    setEnabled(false);
   };
 
   return (
