@@ -6,23 +6,22 @@ import { Subheading, Surface, Text } from "react-native-paper";
 import Pie from "react-native-pie";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import { useSelector } from "react-redux";
-import {
-  combinedDarkTheme,
-  combinedDefaultTheme,
-} from "../../../constants/theme";
+import { combinedDarkTheme, combinedDefaultTheme } from "../../../constants/theme";
 import { CarouselDataType } from "../../../interfaces/shared_components";
 import { DashboardState } from "../../../interfaces/user";
 import { dashboardSelector } from "../../../redux/features/dashboard/dashboard_reducer";
-import carousel_info from "../../../seeder/carousel_info";
-import carousel_items from "../../../seeder/carousel_items";
+import carouselInfo from "../../../seeder/carousel_info";
+import carouselItems from "../../../seeder/carousel_items";
 import styles from "./styles";
 
 const CustomSnapCarousel = () => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  let carouselRef: any = useRef(null);
+  const carouselRef: any = useRef(null);
   const { width } = useWindowDimensions();
   const { dark } = useTheme();
   const { dashboardData } = useSelector(dashboardSelector) as DashboardState;
+
+  console.log("dashboardData", dashboardData);
 
   const renderItem = (item: CarouselDataType, index: number) => {
     return (
@@ -30,17 +29,12 @@ const CustomSnapCarousel = () => {
         <View style={styles.pieView}>
           <Subheading style={styles.subheadingText}>{item.title}</Subheading>
           <View style={styles.gauge}>
-            <Pie
-              radius={60}
-              sections={dashboardData}
-              innerRadius={45}
-              strokeCap={"butt"}
-            />
+            <Pie radius={60} sections={dashboardData} innerRadius={45} strokeCap={"butt"} />
             <Text style={styles.gaugeText}>{item.percent}</Text>
           </View>
         </View>
         <View style={styles.listWrapper}>
-          {carousel_info.map((item2, index2) => {
+          {carouselInfo.map((item2, index2) => {
             return (
               <View key={index2} style={styles.list}>
                 <View style={styles.list2}>
@@ -57,9 +51,7 @@ const CustomSnapCarousel = () => {
                       style={[
                         styles.chartTxt,
                         {
-                          color: dark
-                            ? combinedDarkTheme.colors.text
-                            : combinedDefaultTheme.colors.backdrop,
+                          color: dark ? combinedDarkTheme.colors.text : combinedDefaultTheme.colors.backdrop,
                         },
                       ]}
                     >
@@ -70,9 +62,7 @@ const CustomSnapCarousel = () => {
                     style={[
                       styles.chartTxt,
                       {
-                        color: dark
-                          ? combinedDarkTheme.colors.text
-                          : combinedDefaultTheme.colors.backdrop,
+                        color: dark ? combinedDarkTheme.colors.text : combinedDefaultTheme.colors.backdrop,
                       },
                     ]}
                   >
@@ -93,7 +83,7 @@ const CustomSnapCarousel = () => {
         <Carousel
           layout="default"
           ref={carouselRef}
-          data={carousel_items}
+          data={carouselItems}
           sliderWidth={300}
           itemWidth={width}
           renderItem={({ item, index }) => renderItem(item, index)}
@@ -105,18 +95,10 @@ const CustomSnapCarousel = () => {
         />
       </View>
       <Pagination
-        dotsLength={carousel_items?.length}
+        dotsLength={carouselItems?.length}
         activeDotIndex={activeIndex}
-        dotColor={
-          dark
-            ? combinedDarkTheme.colors.primary
-            : combinedDefaultTheme.colors.primary
-        }
-        inactiveDotColor={
-          dark
-            ? combinedDarkTheme.colors.backdrop
-            : combinedDefaultTheme.colors.backdrop
-        }
+        dotColor={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.primary}
+        inactiveDotColor={dark ? combinedDarkTheme.colors.backdrop : combinedDefaultTheme.colors.backdrop}
         inactiveDotOpacity={0.4}
         inactiveDotScale={0.6}
         carouselRef={carouselRef}
