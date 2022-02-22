@@ -50,4 +50,5 @@ export interface AddFarmExpenseInput {
   category_id: number;
   technicalities: string;
   lessons_learnt: string;
+  type?: string;
 }

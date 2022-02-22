@@ -47,19 +47,21 @@ export const addInventory = (data) => {
       const res = await axiosInstance.post("/inventory", data);
       dispatch(setMessage("Inventory recorded successfully"));
       dispatch(setInventory(res.data.result.data));
-      dispatch(clear());
+      // dispatch(clear());
     } catch (error) {
       dispatch(setError(error.response.data.message));
     }
   };
 };
 
-export const fetchInventory = () => {
+export const fetchInventory = (type) => {
   return async (dispatch) => {
     dispatch(fetch());
     try {
-      const res = await axiosInstance.get("/inventory");
-      dispatch(setInventory(res?.data?.result?.data));
+      // const res = await axiosInstance.get("/inventory");
+      const res = await axiosInstance.get(`inventories/type?type=${type}`);
+      console.log("res ===== > ", res.data.inventory);
+      dispatch(setInventory(res?.data?.inventory));
     } catch (error) {
       console.error("inv error ", error);
       dispatch(setError(error.response.data.message));

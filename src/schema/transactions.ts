@@ -16,8 +16,9 @@ export const AddFarmExpenseSchema = Yup.object().shape({
   farm_activity_id: Yup.number().required("Please select an activity"),
   quantity: Yup.number().integer("Invalid quantity").nullable(),
   unit_price: Yup.number().integer("Invalid price").nullable(),
-  balance_to_be_paid: Yup.number().integer("Invalid price").required("Balance to be padi is required"),
+  balance_to_be_paid: Yup.number().integer("Invalid price").required("Balance to be paid is required"),
   date: Yup.string().required("Please select date"),
+  type: Yup.string(),
   brand: Yup.string().required("Please enter brand"),
   category_id: Yup.number().nullable(),
 });

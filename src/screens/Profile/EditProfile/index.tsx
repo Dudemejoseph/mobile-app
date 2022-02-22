@@ -9,13 +9,14 @@ import ErrorSnackbar from "../../../components/Shared/Snackbar/ErrorSnackbar";
 import InfoSnackbar from "../../../components/Shared/Snackbar/InfoSnackbar";
 import Wrapper from "../../../components/Shared/Wrapper";
 import { combinedDarkTheme, combinedDefaultTheme } from "../../../constants/theme";
+import { DefaultScreenProps } from "../../../interfaces/shared_components";
 import { EditProfileInput, UserState } from "../../../interfaces/user";
 import { editUser } from "../../../redux/features/user/user_actions";
 import { userSelector } from "../../../redux/features/user/user_reducer";
 import { EditProfileSchema } from "../../../schema/profile";
 import styles from "./styles";
 
-const EditProfile = () => {
+const EditProfile: React.FC<DefaultScreenProps> = ({ navigation }) => {
   const dispatch = useDispatch();
   const { colors, dark } = useTheme();
   const [tempValues, setTempValues] = useState<EditProfileInput | any>(null);
@@ -53,7 +54,10 @@ const EditProfile = () => {
               phone: user?.phone ?? "",
               address: user?.address ?? "",
             }}
-            onSubmit={(values: EditProfileInput) => submitForm(values)}
+            onSubmit={(values: EditProfileInput) => {
+              submitForm(values);
+              navigation.goBack();
+            }}
           >
             {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
               <View style={styles.container}>
