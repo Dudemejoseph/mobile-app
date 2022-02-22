@@ -18,10 +18,12 @@ import { getFarms } from "../../../redux/features/farms/farm_actions";
 import { farmSelector } from "../../../redux/features/farms/farm_reducer";
 import { addFinance } from "../../../redux/features/transactions/transactions_actions";
 import { transactionsSelector } from "../../../redux/features/transactions/transactions_reducer";
+import { fetchInventory, inventorySelector } from "../../../redux/features/inventorySlice";
 import { AddFinanceSchema } from "../../../schema/transactions";
 import styles from "./styles";
+import { DefaultScreenProps } from "../../../interfaces/shared_components";
 
-const AddFinance = () => {
+const AddFinance: React.FC<DefaultScreenProps> = ({ navigation }) => {
   const dispatch = useDispatch();
   const { colors, dark } = useTheme();
   const { farmData, fetching, error } = useSelector(farmSelector) as FarmState;
@@ -34,6 +36,9 @@ const AddFinance = () => {
   const [selectedFarm, setSelectedFarm] = useState<Farm | any>(null);
   const [farm_id, setFarmId] = useState<number | any>("");
   const [selectedType, setSelectedType] = useState<"credit" | "debit">("credit");
+  // const [selectedCategory, setSelectedCategory] = useState<any>(null);
+  const [selectedInventory, setSelectedInventory] = useState<any>(null);
+  const { inventory } = useSelector(inventorySelector);
 
   useEffect(() => {
     const fetchFarms = async () => {
@@ -47,6 +52,13 @@ const AddFinance = () => {
   const retry = async () => {
     dispatch(getFarms());
   };
+
+  // Use effect to set the type
+  useEffect(() => {
+    if (inventory) {
+      dispatch(fetchInventory("fertilizer"));
+    }
+  }, []);
 
   const submitForm = async (values: AddFinanceInput) => {
     setTempValues(values);
@@ -88,7 +100,7 @@ const AddFinance = () => {
             validationSchema={AddFinanceSchema}
             initialValues={
               {
-                farm_id: farm_id,
+                farm_id,
                 activity: "",
                 amount: 0.0,
                 note: "",
@@ -195,6 +207,64 @@ const AddFinance = () => {
                   )}
                 </View>
 
+                {inventory && (
+                  <View style={styles.inputView}>
+                    <Surface
+                      style={[
+                        styles.pickerView,
+                        {
+                          borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.backdrop,
+                          backgroundColor: dark
+                            ? combinedDarkTheme.colors.background
+                            : combinedDefaultTheme.colors.surface,
+                        },
+                      ]}
+                    >
+                      <Picker
+                        mode="dropdown"
+                        selectedValue={selectedInventory}
+                        onValueChange={(itemValue: any) => {
+                          setSelectedInventory(itemValue);
+                          // setSpecialUnitPrice(itemValue?.unit_price);
+                          // setSpecialAmount(itemValue?.unit_price * values.quantity);
+                          // setCategoryId(itemValue?.id);
+                          // setFieldValue("category_id", itemValue?.id);
+                        }}
+                        itemStyle={[
+                          styles.pickerView,
+                          {
+                            borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text,
+                          },
+                        ]}
+                      >
+                        <Picker.Item
+                          color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
+                          label={"Select Type"}
+                          value={null}
+                          style={styles.buttonLabel}
+                        />
+
+                        {inventory?.map((item: any, index: number) => {
+                          return (
+                            <Picker.Item
+                              key={index}
+                              color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
+                              label={item.variety}
+                              value={item}
+                              style={styles.buttonLabel}
+                            />
+                          );
+                        })}
+                      </Picker>
+                    </Surface>
+                    {/* {errors?.category_id && (
+                      <HelperText type="error" visible={errors?.category_id ? true : false}>
+                        {errors?.category_id}
+                      </HelperText>
+                    )} */}
+                  </View>
+                )}
+
                 <View style={styles.inputView}>
                   <Surface
                     style={[
@@ -294,7 +364,10 @@ const AddFinance = () => {
                   )}
                 </View>
                 <Button
-                  onPress={handleSubmit}
+                  onPress={() => {
+                    handleSubmit();
+                    navigation.goBack();
+                  }}
                   uppercase={false}
                   theme={dark ? combinedDarkTheme : combinedDefaultTheme}
                   mode="contained"

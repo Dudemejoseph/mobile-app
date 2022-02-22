@@ -312,7 +312,6 @@ const CreateFarm: React.FC<DefaultScreenProps> = ({ route }) => {
                 <View style={styles.inputView}>
                   <Paragraph>Farm Size</Paragraph>
                   <TextInput
-                    disabled={true}
                     label=""
                     value={size_unit?.name === "Acre" ? "" + distance.toString() : hecres.toString()}
                     onChangeText={handleChange("size")}

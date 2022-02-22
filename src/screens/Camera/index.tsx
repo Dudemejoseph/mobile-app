@@ -307,7 +307,7 @@ const Camera = () => {
                   >
                     <Picker
                       mode="dropdown"
-                      selectedValue={selectedRating}
+                      selectedValue={heightUnit}
                       onValueChange={(itemValue: HeightUnit) => {
                         setHeightUnit(itemValue);
                       }}

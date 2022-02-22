@@ -5,7 +5,7 @@ import ImagePicker from "react-native-image-crop-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Modal, Portal } from "react-native-paper";
 import { ScaledSheet } from "react-native-size-matters";
-import Wrapper from "../components/Wrapper";
+import Wrapper from "../components/Shared/Wrapper";
 import { COLORS } from "../constants/theme";
 
 const emergencies = [
@@ -102,7 +102,11 @@ const Emergency = ({ navigation }) => {
   };
 
   return (
-    <Wrapper>
+    <Wrapper
+      customStyle={{
+        padding: 10,
+      }}
+    >
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* ========= Header View ========= */}
         <View style={styles.headerView}>

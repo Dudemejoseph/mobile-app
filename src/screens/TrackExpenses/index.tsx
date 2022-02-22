@@ -69,7 +69,7 @@ const TrackExpenses: React.FC<DefaultScreenProps> = ({ navigation }) => {
   return (
     <Wrapper>
       <AppbarComponent title="Track Expenses" backButton={true} />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.wrapper}>
         {expensesData?.length > 0 && (
           <DataTable>
             <DataTable.Header>
@@ -102,11 +102,10 @@ const TrackExpenses: React.FC<DefaultScreenProps> = ({ navigation }) => {
                         }}
                         title="View"
                       />
-                      <Menu.Item icon="circle-edit-outline" onPress={() => {}} title="Edit" />
+                      <Menu.Item icon="circle-edit-outline" title="Edit" />
                       <Divider />
                       <Menu.Item
                         icon="delete"
-                        onPress={() => {}}
                         title="Delete"
                         titleStyle={{
                           color: dark ? combinedDarkTheme.colors.error : combinedDefaultTheme.colors.error,

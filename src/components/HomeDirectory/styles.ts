@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   itemText: {
     color: "#FFFFFF",
     fontSize: 16,
-    width: "100%",
+    textAlign: "center",
     fontFamily: "Poppins-Medium",
     lineHeight: 24,
   },

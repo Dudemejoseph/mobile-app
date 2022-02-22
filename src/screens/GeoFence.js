@@ -17,7 +17,7 @@ const GeoFence = ({ navigation }) => {
   const [lng, setLng] = useState();
   const LATITUDE_DELTA = 0.005;
   const LONGITUDE_DELTA = 0.005;
-  let [mapRegion, setMapRegion] = useState(null);
+  const [mapRegion, setMapRegion] = useState(null);
   const [coordinates, setCoords] = useState([]);
   const [trackEnabled, setEnabled] = useState(false);
   const [distance, setDistance] = useState(0);

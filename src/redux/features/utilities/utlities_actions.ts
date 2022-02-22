@@ -25,8 +25,7 @@ export const fetchCountries = () => {
       if (error?.message === "Network Error") {
         dispatch(
           fetchCountriesFail({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {
@@ -51,8 +50,7 @@ export const fetchStates = () => {
       if (error?.message === "Network Error") {
         dispatch(
           fetchStatesFail({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {
@@ -77,8 +75,7 @@ export const fetchCrops = () => {
       if (error?.message === "Network Error") {
         dispatch(
           fetchCropsFail({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {
@@ -103,8 +100,7 @@ export const fetchCategoriesAction = () => {
       if (error?.message === "Network Error") {
         dispatch(
           fetchCategoriesFail({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {

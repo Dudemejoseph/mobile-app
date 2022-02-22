@@ -21,6 +21,7 @@ import {
   CAMERA_TAB,
   CREATE_FARMS_SCREEN,
   EDIT_PROFILE_SCREEN,
+  EMERGENCY_SCREEN,
   FIELDS_STACK,
   GEO_FENCING_SCREEN,
   INVENTORY_SCREEN,
@@ -162,13 +163,10 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
           </Banner>
         )}
         <Headline style={styles.welcomeText}>Welcome Back {user?.firstname}</Headline>
-        <View>
-          <CustomSnapCarousel />
-        </View>
+        <CustomSnapCarousel />
         <Surface style={[styles.middleView]}>
           <View style={styles.directoryRow}>
             <HomeDirectory title="Create Farms" color={blue} onAction={showModal} />
-
             <HomeDirectory
               title="Activities"
               color={red}
@@ -190,19 +188,17 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
               }
             />
             <HomeDirectory
-              title="Inventory"
+              title="Crop Health Indicator"
               color={orange}
               onAction={() => {
-                navigation.navigate(INVENTORY_STACK, {
-                  screen: INVENTORY_SCREEN,
-                });
+                navigation.navigate(CAMERA_TAB);
               }}
             />
           </View>
         </Surface>
         <Surface style={[styles.bottomView]}>
           <View style={styles.directoryRow}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={[
                 styles.buttonView,
                 {
@@ -221,7 +217,7 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
               >
                 Generate Report
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
               style={[
                 styles.buttonView,
@@ -229,6 +225,9 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
                   borderColor: dark ? combinedDarkTheme.colors.error : combinedDefaultTheme.colors.error,
                 },
               ]}
+              onPress={() => {
+                navigation.navigate(EMERGENCY_SCREEN);
+              }}
             >
               <EmergencyIcon />
               <Text
@@ -243,7 +242,7 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.directoryRow}>
+          {/* <View style={styles.directoryRow}>
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate(CAMERA_TAB);
@@ -266,7 +265,7 @@ const Dashboard: React.FC<DefaultScreenProps> = ({ navigation }) => {
                 Crop health indicator
               </Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
         </Surface>
       </ScrollView>
       <Portal theme={dark ? combinedDarkTheme : combinedDefaultTheme}>

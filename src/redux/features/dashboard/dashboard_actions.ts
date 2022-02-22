@@ -1,10 +1,6 @@
 import axiosInstance from "../../../config/axios_config";
 import { AppDispatch } from "../../store";
-import {
-  fetch,
-  fetchDashboardFail,
-  fetchDashboardSuccess,
-} from "./dashboard_reducer";
+import { fetch, fetchDashboardFail, fetchDashboardSuccess } from "./dashboard_reducer";
 
 // Fetching Data from dashboard
 export const getDashboard = () => {
@@ -22,8 +18,7 @@ export const getDashboard = () => {
       if (error?.message === "Network Error") {
         dispatch(
           fetchDashboardFail({
-            error:
-              "Oops!, Network error, please check your internet connection",
+            error: "Oops!, Network error, please check your internet connection",
           })
         );
       } else {

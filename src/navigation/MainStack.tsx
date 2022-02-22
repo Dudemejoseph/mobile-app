@@ -21,10 +21,12 @@ import {
   INVENTORY_STACK,
   PROFILE_STACK,
   TRACK_EXPENSES_STACK,
+  EMERGENCY_SCREEN,
 } from "../constants/route_names";
 import { combinedDarkTheme, combinedDefaultTheme } from "../constants/theme";
 import Calender from "../screens/Calendar";
 import Dashboard from "../screens/Dashboard";
+import Emergency from "../screens/Emergency";
 import ActivitiesStack from "./ActivitiesStack";
 import CameraStack from "./CameraStack";
 import FieldsStack from "./FieldsStack";
@@ -132,6 +134,7 @@ const MainStack = () => {
       <Stack.Screen name={FIELDS_STACK} component={FieldsStack} />
       <Stack.Screen name={ACTIVITIES_STACK} component={ActivitiesStack} />
       <Stack.Screen name={INVENTORY_STACK} component={InventoryStack} />
+      <Stack.Screen name={EMERGENCY_SCREEN} component={Emergency} />
     </Stack.Navigator>
   );
 };

@@ -14,15 +14,17 @@ import InfoSnackbar from "../../../components/Shared/Snackbar/InfoSnackbar";
 import Wrapper from "../../../components/Shared/Wrapper";
 import { combinedDarkTheme, combinedDefaultTheme } from "../../../constants/theme";
 import { Farm, FarmState } from "../../../interfaces/farm";
+import { DefaultScreenProps } from "../../../interfaces/shared_components";
 import { AddFarmExpenseInput, TransactionsState } from "../../../interfaces/transactions";
 import { fetchCategoryActivitesAction, getFarms } from "../../../redux/features/farms/farm_actions";
+import { fetchInventory, inventorySelector } from "../../../redux/features/inventorySlice";
 import { farmSelector } from "../../../redux/features/farms/farm_reducer";
 import { addFarmExpenseAction } from "../../../redux/features/transactions/transactions_actions";
 import { transactionsSelector } from "../../../redux/features/transactions/transactions_reducer";
 import { AddFarmExpenseSchema } from "../../../schema/transactions";
-import styles from "./sty;es";
+import styles from "./styles";
 
-const AddFarmExpense = () => {
+const AddFarmExpense: React.FC<DefaultScreenProps> = ({ navigation }) => {
   const dispatch = useDispatch();
   const { colors, dark } = useTheme();
   const {
@@ -37,12 +39,17 @@ const AddFarmExpense = () => {
   const { addingFarmExpense, addFarmExpenseError, addFarmExpenseMessage } = useSelector(
     transactionsSelector
   ) as TransactionsState;
+  const { inventory } = useSelector(inventorySelector);
+
   const [selectedFarm, setSelectedFarm] = useState<any>("Select Farm");
   const [selectedActivity, setSelectedActivity] = useState<any>(null);
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
+  const [selectedInventory, setSelectedInventory] = useState<any>(null);
   const [farm_id, setFarmId] = useState<number | any>(null);
   const [category_id, setCategoryId] = useState<number | any>(null);
   const [farm_activity_id, setFarmActivtyId] = useState<number | any>(null);
+  const [specialUnitPrice, setSpecialUnitPrice] = useState(0);
+  const [specialAmount, setSpecialAmount] = useState(0);
   const [crop, setCrop] = useState<string | any>(null);
   const [isDatePickerVisible, setDatePickerVisibility] = useState<boolean>(false);
   const [date, setDate] = useState(null);
@@ -50,6 +57,8 @@ const AddFarmExpense = () => {
   const [errorSnackbarVisible, setErrorSnackbarVisible] = useState<boolean>(false);
   const [infoSnackbarVisible, setInfoSnackbarVisible] = useState<boolean>(false);
   const [tempValues, setTempValues] = useState<AddFarmExpenseInput | any>(null);
+
+  console.log("state of inventory ", specialAmount);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -121,6 +130,14 @@ const AddFarmExpense = () => {
     convertToArray();
   }, [categoryActivities]);
 
+  // Use effect to set the type
+  useEffect(() => {
+    if (selectedActivity) {
+      dispatch(fetchInventory(selectedActivity.subCategory.includes("urea") ? "chemical" : "fertilizer"));
+      console.log("activity ", selectedActivity);
+    }
+  }, [selectedActivity]);
+
   useEffect(() => {
     if (addFarmExpenseError) {
       setErrorSnackbarVisible(true);
@@ -163,6 +180,13 @@ const AddFarmExpense = () => {
 
   const submitForm = (values: AddFarmExpenseInput) => {
     setTempValues(values);
+    values.inventory_id = selectedInventory?.id;
+    if (selectedCategory.category === "Input") {
+      values.amount = specialAmount;
+      values.unit_price = specialUnitPrice;
+      values.type = selectedInventory?.variety;
+    }
+
     dispatch(addFarmExpenseAction(values));
   };
 
@@ -178,6 +202,7 @@ const AddFarmExpense = () => {
                 farm_id,
                 farm_activity_id,
                 balance_to_be_paid: "",
+                type: "",
                 brand: "",
                 date,
                 note: "",
@@ -425,6 +450,94 @@ const AddFarmExpense = () => {
                   </View>
                 )}
 
+                {/* Select Category */}
+                {inventory && (
+                  <View style={styles.inputView}>
+                    <Surface
+                      style={[
+                        styles.pickerView,
+                        {
+                          borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.backdrop,
+                          backgroundColor: dark
+                            ? combinedDarkTheme.colors.background
+                            : combinedDefaultTheme.colors.surface,
+                        },
+                      ]}
+                    >
+                      <Picker
+                        mode="dropdown"
+                        selectedValue={selectedInventory}
+                        onValueChange={(itemValue: any) => {
+                          setSelectedInventory(itemValue);
+                          setSpecialUnitPrice(itemValue?.unit_price);
+                          setSpecialAmount(itemValue?.unit_price * values.quantity);
+                          // setCategoryId(itemValue?.id);
+                          // setFieldValue("category_id", itemValue?.id);
+                        }}
+                        itemStyle={[
+                          styles.pickerView,
+                          {
+                            borderColor: dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text,
+                          },
+                        ]}
+                      >
+                        <Picker.Item
+                          color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
+                          label={"Select Type"}
+                          value={null}
+                          style={styles.buttonLabel}
+                        />
+
+                        {inventory?.map((item: any, index: number) => {
+                          return (
+                            <Picker.Item
+                              key={index}
+                              color={dark ? combinedDarkTheme.colors.primary : combinedDefaultTheme.colors.text}
+                              label={item.variety}
+                              value={item}
+                              style={styles.buttonLabel}
+                            />
+                          );
+                        })}
+                      </Picker>
+                    </Surface>
+                    {/* {errors?.category_id && (
+                      <HelperText type="error" visible={errors?.category_id ? true : false}>
+                        {errors?.category_id}
+                      </HelperText>
+                    )} */}
+                  </View>
+                )}
+
+                {/* Brand */}
+                {/* <View style={styles.inputView}>
+                  <TextInput
+                    label="Type"
+                    value={values.type}
+                    onChangeText={handleChange("type")}
+                    mode="outlined"
+                    onBlur={handleBlur("type")}
+                    error={errors?.brand ? true : false}
+                    selectionColor={colors.text}
+                    theme={dark ? combinedDarkTheme : combinedDefaultTheme}
+                    outlineColor={dark ? combinedDarkTheme.colors.border : combinedDefaultTheme.colors.backdrop}
+                    style={[
+                      styles.buttonLabel,
+                      {
+                        backgroundColor: dark
+                          ? combinedDarkTheme.colors.background
+                          : combinedDefaultTheme.colors.surface,
+                      },
+                    ]}
+                  />
+
+                  {errors?.type && (
+                    <HelperText type="error" visible={errors?.type ? true : false}>
+                      {errors?.type}
+                    </HelperText>
+                  )}
+                </View> */}
+
                 {/* Brand */}
                 <View style={styles.inputView}>
                   <TextInput
@@ -459,7 +572,17 @@ const AddFarmExpense = () => {
                   <TextInput
                     label="Quantity"
                     value={values.quantity}
-                    onChangeText={handleChange("quantity")}
+                    onChangeText={(text) => {
+                      // handleChange("quantity")
+                      if (selectedCategory.category === "Input") {
+                        setFieldValue("quantity", text);
+                        console.log("text ", Number(text) * specialUnitPrice);
+
+                        setSpecialAmount(5 * Number(text));
+                      } else {
+                        setFieldValue("quantity", text);
+                      }
+                    }}
                     mode="outlined"
                     keyboardType="number-pad"
                     onBlur={handleBlur("quantity")}
@@ -488,7 +611,8 @@ const AddFarmExpense = () => {
                 <View style={styles.inputView}>
                   <TextInput
                     label="Unit Price"
-                    value={values.unit_price}
+                    value={selectedCategory?.category === "Input" ? specialUnitPrice : values.unit_price}
+                    disabled={selectedCategory?.category === "Input" ? true : false}
                     onChangeText={handleChange("unit_price")}
                     mode="outlined"
                     keyboardType="number-pad"
@@ -518,7 +642,8 @@ const AddFarmExpense = () => {
                 <View style={styles.inputView}>
                   <TextInput
                     label="Amount"
-                    value={values.amount}
+                    value={selectedCategory?.category === "Input" ? specialAmount.toString() + ".00" : values.amount}
+                    disabled={selectedCategory?.category === "Input" ? true : false}
                     onChangeText={handleChange("amount")}
                     mode="outlined"
                     keyboardType="number-pad"
@@ -670,6 +795,7 @@ const AddFarmExpense = () => {
                 <Button
                   onPress={() => {
                     submitForm(values);
+                    navigation.goBack();
                   }}
                   uppercase={false}
                   theme={dark ? combinedDarkTheme : combinedDefaultTheme}
